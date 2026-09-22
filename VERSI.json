@@ -1,0 +1,9 @@
+{
+  "name": "KSPPS Syirkah Kebaikan Indonesia",
+  "exportedAt": "2026-09-22",
+  "sourceCommit": "27ef77091976129cfa29364b7720e78083f2cb6e",
+  "sourceVersion": "v18",
+  "publishedFolder": "docs",
+  "backendActiveInStaticVersion": false,
+  "sourceNotes": "Kode aplikasi asli disertakan; konfigurasi identitas deployment tidak disertakan. Tidak berisi database atau unggahan anggota."
+}
