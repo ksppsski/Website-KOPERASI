@@ -1,0 +1,5 @@
+/* Read-only fields retain the established layout. */
+form input:disabled,form select:disabled,form textarea:disabled{cursor:not-allowed;opacity:.78}
+form button:disabled{cursor:not-allowed}
+.staff-role-entry{display:grid;gap:12px}
+.prototype-strip{flex-wrap:wrap}
