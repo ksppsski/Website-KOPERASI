@@ -1,0 +1,27 @@
+{
+  "name": "kspps-preview-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "db:generate": "drizzle-kit generate",
+    "test:portal": "node tests/portal-form-refresh.mjs && node tests/restored-portal-layouts.mjs",
+    "test:workflow": "node tests/member-numbers.mjs && node tests/contract-lifecycle.mjs && node tests/reset-demo.mjs",
+    "test:finance": "node tests/finance-schedule.mjs",
+    "test:activity": "node tests/staff-activity.mjs",
+    "test:savings": "node tests/savings-schedule.mjs",
+    "test:manager": "node tests/manager-offers.mjs",
+    "test:access": "node tests/access-reports.mjs"
+  },
+  "devDependencies": {
+    "drizzle-kit": "0.31.10",
+    "drizzle-orm": "0.45.2",
+    "esbuild": "^0.25.12"
+  },
+  "dependencies": {
+    "@pdf-lib/fontkit": "^1.1.1",
+    "@pdf-lib/upng": "^1.0.1",
+    "pdf-lib": "^1.17.1"
+  }
+}

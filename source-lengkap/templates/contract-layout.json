@@ -1,0 +1,240 @@
+{
+  "version": "ski-original-layout-2026-09-21",
+  "sourcePdfSha256": "75ea97d2ff37e37b2c179826d7fe0de433e81ee15450ea25f0d344f0b8acf274",
+  "pageCount": 2,
+  "slots": [
+    {
+      "page": 0,
+      "key": "number",
+      "box": [
+        36.1,
+        117.3,
+        281.99,
+        126.4
+      ],
+      "text": "Nomor : <<nospk>>/<<kodesurat>>",
+      "size": 7,
+      "bold": false,
+      "center": true
+    },
+    {
+      "page": 0,
+      "key": "intro",
+      "box": [
+        36.1,
+        135,
+        281.99,
+        170.3
+      ],
+      "text": "Perjanjian ini dibuat dan ditandatangani di Kota Makassar, pada hari ini tanggal <<tanggalakad>> telah ditanda tangani Perjanjian Permodalan Project Pengadaan Kebutuhan Barang Mitra Strategis (selanjutnya disebut PERJANJIAN) oleh PARA PIHAK yang tersebut di bawah ini :",
+      "size": 7,
+      "bold": false,
+      "center": false
+    },
+    {
+      "page": 0,
+      "key": "nama",
+      "box": [
+        111.94300842285156,
+        179.23976440429686,
+        281.99,
+        187.65977172851564
+      ],
+      "text": "<<nama>>",
+      "size": 7,
+      "bold": false,
+      "center": false
+    },
+    {
+      "page": 0,
+      "key": "alamat",
+      "box": [
+        111.94300842285156,
+        188.0397521972656,
+        281.99,
+        196.4597595214844
+      ],
+      "text": "<<alamat>>",
+      "size": 7,
+      "bold": false,
+      "center": false
+    },
+    {
+      "page": 0,
+      "key": "kelurahan",
+      "box": [
+        111.94300842285156,
+        196.83973999023436,
+        281.99,
+        205.25974731445314
+      ],
+      "text": "<<kelurahan>>",
+      "size": 7,
+      "bold": false,
+      "center": false
+    },
+    {
+      "page": 0,
+      "key": "kecamatan",
+      "box": [
+        111.94300842285156,
+        205.63978881835936,
+        281.99,
+        214.05979614257814
+      ],
+      "text": "<<kecamatan>>",
+      "size": 7,
+      "bold": false,
+      "center": false
+    },
+    {
+      "page": 0,
+      "key": "kota/kab",
+      "box": [
+        111.94300842285156,
+        214.4397766113281,
+        281.99,
+        222.8597839355469
+      ],
+      "text": "<<kota/kab>>",
+      "size": 7,
+      "bold": false,
+      "center": false
+    },
+    {
+      "page": 0,
+      "key": "provinsi",
+      "box": [
+        111.94300842285156,
+        223.23976440429686,
+        281.99,
+        231.65977172851564
+      ],
+      "text": "<<provinsi>>",
+      "size": 7,
+      "bold": false,
+      "center": false
+    },
+    {
+      "page": 0,
+      "key": "nama",
+      "box": [
+        427.24298095703125,
+        526.0898315429688,
+        561.39,
+        534.5097778320312
+      ],
+      "text": "<<nama>>",
+      "size": 7,
+      "bold": false,
+      "center": false
+    },
+    {
+      "page": 0,
+      "key": "namabank",
+      "box": [
+        427.24298095703125,
+        534.8897583007813,
+        561.39,
+        543.3097045898437
+      ],
+      "text": "<<namabank>>",
+      "size": 7,
+      "bold": false,
+      "center": false
+    },
+    {
+      "page": 0,
+      "key": "norekening",
+      "box": [
+        427.24298095703125,
+        543.6898071289063,
+        561.39,
+        552.1097534179687
+      ],
+      "text": "<<norekening>>",
+      "size": 7,
+      "bold": false,
+      "center": false
+    },
+    {
+      "page": 1,
+      "key": "notelepon",
+      "box": [
+        183.89698791503906,
+        266.48976440429686,
+        281.99,
+        274.90977172851564
+      ],
+      "text": "<<notelepon>>",
+      "size": 7,
+      "bold": false,
+      "center": false
+    },
+    {
+      "page": 1,
+      "key": "email",
+      "box": [
+        147.9429931640625,
+        275.2897521972656,
+        281.99,
+        283.7097595214844
+      ],
+      "text": "<<email>>",
+      "size": 7,
+      "bold": false,
+      "center": false
+    },
+    {
+      "page": 0,
+      "key": "amount",
+      "box": [
+        336.7,
+        178.2,
+        561.39,
+        213.45
+      ],
+      "text": "Nilai Modal Kerjasama oleh PIHAK PERTAMA kepada PIHAK KEDUA dalam rangka mendukung kegiatan pengadaan kebutuhan barang PIHAK KEDUA, sejumlah <<nilaiinvestasi>>,- (<<terbilang>> Rupiah).",
+      "size": 7,
+      "bold": false,
+      "center": false
+    },
+    {
+      "page": 0,
+      "key": "period",
+      "box": [
+        315.4,
+        376.2,
+        561.39,
+        402.8
+      ],
+      "text": "Tanggal Kesepakatan Nisbah / bagi hasil berlaku efektif per tanggal <<tanggalnisbah>> dan setidak-tidaknya sampai tanggal <<tanggalselesai>>, dan dapat diperpanjang sesuai kesepakatan PARA PIHAK.",
+      "size": 7,
+      "bold": false,
+      "center": false
+    },
+    {
+      "page": 1,
+      "key": "member-sign-name",
+      "box": [
+        315.4,
+        275,
+        561.39,
+        284
+      ],
+      "text": "(<<nama>>)",
+      "size": 7,
+      "bold": false,
+      "center": false
+    }
+  ],
+  "signature": {
+    "page": 1,
+    "box": [
+      317.3,
+      222,
+      417.3,
+      257
+    ]
+  }
+}

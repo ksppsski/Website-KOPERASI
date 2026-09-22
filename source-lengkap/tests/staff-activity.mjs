@@ -1,0 +1,66 @@
+import assert from 'node:assert/strict';
+import {DatabaseSync} from 'node:sqlite';
+import {readFileSync,readdirSync} from 'node:fs';
+import {stmt} from '../worker/membership.js';
+import {trackedRun,receive,finish,submission,activityState,startTask,projectEvents,summarize,bootstrapActivity,payoutTask,finishPayoutTask,ensurePayoutTasks} from '../worker/activity.js';
+import {makassarToday} from '../worker/finance.js';
+
+const db=new DatabaseSync(':memory:');
+for(const f of readdirSync('drizzle').filter(f=>f.endsWith('.sql')).sort())db.exec(readFileSync('drizzle/'+f,'utf8'));
+db.exec('CREATE TABLE probe (id TEXT PRIMARY KEY, value INTEGER NOT NULL)');
+const env={DB:{prepare(sql){return {bind(...args){return {execute(){return {meta:{changes:Number(db.prepare(sql).run(...args).changes)}}},async run(){return this.execute()},async all(){return {results:db.prepare(sql).all(...args)}},async first(){return db.prepare(sql).get(...args)||null}}}}},async batch(statements){db.exec('BEGIN');try{const out=statements.map(s=>s.execute());db.exec('COMMIT');return out}catch(e){db.exec('ROLLBACK');throw e}}}};
+const stamp=new Date().toISOString();db.prepare('INSERT INTO staff_accounts VALUES (?,?,?,?,?,?,?)').run('account-a','admin','Admin','admin@example.test','fixture',stamp,stamp);
+const owner='account-a',arrival='2026-09-21T01:00:00.000Z';
+await trackedRun(env,stmt(env,'INSERT INTO probe VALUES (?,?)','one',1),owner,'one',null,submission('one','capital','ANGGOTA',arrival),arrival);
+let state=await activityState(env,owner);assert.equal(state.tasks.length,2);assert(state.tasks.every(t=>t.receivedAt===arrival&&t.startedAt===null));
+const admin=state.tasks.find(t=>t.role==='admin'),finance=state.tasks.find(t=>t.role==='finance');
+await assert.rejects(startTask(env,owner,{taskId:finance.id}),e=>e.status===403);
+await assert.rejects(startTask(env,'account-b',{taskId:admin.id}),e=>e.status===404);
+const starts=await Promise.all([startTask(env,owner,{taskId:admin.id}),startTask(env,owner,{taskId:admin.id})]);
+assert.equal(starts[0].task.startedAt,starts[1].task.startedAt);
+assert.equal(db.prepare("SELECT COUNT(*) n FROM staff_activity WHERE event_key=?").get('start:'+admin.id).n,1);
+const before=db.prepare('SELECT COUNT(*) n FROM staff_activity').get().n;
+const failed=await trackedRun(env,stmt(env,'UPDATE probe SET value=2 WHERE id=? AND value=?','one',999),owner,'one','admin',[finish('one',['capital'])]);
+assert.equal(failed.meta.changes,0);assert.equal(db.prepare('SELECT COUNT(*) n FROM staff_activity').get().n,before);
+assert.equal((await activityState(env,owner)).tasks.find(t=>t.id===admin.id).completedAt,null);
+// An audit-storage error must roll back the actual business update too.
+db.exec("CREATE TRIGGER refuse_activity BEFORE INSERT ON staff_activity BEGIN SELECT RAISE(ABORT,'test audit failure'); END");
+await assert.rejects(trackedRun(env,stmt(env,'UPDATE probe SET value=2 WHERE id=?','one'),owner,'one','admin',[finish('one',['capital'])]));
+assert.equal(db.prepare('SELECT value FROM probe WHERE id=?').get('one').value,1);
+db.exec('DROP TRIGGER refuse_activity');
+await trackedRun(env,stmt(env,'UPDATE probe SET value=2 WHERE id=?','one'),owner,'one','admin',[finish('one',['capital'],'correction')]);
+const completed=(await activityState(env,owner)).tasks.find(t=>t.id===admin.id);assert(completed.startedAt&&completed.completedAt);assert.equal(completed.completedBy,owner);
+await trackedRun(env,stmt(env,'UPDATE probe SET value=3 WHERE id=?','one'),owner,'one',null,submission('one','capital','ANGGOTA'));
+state=await activityState(env,owner);assert.equal(state.tasks.length,4);assert.equal(state.tasks.find(t=>t.id===admin.id).completedAt,completed.completedAt);assert(state.tasks.find(t=>t.id===finance.id).closedAt);
+const current=state.tasks.findLast(t=>t.stage==='capital');assert.equal(current.startedAt,null);
+// Duration math, missing timestamps and closed-task exclusion are deterministic.
+const task=receive('metric','registration','Metric',arrival).task;
+const event=(at,ops)=>({occurred_at:at,actor_id:owner,payload:JSON.stringify(ops)});
+const events=[event(arrival,[{type:'receive',task}]),event('2026-09-21T01:02:00.000Z',[{type:'start',taskId:task.id}]),event('2026-09-21T01:03:00.000Z',[{type:'start',taskId:task.id}]),event('2026-09-21T01:07:00.000Z',[finish('metric',['registration'])])];
+const metric=projectEvents(events)[0];assert.equal(metric.responseSeconds,120);assert.equal(metric.processingSeconds,300);
+assert.equal(summarize([metric,{...metric,id:'missing',startedAt:null,responseSeconds:null,processingSeconds:null},{...metric,id:'closed',closedAt:arrival}]).avgProcessingSeconds,300);
+assert.equal(summarize([metric,{...metric,startedAt:null,responseSeconds:null,processingSeconds:null}]).processingSamples,1);
+// No old review timestamp is reconstructed from updated_at.
+db.prepare("INSERT INTO workflow_requests (id,owner,kind,member_name,status,created_at,updated_at,version) VALUES (?,?,?,?,?,?,?,?)").run('legacy','old-account','withdrawal','OLD','reviewing',arrival,'2026-09-21T04:00:00Z',3);
+await bootstrapActivity(env,'old-account');await bootstrapActivity(env,'old-account');
+const legacy=(await activityState(env,'old-account')).tasks;assert.equal(legacy.length,1);assert.equal(legacy[0].receivedAt,null);assert.equal(legacy[0].startedAt,null);assert.equal(legacy[0].legacy,true);
+// Daily preparation arrival is scheduled midnight, not the moment someone opens it.
+db.prepare('UPDATE staff_accounts SET role=? WHERE user_id=?').run('finance',owner);
+await stmt(env,'INSERT INTO staff_workspaces VALUES (?,?,?)',owner,'finance',new Date().toISOString()).run();
+const today=makassarToday(),midnight=new Date(today+'T00:00:00+08:00').toISOString();
+const schedule={date:today,contractCount:1,total:50000,items:[{id:'daily-contract',amount:50000,bankName:'BSI',bankAccount:'001'}]};
+const contracts=[{id:'daily-contract',generated_at:'2026-01-01T00:00:00.000Z'}],recs=[{target_id:'daily-contract',checked_at:'2026-01-01T00:00:00.000Z'}];
+let daily=await payoutTask(env,owner,schedule,contracts,recs,today);assert.equal(daily.receivedAt,midnight);
+assert.equal((await payoutTask(env,owner,schedule,contracts,recs,today)).id,daily.id);
+await assert.rejects(finishPayoutTask(env,owner,daily,{taskId:daily.id,confirm:true}),e=>e.status===409);
+daily=(await startTask(env,owner,{taskId:daily.id})).task;
+await assert.rejects(finishPayoutTask(env,owner,daily,{taskId:daily.id,confirm:false}),e=>e.status===400);
+daily=await finishPayoutTask(env,owner,daily,{taskId:daily.id,confirm:true});assert.equal(daily.outcome,'prepared');assert(daily.completedAt);
+assert.equal((await finishPayoutTask(env,owner,daily,{taskId:daily.id,confirm:true})).completedAt,daily.completedAt);
+const next=await payoutTask(env,owner,{...schedule,total:60000,items:[{...schedule.items[0],amount:60000}]},contracts,recs,today);
+assert.notEqual(next.id,daily.id);assert.equal(next.completedAt,null);assert.equal((await activityState(env,owner)).tasks.find(t=>t.id===daily.id).completedAt,daily.completedAt);
+assert.equal(await payoutTask(env,owner,{...schedule,date:'2099-01-01'},contracts,recs,today),null);
+const yesterdayDate=new Date(today+'T12:00:00Z');yesterdayDate.setUTCDate(yesterdayDate.getUTCDate()-1);const yesterday=yesterdayDate.toISOString().slice(0,10);
+await ensurePayoutTasks(env,owner,[{...schedule,date:yesterday}],contracts,recs,today,yesterday);
+const overdue=(await activityState(env,owner)).tasks.find(t=>t.paymentDate===yesterday);assert(overdue);assert.equal(overdue.receivedAt,new Date(yesterday+'T00:00:00+08:00').toISOString());assert.equal(overdue.status,'queued','missed day remains queued without someone opening that day');
+console.log('PASS: transactional audit, rollback, failed CAS, concurrent/idempotent starts, scope and roles, revision history, honest legacy/missing times, KPI arithmetic, and dated payout preparation.');

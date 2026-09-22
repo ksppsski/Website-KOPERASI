@@ -1,0 +1,600 @@
+{
+  "version": "ski-2026-09-21",
+  "sourceSha256": "8456f3b1542fa3032729deb872c63504844bd3083802da3f1130bf01b30fd541",
+  "blocks": [
+    {
+      "sourceIndex": 0,
+      "kind": "title",
+      "text": "BISMILLAHIRROHMANIRROHIM",
+      "label": ""
+    },
+    {
+      "sourceIndex": 1,
+      "kind": "title",
+      "text": "SURAT PERJANJIAN KERJASAMA PERMODALAN PROYEK PENGADAAN KEBUTUHAN BARANG MITRA STRATEGIS",
+      "label": ""
+    },
+    {
+      "sourceIndex": 4,
+      "kind": "title",
+      "text": "Nomor : <<nospk>>/<<kodesurat>>",
+      "label": ""
+    },
+    {
+      "sourceIndex": 6,
+      "kind": "paragraph",
+      "text": "Perjanjian ini dibuat dan ditandatangani di Kota Makassar, pada hari ini tanggal <<tanggalakad>> telah ditanda tangani Perjanjian Permodalan Project Pengadaan Kebutuhan Barang Mitra Strategis (selanjutnya disebut PERJANJIAN) oleh PARA PIHAK yang tersebut di bawah ini :",
+      "label": ""
+    },
+    {
+      "sourceIndex": 8,
+      "kind": "field",
+      "text": "Nama: <<nama>>",
+      "label": ""
+    },
+    {
+      "sourceIndex": 9,
+      "kind": "field",
+      "text": "Alamat: <<alamat>>",
+      "label": ""
+    },
+    {
+      "sourceIndex": 10,
+      "kind": "field",
+      "text": "Kelurahan: <<kelurahan>>",
+      "label": ""
+    },
+    {
+      "sourceIndex": 11,
+      "kind": "field",
+      "text": "Kecamatan: <<kecamatan>>",
+      "label": ""
+    },
+    {
+      "sourceIndex": 12,
+      "kind": "field",
+      "text": "Kota/Kabupaten: <<kota/kab>>",
+      "label": ""
+    },
+    {
+      "sourceIndex": 13,
+      "kind": "field",
+      "text": "Provinsi: <<provinsi>>",
+      "label": ""
+    },
+    {
+      "sourceIndex": 15,
+      "kind": "paragraph",
+      "text": "Selanjutnya disebut sebagai “PIHAK PERTAMA”",
+      "label": ""
+    },
+    {
+      "sourceIndex": 17,
+      "kind": "field",
+      "text": "Nama: MUHAMMAD AQRA WARDIANSYAH",
+      "label": ""
+    },
+    {
+      "sourceIndex": 18,
+      "kind": "field",
+      "text": "Alamat: Jl. Tombolo, RT/RW 001/001",
+      "label": ""
+    },
+    {
+      "sourceIndex": 19,
+      "kind": "field",
+      "text": "Kelurahan: Tombolo",
+      "label": ""
+    },
+    {
+      "sourceIndex": 20,
+      "kind": "field",
+      "text": "Kecamatan: Somba Opu",
+      "label": ""
+    },
+    {
+      "sourceIndex": 21,
+      "kind": "field",
+      "text": "Kota/Kabupaten: Gowa",
+      "label": ""
+    },
+    {
+      "sourceIndex": 22,
+      "kind": "field",
+      "text": "Provinsi: Sulawesi Selatan",
+      "label": ""
+    },
+    {
+      "sourceIndex": 24,
+      "kind": "paragraph",
+      "text": "Selanjutnya sebagai Ketua KSPPS Syirkah Kebaikan Indonesia maka dari itu berhak dan sah untuk bertindak dengan atas nama KSPPS Syirkah Kebaikan Indonesia, selanjutnya dalam perjanjian ini disebut sebagai “PIHAK KEDUA”.",
+      "label": ""
+    },
+    {
+      "sourceIndex": 26,
+      "kind": "paragraph",
+      "text": "Selanjutnya PIHAK PERTAMA dan PIHAK KEDUA secara bersama-sama disebut sebagai PARA PIHAK dan secara sendiri-sendiri disebut PIHAK. PARA PIHAK dalam kedudukannya masing-masing sebagaimana tersebut di atas terlebih dahulu menerangkan hal-hal sebagai berikut :",
+      "label": ""
+    },
+    {
+      "sourceIndex": 27,
+      "kind": "paragraph",
+      "text": "Bahwa PIHAK KEDUA merupakan yang mendapatkan Proyek Pengadaan kebutuhan barang dari Mitra Strategis (PIHAK KETIGA), untuk itu menawarkan Kerjasama kepada PIHAK PERTAMA, dan PIHAK PERTAMA menyatakan setuju untuk mengajukan Kerjasama Permodalan kepada PIHAK KEDUA dengan ketentuan sebagaimana diatur di dalam Perjanjian ini;",
+      "label": "a."
+    },
+    {
+      "sourceIndex": 28,
+      "kind": "paragraph",
+      "text": "Bahwa PIHAK PERTAMA sebagai pemberi Biaya Permodalan berupa Uang Tunai /Cash dalam rangka menunjang kegiatan operasional dari PIHAK KEDUA;",
+      "label": "b."
+    },
+    {
+      "sourceIndex": 29,
+      "kind": "paragraph",
+      "text": "PIHAK KEDUA menyatakan setuju untuk menerima Modal dari PIHAK PERTAMA untuk dipergunakan sebagaimana maksud dan tujuan dari Perjanjian ini.",
+      "label": "c."
+    },
+    {
+      "sourceIndex": 30,
+      "kind": "paragraph",
+      "text": "PARA PIHAK setuju dan sepakat mengadakan Perjanjian ini dengan syarat-syarat dan ketentuan sebagai berikut :",
+      "label": ""
+    },
+    {
+      "sourceIndex": 32,
+      "kind": "article",
+      "text": "PASAL 1",
+      "label": ""
+    },
+    {
+      "sourceIndex": 33,
+      "kind": "heading",
+      "text": "KETENTUAN UMUM",
+      "label": ""
+    },
+    {
+      "sourceIndex": 34,
+      "kind": "paragraph",
+      "text": "Modal adalah dana yang diberikan PIHAK PERTAMA kepada PIHAK KEDUA untuk membiayai satu kali transaksi pengadaan kebutuhan barang dari PIHAK KETIGA (Mitra Pendanaan Strategis) yang dimana telah disepakati memberi keleluasan modal kepada PIHAK KEDUA untuk di kelola.",
+      "label": "1."
+    },
+    {
+      "sourceIndex": 35,
+      "kind": "paragraph",
+      "text": "Kwitansi adalah bukti penerimaan, pengiriman Modal dan/atau bagi hasil yang disampaikan oleh salah satu PIHAK kepada PIHAK Lainnya baik berupa bukti elektronik maupun non-elektronik (tunai) atau sekurang-kurangnya bentuk lain sebagaimana kesepakatan dari PARA PIHAK.",
+      "label": "2."
+    },
+    {
+      "sourceIndex": 36,
+      "kind": "paragraph",
+      "text": "Nisbah adalah pembagian keuntungan (margin) dari penjualan barang kepada Mitra Strategis (PIHAK KETIGA) ialah yaitu dengan persentase 80% untuk PIHAK PERTAMA dan 20% untuk PIHAK KEDUA.",
+      "label": "3."
+    },
+    {
+      "sourceIndex": 37,
+      "kind": "paragraph",
+      "text": "Margin yang diestimasikan dari proyek pengadaan barang kepada Pihak Ketiga (Mitra Strategis) ialah sebesar 75% p.a",
+      "label": "4."
+    },
+    {
+      "sourceIndex": 38,
+      "kind": "paragraph",
+      "text": "Biaya Operasional adalah segala biaya administrasi sesuai ketentuan syariah dirincikan dan disampaikan oleh PIHAK KEDUA kepada PIHAK PERTAMA.",
+      "label": "5."
+    },
+    {
+      "sourceIndex": 39,
+      "kind": "paragraph",
+      "text": "Objek Pemberian Modal Kerjasama adalah Untuk Proyek Pengadaan Kebutuhan Barang dari Mitra Strategis menggunakan akad jual beli kredit kepada PIHAK KETIGA (Mitra Strategis) yang dimana menggunakan modal dari PIHAK PERTAMA dan PIHAK KEDUA sebagai pengelolanya .",
+      "label": "6."
+    },
+    {
+      "sourceIndex": 40,
+      "kind": "paragraph",
+      "text": "Adapun Mitra Strategis (Pihak Ketiga) apabila mengajukan Permintaan Kebutuhan Barang , maka Mitra Strategis (Pihak Ketiga) Tersebut menyertakan jaminan berupa PPJB , SHM, Ataupun BPKB Kendaraan yang nantinya dipegang oleh PIHAK KEDUA yang sewaktu-waktu dapat dilakukan penjualan oleh PIHAK KEDUA ketika terjadi wanprestasi demi menjamin/menutupi sisa hutang Pihak Ketiga (mitra pendanaan) kepada Pihak Pertama dan Pihak Kedua.",
+      "label": "7."
+    },
+    {
+      "sourceIndex": 41,
+      "kind": "paragraph",
+      "text": "Pengembalian modal pokok dilakukan setelah seluruh pembayaran dari Mitra Strategis selesai.",
+      "label": "8."
+    },
+    {
+      "sourceIndex": 42,
+      "kind": "paragraph",
+      "text": "Bagi Hasil dihitung berdasarkan realisasi margin dari penjualan kepada Pihak Ketiga (Mitra Strategis), bukan dari Modal yang di setor.",
+      "label": "9."
+    },
+    {
+      "sourceIndex": 44,
+      "kind": "article",
+      "text": "PASAL 2",
+      "label": ""
+    },
+    {
+      "sourceIndex": 45,
+      "kind": "heading",
+      "text": "NILAI MODAL DAN TUJUAN PERJANJIAN",
+      "label": ""
+    },
+    {
+      "sourceIndex": 46,
+      "kind": "paragraph",
+      "text": "Nilai Modal Kerjasama oleh PIHAK PERTAMA kepada PIHAK KEDUA dalam rangka mendukung kegiatan pengadaan kebutuhan barang PIHAK KEDUA, sejumlah <<nilaiinvestasi>>,- (<<terbilang>> Rupiah).",
+      "label": "1."
+    },
+    {
+      "sourceIndex": 47,
+      "kind": "paragraph",
+      "text": "Tujuan Objek Pemberian Modal ini adalah dalam rangka Pengadaan Kebutuhan Barang dari para mitra pendanaan strategis dari KSPPS Syirkah Kebaikan Indonesia.",
+      "label": "2."
+    },
+    {
+      "sourceIndex": 49,
+      "kind": "article",
+      "text": "PASAL 3",
+      "label": ""
+    },
+    {
+      "sourceIndex": 50,
+      "kind": "heading",
+      "text": "RUANG LINGKUP DAN JAMINAN",
+      "label": ""
+    },
+    {
+      "sourceIndex": 51,
+      "kind": "paragraph",
+      "text": "Ruang lingkup Perjanjian ini adalah berupa penyertaan Modal oleh PIHAK PERTAMA kepada PIHAK KEDUA dengan cara memberikan modal uang tunai (cash) /via transfer sesuai besaran nilai di Pasal 2 Ayat (1) dibuktikan dengan Kwitansi Pembayaran/ Bukti Transfer yang ada.",
+      "label": "1."
+    },
+    {
+      "sourceIndex": 52,
+      "kind": "paragraph",
+      "text": "PIHAK KEDUA bersedia untuk menerima klaim dan/atau penjualan berupa seluruh aset Jaminan dari PIHAK KETIGA (Mitra Pendanaan Strategis), guna meminimalkan risiko nilai modal pokok terjaga yang telah disetor oleh PIHAK PERTAMA, bilamana dalam proses pelaksanaan terdapat peristiwa hukum yang mengakibatkan PIHAK PERTAMA mengalami kerugian.",
+      "label": "2."
+    },
+    {
+      "sourceIndex": 54,
+      "kind": "article",
+      "text": "PASAL 4",
+      "label": ""
+    },
+    {
+      "sourceIndex": 55,
+      "kind": "heading",
+      "text": "JANGKA WAKTU PERJANJIAN",
+      "label": ""
+    },
+    {
+      "sourceIndex": 56,
+      "kind": "paragraph",
+      "text": "Tanggal Kesepakatan Nisbah / bagi hasil berlaku efektif per tanggal <<tanggalnisbah>> dan setidak-tidaknya sampai tanggal <<tanggalselesai>>, dan dapat diperpanjang sesuai kesepakatan PARA PIHAK.",
+      "label": ""
+    },
+    {
+      "sourceIndex": 58,
+      "kind": "article",
+      "text": "PASAL 5",
+      "label": ""
+    },
+    {
+      "sourceIndex": 59,
+      "kind": "heading",
+      "text": "PEMBAYARAN",
+      "label": ""
+    },
+    {
+      "sourceIndex": 60,
+      "kind": "paragraph",
+      "text": "Setiap Penyertaan Modal yang disampaikan oleh PIHAK PERTAMA kepada PIHAK KEDUA wajib disetorkan bersama-sama dengan PIHAK KEDUA atau kuasa PIHAK KEDUA dan/atau setidak-tidaknya diberitahukan secara tertulis atau elektronik kepada PIHAK KEDUA ke Rekening :",
+      "label": "1."
+    },
+    {
+      "sourceIndex": 61,
+      "kind": "field",
+      "text": "Nama: KSPPS SYIRKAH KEBAIKAN INDONESIA",
+      "label": ""
+    },
+    {
+      "sourceIndex": 62,
+      "kind": "field",
+      "text": "Bank: Bank Syariah Indonesia (BSI)",
+      "label": ""
+    },
+    {
+      "sourceIndex": 63,
+      "kind": "field",
+      "text": "No Rek: 1111018894",
+      "label": ""
+    },
+    {
+      "sourceIndex": 65,
+      "kind": "paragraph",
+      "text": "Setiap bagi hasil yang disampaikan oleh PIHAK KEDUA kepada PIHAK PERTAMA wajib disampaikan melalui rekening milik PIHAK PERTAMA :",
+      "label": "2."
+    },
+    {
+      "sourceIndex": 66,
+      "kind": "field",
+      "text": "Nama: <<nama>>",
+      "label": ""
+    },
+    {
+      "sourceIndex": 67,
+      "kind": "field",
+      "text": "Bank: <<namabank>>",
+      "label": ""
+    },
+    {
+      "sourceIndex": 68,
+      "kind": "field",
+      "text": "No Rek: <<norekening>>",
+      "label": ""
+    },
+    {
+      "sourceIndex": 69,
+      "kind": "paragraph",
+      "text": "Dan apabila disampaikan secara non elektronik (tunai) disertai setidak-tidaknya kwitansi atau bukti penyerahan.",
+      "label": ""
+    },
+    {
+      "sourceIndex": 70,
+      "kind": "paragraph",
+      "text": "Setiap perubahan data dan/atau rekening PIHAK lain wajib disampaikan kepada PIHAK lainnya secara tertulis dan dituangkan ke dalam Berita Acara dan/atau addendum Perjanjian ini yang menjadi satu kesatuan dan tidak dapat dipisahkan dengan Perjanjian Pokok ini.",
+      "label": "3."
+    },
+    {
+      "sourceIndex": 72,
+      "kind": "article",
+      "text": "PASAL 6",
+      "label": ""
+    },
+    {
+      "sourceIndex": 73,
+      "kind": "heading",
+      "text": "HAK DAN KEWAJIBAN PARA PIHAK",
+      "label": ""
+    },
+    {
+      "sourceIndex": 74,
+      "kind": "paragraph",
+      "text": "PIHAK PERTAMA mempunyai hak dan kewajiban antara lain :",
+      "label": ""
+    },
+    {
+      "sourceIndex": 75,
+      "kind": "paragraph",
+      "text": "Berkewajiban menyampaikan penyetoran Modal berupa modal/uang cash kepada PIHAK KEDUA sesuai dengan tujuan objek pemberian Modal.",
+      "label": "1."
+    },
+    {
+      "sourceIndex": 76,
+      "kind": "paragraph",
+      "text": "Berhak mendapatkan sisa modal pokok yang telah disetorkan kepada PIHAK KEDUA setelah jangka waktu Perjanjian ini berakhir / seluruh pembayaran mitra strategis selesai.",
+      "label": "2."
+    },
+    {
+      "sourceIndex": 77,
+      "kind": "paragraph",
+      "text": "Bersedia menanggung kerugian berupa modal apabila terjadi kerugian, yang dimana bukan atas dasar kesengajaan dari PIHAK KEDUA dan apabila melakukan pelanggaran kesepakatan (wanprestasi) kepada PIHAK KEDUA.",
+      "label": "3."
+    },
+    {
+      "sourceIndex": 78,
+      "kind": "paragraph",
+      "text": "Berhak mendapatkan bagi hasil sesuai dengan Pasal 1 Ayat (3).",
+      "label": "4."
+    },
+    {
+      "sourceIndex": 79,
+      "kind": "paragraph",
+      "text": "Berhak mendapatkan / mengajukan klaim dan/atau penjualan, dan/atau hal-hal lain yang disepakati PARA PIHAK atas objek jaminan milik PIHAK KETIGA (Mitra Pendanaan Strategis) yang di pegang oleh PIHAK KEDUA bilamana dalam proses pelaksanaan perjanjian terdapat permasalahan yang mengakibatkan PIHAK PERTAMA menderita kerugian.",
+      "label": "5."
+    },
+    {
+      "sourceIndex": 80,
+      "kind": "paragraph",
+      "text": "PIHAK KEDUA mempunyai hak dan kewajiban antara lain :",
+      "label": ""
+    },
+    {
+      "sourceIndex": 81,
+      "kind": "paragraph",
+      "text": "Berkewajiban memberikan bagi hasil sesuai dengan Pasal 1 Ayat (3).",
+      "label": "1."
+    },
+    {
+      "sourceIndex": 82,
+      "kind": "paragraph",
+      "text": "Berkewajiban mengembalikan sisa modal pokok kepada PIHAK PERTAMA setelah jangka waktu Perjanjian ini berakhir / seluruh pembayaran mitra strategis selesai.",
+      "label": "2."
+    },
+    {
+      "sourceIndex": 83,
+      "kind": "paragraph",
+      "text": "Berkewajiban dan bertanggung jawab menanggung kerugian kepada PIHAK PERTAMA bilamana dalam proses pelaksanaan perjanjian ini PIHAK KEDUA melakukan cedera janji (wanprestasi) yang berakibat pengakhiran perjanjian dan/atau kelalaian dalam mengelola dana milik PIHAK PERTAMA,",
+      "label": "3."
+    },
+    {
+      "sourceIndex": 84,
+      "kind": "paragraph",
+      "text": "Berhak menerima penyetoran Modal berupa modal dari PIHAK PERTAMA sesuai dengan tujuan objek pemberian Modal.",
+      "label": "4."
+    },
+    {
+      "sourceIndex": 86,
+      "kind": "article",
+      "text": "PASAL 7",
+      "label": ""
+    },
+    {
+      "sourceIndex": 87,
+      "kind": "heading",
+      "text": "PEMBERITAHUAN",
+      "label": ""
+    },
+    {
+      "sourceIndex": 88,
+      "kind": "paragraph",
+      "text": "Setiap pemberitahuan/laporan/persetujuan dan hal-hal lain yang dipandang perlu dalam pelaksanaan Perjanjian ini yang dilakukan oleh salah satu pihak kepada pihak lain disampaikan melalui :",
+      "label": "1."
+    },
+    {
+      "sourceIndex": 89,
+      "kind": "paragraph",
+      "text": "Dalam hal pemberitahuan kepada PIHAK PERTAMA",
+      "label": "a."
+    },
+    {
+      "sourceIndex": 90,
+      "kind": "field",
+      "text": "Telepon/Hp: <<notelepon>>",
+      "label": ""
+    },
+    {
+      "sourceIndex": 91,
+      "kind": "field",
+      "text": "Email: <<email>>",
+      "label": ""
+    },
+    {
+      "sourceIndex": 92,
+      "kind": "paragraph",
+      "text": "Dalam hal pemberitahuan kepada PIHAK KEDUA",
+      "label": "b."
+    },
+    {
+      "sourceIndex": 93,
+      "kind": "field",
+      "text": "Telepon/Hp: +62 856-0836-5555",
+      "label": ""
+    },
+    {
+      "sourceIndex": 94,
+      "kind": "field",
+      "text": "Email: syirkahkebaikanindonesia@gmail.com",
+      "label": ""
+    },
+    {
+      "sourceIndex": 95,
+      "kind": "paragraph",
+      "text": "Setiap perubahan alamat korespondensi resmi sebagaimana tertera dalam ayat (1) diatas harus diberitahukan terlebih dahulu kepada pihak lainnya paling lambat 3 (tiga) hari kalender sebelum perubahan tersebut dilakukan.",
+      "label": "2."
+    },
+    {
+      "sourceIndex": 97,
+      "kind": "article",
+      "text": "PASAL 8",
+      "label": ""
+    },
+    {
+      "sourceIndex": 98,
+      "kind": "heading",
+      "text": "PENYELESAIAN PERSELISIHAN",
+      "label": ""
+    },
+    {
+      "sourceIndex": 99,
+      "kind": "paragraph",
+      "text": "Setiap Perselisihan atau perbedaan dalam bentuk apapun yang timbul antara PIHAK PERTAMA dan PIHAK KEDUA sehubungan dengan atau sebagai akibat dari adanya Perjanjian ini, maka akan diselesaikan secara musyawarah dengan tata cara sebagai berikut:",
+      "label": "1."
+    },
+    {
+      "sourceIndex": 100,
+      "kind": "paragraph",
+      "text": "Pihak yang merasa dirugikan kepentingannya mengirimkan surat permintaan musyawarah dilengkapi dengan uraian mengenai permasalahan dan pandangan pihak tersebut mengenai permasalahan yang timbul.",
+      "label": "a."
+    },
+    {
+      "sourceIndex": 101,
+      "kind": "paragraph",
+      "text": "PARA PIHAK sepakat bahwa tempat musyawarah ditetapkan di tempat kedudukan PIHAK PERTAMA.",
+      "label": "b."
+    },
+    {
+      "sourceIndex": 102,
+      "kind": "paragraph",
+      "text": "Musyawarah untuk menyelesaikan perselisihan atau perbedaan antara PARA PIHAK ditetapkan untuk waktu paling lama 7 (tujuh) hari kalender terhitung sejak surat permintaan musyawarah diterima oleh Pihak yang dimintakan untuk musyawarah.",
+      "label": "c."
+    },
+    {
+      "sourceIndex": 103,
+      "kind": "paragraph",
+      "text": "Musyawarah dianggap tidak mencapai kata sepakat apabila jangka waktu musyawarah terlewati tetapi tidak diperoleh mufakat atau apabila PARA PIHAK telah sepakat bahwa musyawarah tidak berhasil menghasilkan kemufakatan meskipun jangka waktu untuk bermusyawarah belum berakhir. Oleh karena itu, maka PARA PIHAK sepakat untuk memilih Domisili yang tetap dan umum di kantor Panitera Pengadilan Negeri di Makassar.",
+      "label": "2."
+    },
+    {
+      "sourceIndex": 105,
+      "kind": "article",
+      "text": "PASAL 9",
+      "label": ""
+    },
+    {
+      "sourceIndex": 106,
+      "kind": "heading",
+      "text": "LAIN-LAIN",
+      "label": ""
+    },
+    {
+      "sourceIndex": 108,
+      "kind": "paragraph",
+      "text": "Perjanjian ini dapat diakhiri bila mana terjadi salah satu hal dibawah ini, antara lain :",
+      "label": "1."
+    },
+    {
+      "sourceIndex": 109,
+      "kind": "paragraph",
+      "text": "Telah berakhir jangka waktu perjanjian dan tidak diajukannya perpanjangan terhadap perjanjian ini.",
+      "label": "a."
+    },
+    {
+      "sourceIndex": 110,
+      "kind": "paragraph",
+      "text": "Berakhir disebabkan peraturan perundang-undangan.",
+      "label": "b."
+    },
+    {
+      "sourceIndex": 111,
+      "kind": "paragraph",
+      "text": "Adanya cedera janji/wanprestasi sebagaimana diatur didalam Kitab Undang-Undang Hukum Perdata (Burgerlijk Wetboek)",
+      "label": "c."
+    },
+    {
+      "sourceIndex": 112,
+      "kind": "paragraph",
+      "text": "Perjanjian ini berlaku efektif sejak tanggal yang tertera pada bagian awal Perjanjian ini.",
+      "label": "2."
+    },
+    {
+      "sourceIndex": 113,
+      "kind": "paragraph",
+      "text": "Apabila masih terdapat hal-hal yang belum secara rinci dalam perjanjian ini, berdasarkan kesepakatan PARA PIHAK, dapat diajukan penambahan dan/atau pengurangan perjanjian yang dituangkan kedalam addendum perjanjian yang menjadi satu kesatuan dengan perjanjian dan tidak dapat dipisahkan.",
+      "label": "3."
+    },
+    {
+      "sourceIndex": 114,
+      "kind": "paragraph",
+      "text": "Semua Kuasa dan wewenang yang diberikan dalam perjanjian ini merupakan bagian terpenting dan tidak terpisahkan dari Perjanjian dan tidak dapat ditarik atau dicabut kembali secara sepihak dan juga tidak menjadi berakhir atau terhapus jika pemberi kuasa atau yang memberi wewenang dibubarkan atau karena timbul peristiwa apapun dan PARA PIHAK dengan ini melepaskan dan menyatakan tidak berlaku atau mengesampingkan pasal 1813 dan pasal 1816 KUH Perdata.",
+      "label": "4."
+    },
+    {
+      "sourceIndex": 115,
+      "kind": "paragraph",
+      "text": "Apabila terjadinya meninggal dunia dari salah satu Pihak, maka perjanjian tetap sah sesuai tenggang waktu kesepakatan , dan berlanjut kepada Ahli Waris Para Pihak sesuai aturan Hukum syariat Islam dan hukum Negara Kesatuan Republik Indonesia.",
+      "label": "5."
+    },
+    {
+      "sourceIndex": 116,
+      "kind": "paragraph",
+      "text": "Judul pada setiap Pasal Perjanjian dipakai hanya untuk memudahkan membawa perjanjian karenanya judul tersebut tidak memberikan penafsiran apapun atas isi perjanjian.",
+      "label": "6."
+    },
+    {
+      "sourceIndex": 118,
+      "kind": "paragraph",
+      "text": "Demikian Surat Perjanjian ini dibuat dan ditandatangani oleh PIHAK PERTAMA dan PIHAK KEDUA aslinya dalam 1 rangkap file dibubuhi E meterai secukupnya, serta masing-masing mempunyai kekuatan hukum yang sama",
+      "label": ""
+    }
+  ]
+}

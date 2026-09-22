@@ -1,0 +1,76 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1789612677475,
+      "tag": "0000_right_hellfire_club",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1789967582227,
+      "tag": "0001_lying_chamber",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1789970122605,
+      "tag": "0002_nice_maddog",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1789972648463,
+      "tag": "0003_good_living_lightning",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1790005099266,
+      "tag": "0004_petite_polaris",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1790006458228,
+      "tag": "0005_exotic_wolfsbane",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1790008402115,
+      "tag": "0006_strange_greymalkin",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1790064026165,
+      "tag": "0007_loud_purple_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1790068789171,
+      "tag": "0008_aberrant_doctor_doom",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1790075751356,
+      "tag": "0009_hesitant_omega_sentinel",
+      "breakpoints": true
+    }
+  ]
+}
