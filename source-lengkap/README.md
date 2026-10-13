@@ -1,8 +1,13 @@
 # Website KSPPS — Svelte
 
-**Sumber revisi v36**, disalin pada 13 Oktober 2026 dari commit `5537c57d41f0c48bc3d4b7662885e9a66755b4a6`. Folder ini adalah sumber aplikasi terbaru untuk dilanjutkan di Codex. Panduan pindah hosting ada di [docs/PINDAH-HOSTING.md](docs/PINDAH-HOSTING.md).
+**Sumber revisi v37**, disalin pada 14 Oktober 2026 dari commit `0e835c1377ee254080d1e7e7e3d050f0f97b8ae6`. Folder ini adalah sumber aplikasi terbaru untuk dilanjutkan di Codex. Panduan pindah hosting ada di [docs/PINDAH-HOSTING.md](docs/PINDAH-HOSTING.md).
 
 Website KSPPS Syirkah Kebaikan Indonesia menggunakan Svelte 5 + Vite untuk frontend dan Worker untuk backend. **Daftar pekerjaan dan status fitur ada di [to-do.md](to-do.md).**
+
+## Panduan tim IT
+
+Buka **[Peta kode dan panduan pemeliharaan](docs/PETA-KODE.md)** untuk mencari file berdasarkan fitur atau gejala bug. Source tetap memakai Svelte 5; controller telah dipisahkan menjadi pembacaan data, formulir, tampilan, dan handler. Hubungan antarfitur memakai import eksplisit, dengan pemeriksaan otomatis untuk mencegah import melingkar.
+
 
 ## Bagian utama
 
@@ -59,7 +64,7 @@ npm run build:frontend
 
 Untuk `npm run build` lengkap, sediakan gambar tanda tangan privat melalui `KSPPS_MEMBERSHIP_SIGNATURE_FILE` sesuai [panduan template](backend/templates/README.md). Berkas tanda tangan dan sumber Word yang menyematkannya dikecualikan dari GitHub publik; pengujian memakai gambar sintetis. Build backend menolak melanjutkan bila aset privat belum tersedia.
 
-`npm test` memeriksa Svelte, tampilan, interaksi dan aturan backend. `npm run build` menghasilkan empat HTML, aset frontend serta `dist/server/index.js`. URL `index.html`, `anggota.html`, `petugas.html`, `avalist.html`, rute `#...` dan API `/api/workflow` tetap digunakan.
+`npm test` memeriksa Svelte, batas arsitektur, tampilan, interaksi dan aturan backend. `npm run build` menghasilkan empat HTML, aset frontend serta `dist/server/index.js`. URL `index.html`, `anggota.html`, `petugas.html`, `avalist.html`, rute `#...` dan API `/api/workflow` tetap digunakan.
 
 Perintah terpisah tersedia untuk proses build: `npm run build:frontend`, lalu `npm run build:backend`. Backend packager memerlukan hasil frontend di `dist/`. Ketiga frontend dan backend masih dipublikasikan sebagai satu Site dengan origin yang sama.
 

@@ -1,4 +1,5 @@
 <script>
+  import { staffAccessService } from '../../../../shared/services/staff-access.js';
   import Brand from '../../../../shared/components/Brand.svelte';
   import Icon from '../../../../shared/components/Icon.svelte';
 
@@ -29,7 +30,7 @@
         <span class="badge">Akses Petugas</span>
         <h1>Portal Petugas KSPPS</h1>
         <p class="subtext">Ruang kerja internal koperasi.</p>
-        {@html (window.KsppsStaffAccess?.entry() || '<p>Memeriksa akses akun…</p>') ?? ''}
+        {@html (staffAccessService?.entry() || '<p>Memeriksa akses akun…</p>') ?? ''}
         <p id="staff-access-error" class="form-error" role="alert" hidden></p>
         <p class="auth-foot">
           <a target="_top" href="/signout-with-chatgpt?return_to=/petugas.html">Gunakan akun lain</a

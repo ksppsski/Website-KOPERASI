@@ -59,7 +59,8 @@ export function eventStatement(
 ) {
   return stmt(
     env,
-    `INSERT INTO staff_activity (owner,event_key,target_id,occurred_at,role,actor_id,payload) SELECT ?,?,?,?,?,?,? ${guard} ON CONFLICT(owner,event_key) DO NOTHING`,
+    `INSERT INTO staff_activity (owner,event_key,target_id,occurred_at,role,actor_id,payload)
+      SELECT ?,?,?,?,?,?,? ${guard} ON CONFLICT(owner,event_key) DO NOTHING`,
     owner,
     key,
     targetId,

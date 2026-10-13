@@ -1,4 +1,5 @@
 <script>
+  import { withdrawalService } from '../../services/withdrawal.js';
   let { context, route } = $props();
   let { staff, frame, action } = $derived(context);
 </script>
@@ -29,6 +30,6 @@
     </div>
     {@html action('withdrawal', '', 'Ajukan pengunduran diri', true)}
   </div>
-  {@html window.KsppsWithdrawal?.eligibility() || ''}
+  {@html withdrawalService?.eligibility() || ''}
   {@html frame('member-withdrawal', 'Permohonan Anda')}
 {/if}

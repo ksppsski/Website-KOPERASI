@@ -101,7 +101,11 @@ export async function uploadReport(request, env, id) {
   try {
     await stmt(
       env,
-      'INSERT INTO member_reports (id,category,title,period,project_code,file_key,file_name,file_type,file_size,uploaded_by,uploader_name,created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
+      `
+  INSERT INTO member_reports
+  (id,category,title,period,project_code,file_key,file_name,file_type,file_size,uploaded_by,uploader_name,created_at)
+  VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
+`,
       reportId,
       category,
       title,

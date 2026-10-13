@@ -1,4 +1,5 @@
 <script>
+  import { workflowService } from '../../../../shared/services/workflow.js';
   import Brand from '../../../../shared/components/Brand.svelte';
   import Icon from '../../../../shared/components/Icon.svelte';
   import Badge from '../../../../shared/components/Badge.svelte';
@@ -65,7 +66,7 @@
             ><span class="avatar">{(state.profile.name || 'A').slice(0, 1)}</span>
             <div>
               <strong>{state.profile.name || 'Calon anggota'}</strong><small
-                >{window.KsppsWorkflow?.getProfile()?.memberNumber ||
+                >{workflowService?.getProfile()?.memberNumber ||
                   (state.savedProfile ? 'Pendaftaran tersimpan' : 'Belum terdaftar')}</small
               >
             </div></a

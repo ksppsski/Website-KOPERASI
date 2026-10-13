@@ -1,3 +1,4 @@
+import { registerStaffAccess } from '../../../../shared/services/staff-access.js';
 /**
  * Akses akun petugas dan pergantian role yang diizinkan server.
  * Tampilan halaman berada di frontend-petugas/src/components/staff-access/.
@@ -118,7 +119,11 @@ export function initializeStaffAccess() {
         ${
           state.request
             ? /* HTML */ `<p class="field-hint">
-                  ${state.request.status === 'revoked' ? 'Akses telah dicabut. Hubungi Manajer.' : 'Permintaan akses sudah dikirim. Sampaikan kode berikut kepada Manajer.'}
+                  ${
+                    state.request.status === 'revoked'
+                      ? 'Akses telah dicabut. Hubungi Manajer.'
+                      : 'Permintaan akses sudah dikirim. Sampaikan kode berikut kepada Manajer.'
+                  }
                 </p>
                 <p class="access-code">${esc(state.request.code)}</p>`
             : '<button type="button" class="btn full" data-access-action="request">Ajukan akses ke Manajer</button>'
@@ -154,7 +159,31 @@ export function initializeStaffAccess() {
                       </td>
                       <td>
                         <div class="wf-actions">
-                          ${['admin', 'finance', 'avalist'].map((r) => /* HTML */ `<button class="btn secondary small-btn" data-access-action="grant" data-code="${esc(x.code)}" data-role="${r}" ${x.role === r ? 'disabled' : ''}>${names[r]}</button>`).join('')}${x.role ? /* HTML */ `<button class="btn secondary small-btn" data-access-action="grant" data-code="${esc(x.code)}" data-role="revoke">Cabut akses</button>` : ''}
+                          ${['admin', 'finance', 'avalist']
+                            .map(
+                              (r) =>
+                                /* HTML */ `<button
+                                  class="btn secondary small-btn"
+                                  data-access-action="grant"
+                                  data-code="${esc(x.code)}"
+                                  data-role="${r}"
+                                  ${x.role === r ? 'disabled' : ''}
+                                >
+                                  ${names[r]}
+                                </button>`,
+                            )
+                            .join('')}${
+                            x.role
+                              ? /* HTML */ `<button
+                                  class="btn secondary small-btn"
+                                  data-access-action="grant"
+                                  data-code="${esc(x.code)}"
+                                  data-role="revoke"
+                                >
+                                  Cabut akses
+                                </button>`
+                              : ''
+                          }
                         </div>
                       </td>
                     </tr>`,
@@ -223,10 +252,10 @@ export function initializeStaffAccess() {
       if (b.isConnected) b.disabled = false;
     }
   });
-  window.KsppsStaffAccess = {
+  registerStaffAccess({
     getViewContext: () => ({ accountRows, accounts }),
     entry,
     load,
     mount,
-  };
+  });
 }

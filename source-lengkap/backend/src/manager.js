@@ -1,5 +1,5 @@
 import { cooperativeOwner } from './access.js';
-import { Problem, stmt } from './membership.js';
+import { Problem } from './membership.js';
 import { requireStaffRole, makassarToday, calendarDate, syncDuePayoutTasks } from './finance.js';
 import { activityState, summarize } from './activity.js';
 

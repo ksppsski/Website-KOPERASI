@@ -15,17 +15,20 @@ export async function assignMemberNumbers(env) {
   await env.DB.batch([
     stmt(
       env,
-      `INSERT INTO member_numbers (profile_id)
-   SELECT p.id FROM member_profiles p
-   WHERE p.member_number IS NULL AND NOT EXISTS (SELECT 1 FROM member_numbers n WHERE n.profile_id = p.id)
-   ORDER BY p.created_at, p.id`,
+      `
+  INSERT INTO member_numbers (profile_id) SELECT p.id FROM member_profiles p WHERE
+  p.member_number IS NULL AND NOT EXISTS (SELECT 1 FROM member_numbers n WHERE n.profile_id =
+  p.id) ORDER BY p.created_at, p.id
+`,
     ),
     stmt(
       env,
-      `UPDATE member_profiles SET member_number = printf('SKI-%s-%04d',
-   strftime('%Y', created_at, '+8 hours'),
-   (SELECT serial FROM member_numbers WHERE profile_id = member_profiles.id))
-   WHERE member_number IS NULL AND EXISTS (SELECT 1 FROM member_numbers WHERE profile_id = member_profiles.id)`,
+      `
+  UPDATE member_profiles SET member_number = printf( 'SKI-%s-%04d' , strftime( '%Y' ,
+  created_at, '+8 hours' ), (SELECT serial FROM member_numbers WHERE profile_id =
+  member_profiles.id)) WHERE member_number IS NULL AND EXISTS (SELECT 1 FROM member_numbers
+  WHERE profile_id = member_profiles.id)
+`,
     ),
   ]);
 }

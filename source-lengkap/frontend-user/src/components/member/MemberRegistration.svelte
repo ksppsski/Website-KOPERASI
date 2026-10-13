@@ -1,4 +1,6 @@
 <script>
+  import { workflowService } from '../../../../shared/services/workflow.js';
+  import { withdrawalService } from '../../../../shared/services/withdrawal.js';
   import SelectField from '../../../../shared/components/SelectField.svelte';
   import TextField from '../../../../shared/components/TextField.svelte';
   import ReviewList from '../../../../shared/components/ReviewList.svelte';
@@ -19,8 +21,8 @@
 </script>
 
 {#if context}
-  {#if window.KsppsWorkflow?.getProfile()?.status === 'closed'}<MemberAuthLayout {context}
-      >{@html window.KsppsWithdrawal?.closedPage() || 'Keanggotaan ditutup.'}</MemberAuthLayout
+  {#if workflowService?.getProfile()?.status === 'closed'}<MemberAuthLayout {context}
+      >{@html withdrawalService?.closedPage() || 'Keanggotaan ditutup.'}</MemberAuthLayout
     >{:else}
     {@const r = state.registration}
     {@const s = state.registrationStep}
@@ -46,7 +48,7 @@
         {/each}
       </ol>
       {#if s === 1}
-        {@html window.KsppsWorkflow?.registrationAccess() || ''}
+        {@html workflowService?.registrationAccess() || ''}
       {/if}
       <form id="registration-form">
         {#if s === 1}
@@ -306,7 +308,7 @@
               ['Bukti transfer simpanan', state.registrationProof?.name || 'Belum dilampirkan'],
               ['Foto KTP', state.registrationKtp?.name || 'Belum dilampirkan'],
             ]}
-          />{@html (window.KsppsWorkflow?.identityMedia({
+          />{@html (workflowService?.identityMedia({
             signatureUrl: r.signatureImage,
             ktpUrl: state.registrationKtpUrl,
           }) ||

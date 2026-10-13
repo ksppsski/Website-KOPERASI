@@ -1,4 +1,9 @@
 <script>
+  import DataTable from '../../../../shared/components/DataTable.svelte';
+  import EmptyTableRow from '../../../../shared/components/EmptyTableRow.svelte';
+  import Badge from '../../../../shared/components/Badge.svelte';
+  import ReviewAction from '../../../../shared/components/ReviewAction.svelte';
+  import { workflowService } from '../../../../shared/services/workflow.js';
   import Icon from '../../../../shared/components/Icon.svelte';
 
   let { context, route, key = route } = $props();
@@ -15,6 +20,12 @@
     table,
     queueRows,
   } = $derived(context);
+  const dashboardMetrics = [
+    ['pendaftaran', 'Pendaftaran anggota', 'Menunggu verifikasi', 'user'],
+    ['setoran', 'Setoran masuk', 'Perlu dicocokkan', 'wallet'],
+    ['pengajuan', 'Pengajuan layanan', 'Menunggu tinjauan', 'sprout'],
+    ['akad', 'Akad siap dibuat', 'Persyaratan terpenuhi', 'file'],
+  ];
 </script>
 
 {#if context}
@@ -23,9 +34,9 @@
     'Ringkasan pekerjaan',
     'Lihat antrean dan lanjutkan pemeriksaan anggota.',
     '<span class="date-label">' + dateLabel(new Date()) + '</span>',
-  ) ?? ''}{@html (window.KsppsWorkflow?.staffOverview() || '') ?? ''}
+  ) ?? ''}{@html (workflowService?.staffOverview() || '') ?? ''}
   <div class="stats">
-    {#each [['pendaftaran', 'Pendaftaran anggota', 'Menunggu verifikasi', 'user'], ['setoran', 'Setoran masuk', 'Perlu dicocokkan', 'wallet'], ['pengajuan', 'Pengajuan layanan', 'Menunggu tinjauan', 'sprout'], ['akad', 'Akad siap dibuat', 'Persyaratan terpenuhi', 'file']] as [key, label, note, ico]}
+    {#each dashboardMetrics as [key, label, note, ico]}
       <a class="stat" href="#{key}"
         ><div class="stat-top">{label}<span class="stat-icon"><Icon name={ico} /></span></div>
         <div class="stat-value">{c[key]}</div>
@@ -41,15 +52,24 @@
           queueRows().length + ' menunggu',
         ) ?? ''}
       </div>
-      {@html table(
-        ['ANGGOTA / PENGAJUAN', 'STATUS', 'TINDAKAN'],
-        queueRows()
-          .map(
-            (x) =>
-              `<tr><td><div class="queue-kind"><span class="activity-symbol">${icon(x.icon)}</span><div><strong>${esc(x.name)}</strong><small>${esc(x.reference || x.id)}<br>${x.kind}</small></div></div></td><td>${badge(x.status)}</td><td>${reviewButton(x.id, 'Periksa', x.registration)}</td></tr>`,
-          )
-          .join(''),
-      ) ?? ''}
+      <DataTable headers={['ANGGOTA / PENGAJUAN', 'STATUS', 'TINDAKAN']}>
+        {#each queueRows() as x}
+          <tr
+            ><td
+              ><div class="queue-kind">
+                <span class="activity-symbol"><Icon name={x.icon} /></span>
+                <div>
+                  <strong>{x.name}</strong><small>{x.reference || x.id}<br />{x.kind}</small>
+                </div>
+              </div></td
+            ><td><Badge text={x.status} /></td><td
+              ><ReviewAction id={x.id} label={'Periksa'} registration={x.registration} /></td
+            ></tr
+          >
+        {:else}
+          <EmptyTableRow columns={3} message={'Tidak ada data yang sesuai.'} />
+        {/each}
+      </DataTable>
     </section>
     <aside>
       <section class="panel">

@@ -1,17 +1,16 @@
 # To-do pengembangan website KSPPS
 
-Diperbarui: 13 Oktober 2026 — sinkronisasi sumber v36.
+Diperbarui: 3 Oktober 2026.
 
-Project dibagi menjadi **frontend user**, **frontend petugas**, **frontend avalist**, dan **backend**. Daftar ini mengikuti fitur terakhir yang sudah disepakati. `[x]` berarti sudah tersedia pada implementasi/pratinjau; `[ ]` berarti masih perlu dikerjakan atau diverifikasi. Status tersedia tidak berarti seluruh kebutuhan operasional produksi sudah selesai.
+Project dibagi menjadi **frontend user**, **frontend petugas**, dan **backend**. Daftar ini mengikuti fitur terakhir yang sudah disepakati. `[x]` berarti sudah tersedia pada implementasi/pratinjau; `[ ]` berarti masih perlu dikerjakan atau diverifikasi. Status tersedia tidak berarti seluruh kebutuhan operasional produksi sudah selesai.
 
 | Bagian           | Folder              | Tanggung jawab                                            |
 | ---------------- | ------------------- | --------------------------------------------------------- |
 | Frontend user    | `frontend-user/`    | Landing page, pendaftaran dan portal anggota              |
 | Frontend petugas | `frontend-petugas/` | Portal admin, finance dan manajer                         |
-| Frontend avalist | `frontend-avalist/` | Portal pribadi avalist dan ringkasan fee |
 | Backend          | `backend/`          | API, otorisasi, aturan keuangan, database, berkas dan PDF |
 
-`shared/` memuat komponen, CSS dan controller browser yang memang dipakai lintas frontend. `public/` memuat aset bersama. Keduanya adalah pendukung, bukan aplikasi atau backend tambahan. Semua bagian masih dibangun dari satu repository dan dipublikasikan pada satu origin.
+`shared/` memuat komponen, CSS dan controller browser yang memang dipakai kedua frontend. `public/` memuat aset bersama. Keduanya adalah pendukung, bukan aplikasi atau backend tambahan. Semua bagian masih dibangun dari satu repository dan dipublikasikan pada satu origin.
 
 ## 1. Frontend user
 
@@ -156,7 +155,7 @@ Project dibagi menjadi **frontend user**, **frontend petugas**, **frontend avali
 
 ## Verifikasi pemisahan kode
 
-- [x] URL `index.html`, `anggota.html`, `petugas.html` dan `avalist.html` tetap dipertahankan.
+- [x] URL `index.html`, `anggota.html` dan `petugas.html` tetap dipertahankan.
 - [x] Pemeriksaan Svelte lulus tanpa error/warning.
 - [x] Perbandingan 40 tampilan portal dan interaksi landing page lulus.
 - [x] Bundle masing-masing frontend tidak mengimpor folder frontend lain atau kode backend.
@@ -173,17 +172,16 @@ Jalankan perintah dari folder utama repository:
 npm ci
 npm run dev
 npm test
-npm run build:frontend
+npm run build
 ```
 
-`npm run dev` membuka frontend lokal. Data portal tetap memerlukan API dan autentikasi yang sesuai. `npm run build:frontend` menyusun ketiga frontend. `npm run build:backend` membungkus hasil frontend yang sudah dibangun bersama API dan template; untuk paket lengkap sediakan `KSPPS_MEMBERSHIP_SIGNATURE_FILE` sesuai `backend/templates/README.md`, lalu gunakan `npm run build`.
+`npm run dev` membuka frontend lokal. Data portal tetap memerlukan API dan autentikasi yang sesuai. `npm run build:frontend` menyusun kedua frontend. `npm run build:backend` membungkus hasil frontend yang sudah dibangun bersama API dan template; untuk paket lengkap gunakan `npm run build`.
 
-Tetap unggah satu repository lengkap yang berisi keempat bagian, `shared/`, `public/`, konfigurasi dan berkas pendukung. Pemisahan folder ini belum membuat empat aplikasi yang dapat dipasang sendiri-sendiri. Perubahan ke repository GitHub/domain milik Anda masih memerlukan pengaturan publikasi di tempat tersebut.
-
+Tetap unggah satu repository lengkap yang berisi ketiga bagian, `shared/`, `public/`, konfigurasi dan berkas pendukung. Pemisahan folder ini belum membuat tiga aplikasi yang dapat dipasang sendiri-sendiri. Perubahan ke repository GitHub/domain milik Anda masih memerlukan pengaturan publikasi di tempat tersebut.
 
 ## Avalist internal
 
-- [x] Sediakan portal Avalist terpisah di `/avalist.html`; Manajer mendaftarkan email tanpa memberikan peran Admin/Finance. Identitas email terverifikasi ditautkan ke ID akun saat masuk pertama.
+- [x] Sediakan akses Avalist melalui Akses Petugas dan tautkan rekeningnya ke akun internal.
 - [x] Manajer menetapkan/mengganti avalist serta persentase; Admin hanya mengirim usulan.
 - [x] Simpan avalist bawaan untuk pengajuan baru dan riwayat penetapan per akad berjalan dengan tanggal mulai periode.
 - [x] Pergantian orang dapat mempertahankan persentase; perubahan persentase dapat mempertahankan orang.
@@ -194,11 +192,12 @@ Tetap unggah satu repository lengkap yang berisi keempat bagian, `shared/`, `pub
 - [x] Avalist melihat hanya periode hak dan riwayat miliknya; tidak mendapat dokumen atau rekening anggota.
 - [x] Uji otorisasi server, periode, pembagian rupiah, perubahan bersamaan, pembayaran sekali, koreksi, serta formulir dan navigasi.
 
-## Ringkasan revisi terbaru v36
+## Refactor modular Svelte — 14 Oktober 2026
 
-- [x] Status normal memakai hijau/biru; pengingat top up dan peringatan memakai merah.
-- [x] Portal avalist hanya menampilkan data pemiliknya dan tidak membuka API operasional petugas.
-- [x] Tampilkan total fee kumulatif beserta rincian pembayaran, hak jatuh tempo, dan penyesuaian.
-- [x] Pilihan bulan/tahun menampilkan total hak fee berdasarkan bulan jatuh tempo serta fee yang sudah dibayar berdasarkan bulan tanggal transfer.
-- [x] Pisahkan pembayaran untuk periode terpilih dari pembayaran yang dilakukan pada bulan tersebut, agar sisa hak tidak salah dihitung.
-- [x] Sertakan koreksi positif/negatif yang disahkan, hindari perhitungan ganda, dan pertahankan riwayat pembayaran.
+- [x] Pisahkan controller besar menjadi modul pembacaan data, formulir, dialog, tampilan, dan event.
+- [x] Ganti global window.Kspps dengan import layanan fitur yang eksplisit.
+- [x] Tulis kartu akad dan tabel utama memakai markup Svelte.
+- [x] Pisahkan halaman pengelolaan avalist menjadi komponen dengan state lokal masing-masing.
+- [x] Pisahkan endpoint dan proses backend menurut fitur, tanpa mengubah skema atau data.
+- [x] Tambahkan peta kode untuk tim IT serta pemeriksaan batas modul, import melingkar, dan panjang baris.
+- [ ] Migrasikan sisa dialog HTML lama menjadi komponen Svelte ketika fitur terkait dikembangkan.

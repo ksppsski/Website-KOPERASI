@@ -1,4 +1,5 @@
 <script>
+  import { workflowService } from '../../../../shared/services/workflow.js';
   import Badge from '../../../../shared/components/Badge.svelte';
   import Icon from '../../../../shared/components/Icon.svelte';
   import StatCard from '../../../../shared/components/StatCard.svelte';
@@ -21,7 +22,7 @@
 </script>
 
 {#if context}
-  {@const p = window.KsppsWorkflow?.getProfile()}
+  {@const p = workflowService?.getProfile()}
   {@const active = currentContracts().filter((x) => x.status === 'Aktif')}
   {@const total = savingsEntries().reduce((n, [, v]) => n + v, 0)}
   {@html heading(
@@ -35,7 +36,7 @@
       <h2>Syirkah Kebaikan Indonesia</h2>
       <Badge
         text={p
-          ? window.KsppsWorkflow?.needsCorrection(p)
+          ? workflowService?.needsCorrection(p)
             ? 'Perlu perbaikan'
             : {
                 approved: 'Anggota terdaftar',
@@ -59,7 +60,7 @@
       <Icon name={'card'} />
     </div>
   </section>
-  {@html memberAlerts() ?? ''}{@html (window.KsppsWorkflow?.memberOffers() || '') ?? ''}
+  {@html memberAlerts() ?? ''}{@html (workflowService?.memberOffers() || '') ?? ''}
   <div class="stats">
     <StatCard
       label={'Total simpanan'}

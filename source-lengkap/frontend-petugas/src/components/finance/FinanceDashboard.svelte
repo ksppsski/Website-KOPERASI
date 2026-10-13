@@ -1,4 +1,5 @@
 <script>
+  import { activityService } from '../../../../shared/services/activity.js';
   let { context } = $props();
   let { wf, date, state, badge, heading, loading, metrics, queueTable } = $derived(context);
 </script>
@@ -9,7 +10,7 @@
     'Ringkasan Finance',
     'Rekonsiliasi setoran dan siapkan bagi hasil anggota.',
     `<span class="date-label">${date(state.date)}</span>`,
-  ) ?? ''}{@html (window.KsppsActivity?.queue() || '') ??
+  ) ?? ''}{@html (activityService?.queue() || '') ??
     ''}{#if !state.loaded || state.loading || state.error}
     {@html loading() ?? ''}
   {:else}

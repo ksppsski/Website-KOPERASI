@@ -97,9 +97,12 @@ export function creditStatement(env, owner, kind, row) {
     : 0;
   return stmt(
     env,
-    `INSERT INTO savings_credits (owner,source_kind,source_id,basic,mandatory,other,accepted_at)
- SELECT ?,?,?,?,?,?,checked_at FROM finance_reconciliations WHERE owner=? AND target_kind=? AND target_id=? AND proof_key=? AND status='approved'
- ON CONFLICT(owner,source_kind,source_id) DO NOTHING`,
+    `
+  INSERT INTO savings_credits (owner,source_kind,source_id,basic,mandatory,other,accepted_at)
+  SELECT ?,?,?,?,?,?,checked_at FROM finance_reconciliations WHERE owner=? AND target_kind=?
+  AND target_id=? AND proof_key=? AND status= 'approved' ON
+  CONFLICT(owner,source_kind,source_id) DO NOTHING
+`,
     owner,
     kind,
     row.id,
@@ -119,7 +122,13 @@ export async function savingsState(env, owner, profile) {
   const rows = (
     await stmt(
       env,
-      "SELECT r.* FROM workflow_requests r JOIN finance_reconciliations f ON f.owner=r.owner AND f.target_id=r.id AND f.target_kind='savings' AND f.status='approved' AND f.proof_key=r.proof_key LEFT JOIN savings_credits c ON c.owner=r.owner AND c.source_kind='savings' AND c.source_id=r.id WHERE r.owner=? AND r.kind='savings' AND c.source_id IS NULL",
+      `
+  SELECT r.* FROM workflow_requests r JOIN finance_reconciliations f ON f.owner=r.owner AND
+  f.target_id=r.id AND f.target_kind= 'savings' AND f.status= 'approved' AND
+  f.proof_key=r.proof_key LEFT JOIN savings_credits c ON c.owner=r.owner AND c.source_kind=
+  'savings' AND c.source_id=r.id WHERE r.owner=? AND r.kind= 'savings' AND c.source_id IS
+  NULL
+`,
       owner,
     ).all()
   ).results;

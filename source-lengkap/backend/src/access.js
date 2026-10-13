@@ -1,4 +1,4 @@
-import { Problem, stmt, hash, getProfile } from './membership.js';
+import { Problem, stmt, hash } from './membership.js';
 
 export const actorId = (env, owner) => env.ACTOR_ID || owner;
 export async function staffContext(env, owner) {
@@ -54,7 +54,11 @@ export async function changeStaffRole(env, owner, role) {
     throw new Problem(403, 'Anda hanya dapat membuka portal sesuai hak akses akun.');
   await stmt(
     env,
-    'INSERT INTO staff_workspaces (owner,active_role,updated_at) VALUES (?,?,?) ON CONFLICT(owner) DO UPDATE SET active_role=excluded.active_role,updated_at=excluded.updated_at',
+    `
+  INSERT INTO staff_workspaces (owner,active_role,updated_at) VALUES (?,?,?) ON
+  CONFLICT(owner) DO UPDATE SET
+  active_role=excluded.active_role,updated_at=excluded.updated_at
+`,
     actorId(env, owner),
     role,
     new Date().toISOString(),
@@ -121,7 +125,12 @@ export async function activateManager(env, id, body, person) {
     ),
     stmt(
       env,
-      "INSERT INTO staff_accounts (user_id,role,display_name,email,granted_by,created_at,updated_at) SELECT ?,'manager',?,?,?,?,? WHERE EXISTS (SELECT 1 FROM staff_bootstrap WHERE id='primary' AND manager_id=?) ON CONFLICT(user_id) DO NOTHING",
+      `
+  INSERT INTO staff_accounts
+  (user_id,role,display_name,email,granted_by,created_at,updated_at) SELECT ?, 'manager'
+  ,?,?,?,?,? WHERE EXISTS (SELECT 1 FROM staff_bootstrap WHERE id= 'primary' AND
+  manager_id=?) ON CONFLICT(user_id) DO NOTHING
+`,
       id,
       person.name,
       person.email,
@@ -148,7 +157,11 @@ export async function requestStaffAccess(env, id, person) {
     at = new Date().toISOString();
   await stmt(
     env,
-    "INSERT INTO staff_access_requests (user_id,request_code,display_name,email,status,requested_at) VALUES (?,?,?,?,'pending',?) ON CONFLICT(user_id) DO NOTHING",
+    `
+  INSERT INTO staff_access_requests
+  (user_id,request_code,display_name,email,status,requested_at) VALUES (?,?,?,?, 'pending'
+  ,?) ON CONFLICT(user_id) DO NOTHING
+`,
     id,
     code,
     person.name,
@@ -203,7 +216,13 @@ export async function assignAccess(env, id, body) {
       ? stmt(env, 'DELETE FROM staff_accounts WHERE user_id=? AND role<>?', row.user_id, 'manager')
       : stmt(
           env,
-          "INSERT INTO staff_accounts (user_id,role,display_name,email,granted_by,created_at,updated_at) VALUES (?,?,?,?,?,?,?) ON CONFLICT(user_id) DO UPDATE SET role=excluded.role,granted_by=excluded.granted_by,updated_at=excluded.updated_at WHERE staff_accounts.role<>'manager'",
+          `
+  INSERT INTO staff_accounts
+  (user_id,role,display_name,email,granted_by,created_at,updated_at) VALUES (?,?,?,?,?,?,?)
+  ON CONFLICT(user_id) DO UPDATE SET
+  role=excluded.role,granted_by=excluded.granted_by,updated_at=excluded.updated_at WHERE
+  staff_accounts.role<> 'manager'
+`,
           row.user_id,
           body.role,
           row.display_name,

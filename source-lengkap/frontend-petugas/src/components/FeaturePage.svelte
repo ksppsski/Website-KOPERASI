@@ -1,4 +1,11 @@
 <script>
+  import { workflowService } from '../../../shared/services/workflow.js';
+  import { activityService } from '../../../shared/services/activity.js';
+  import { financeService } from '../../../shared/services/finance.js';
+  import { maturityService } from '../../../shared/services/maturity.js';
+  import { withdrawalService } from '../../../shared/services/withdrawal.js';
+  import { reportsService } from '../../../shared/services/reports.js';
+  import { staffAccessService } from '../../../shared/services/staff-access.js';
   import FinanceDashboard from './finance/FinanceDashboard.svelte';
   import ReconciliationQueue from './finance/ReconciliationQueue.svelte';
   import DailyPayout from './finance/DailyPayout.svelte';
@@ -13,26 +20,26 @@
 
   let { route } = $props();
   const pages = {
-    pengunduran: [WorkflowPage, 'KsppsWorkflow'],
-    penyertaan: [WorkflowPage, 'KsppsWorkflow'],
-    'finance-ringkasan': [FinanceDashboard, 'KsppsFinance'],
-    'finance-rekonsiliasi': [ReconciliationQueue, 'KsppsFinance'],
-    'finance-bagi-hasil': [DailyPayout, 'KsppsFinance'],
-    'finance-pengembalian': [CapitalReturns, 'KsppsMaturity'],
-    'manager-jatuh-tempo': [MaturityReport, 'KsppsMaturity'],
-    'manager-pengunduran': [WithdrawalQueue, 'KsppsWithdrawal'],
-    'finance-pengunduran': [WithdrawalQueue, 'KsppsWithdrawal'],
-    pengajuan: [WithdrawalQueue, 'KsppsWithdrawal'],
-    'waktu-kerja': [ManagerActivity, 'KsppsActivity'],
-    'manager-laporan': [Reports, 'KsppsReports'],
-    'manager-akses': [StaffAccess, 'KsppsStaffAccess'],
-    'manager-penawaran': [CapitalOffers, 'KsppsWorkflow'],
+    pengunduran: [WorkflowPage, () => workflowService.getViewContext()],
+    penyertaan: [WorkflowPage, () => workflowService.getViewContext()],
+    'finance-ringkasan': [FinanceDashboard, () => financeService.getViewContext()],
+    'finance-rekonsiliasi': [ReconciliationQueue, () => financeService.getViewContext()],
+    'finance-bagi-hasil': [DailyPayout, () => financeService.getViewContext()],
+    'finance-pengembalian': [CapitalReturns, () => maturityService.getViewContext()],
+    'manager-jatuh-tempo': [MaturityReport, () => maturityService.getViewContext()],
+    'manager-pengunduran': [WithdrawalQueue, () => withdrawalService.getViewContext()],
+    'finance-pengunduran': [WithdrawalQueue, () => withdrawalService.getViewContext()],
+    pengajuan: [WithdrawalQueue, () => withdrawalService.getViewContext()],
+    'waktu-kerja': [ManagerActivity, () => activityService.getViewContext()],
+    'manager-laporan': [Reports, () => reportsService.getViewContext()],
+    'manager-akses': [StaffAccess, () => staffAccessService.getViewContext()],
+    'manager-penawaran': [CapitalOffers, () => workflowService.getViewContext()],
   };
 </script>
 
 {#if pages[route]}
   {@const Page = pages[route][0]}
-  {@const context = window[pages[route][1]].getViewContext()}
+  {@const context = pages[route][1]()}
   <Page {context} {route} />
 {:else}
   <p role="alert">Halaman tidak ditemukan.</p>

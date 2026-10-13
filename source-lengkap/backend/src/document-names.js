@@ -14,5 +14,10 @@ export const safeFilename = (name) =>
 export function disposition(name, download = false) {
   const filename = safeFilename(name),
     ascii = filename.replace(/[^\x20-\x7e]/g, '_');
-  return `${download ? 'attachment' : 'inline'}; filename="${ascii}"; filename*=UTF-8''${encodeURIComponent(filename).replace(/[!'()*]/g, (c) => '%' + c.charCodeAt(0).toString(16).toUpperCase())}`;
+  const encoded = encodeURIComponent(filename).replace(
+    /[!'()*]/g,
+    (character) => '%' + character.charCodeAt(0).toString(16).toUpperCase(),
+  );
+  const mode = download ? 'attachment' : 'inline';
+  return `${mode}; filename="${ascii}"; filename*=UTF-8''${encoded}`;
 }

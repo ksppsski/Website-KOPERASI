@@ -1,4 +1,7 @@
 <script>
+  import DataTable from '../../../../shared/components/DataTable.svelte';
+  import EmptyTableRow from '../../../../shared/components/EmptyTableRow.svelte';
+  import { activityService } from '../../../../shared/services/activity.js';
   let { context } = $props();
   let {
     wf,
@@ -26,7 +29,7 @@
     {@html loading() ?? ''}
   {:else}
     {@html metrics() ?? ''}{#if p?.task}
-      {@html (window.KsppsActivity?.panel(p.task.targetId, 'payout') || '') ?? ''}
+      {@html (activityService?.panel(p.task.targetId, 'payout') || '') ?? ''}
     {/if}{#if p?.task && !p.task.completedAt}
       <div class="wf-actions work-payout-action">
         {@html action('payout-complete', 'Selesaikan persiapan') ?? ''}
@@ -41,16 +44,26 @@
         <p class="form-error">
           Ada rekening yang belum lengkap. Periksa rincian anggota sebelum transfer.
         </p>
-      {/if}{@html table(
-        ['ANGGOTA', 'REKENING TUJUAN', 'AKAD', 'BAGI HASIL', ''],
-        (p?.members || [])
-          .map(
-            (m, i) =>
-              `<tr><td><strong>${esc(m.memberName)}</strong><small>${esc(m.memberId)}</small></td><td>${esc(m.bankName || 'Bank belum tersedia')}<small class="finance-account">${esc(m.bankAccount || 'Rekening belum tersedia')}</small><small>a.n. ${esc(m.accountName)}</small></td><td>${m.contractCount}</td><td class="money"><strong>${money(m.amount)}</strong></td><td>${action('detail', 'Rincian', `data-index="${i}"`)}</td></tr>`,
-          )
-          .join(''),
-        'Tidak ada akad yang terjadwal pada tanggal ini.',
-      ) ?? ''}
+      {/if}<DataTable headers={['ANGGOTA', 'REKENING TUJUAN', 'AKAD', 'BAGI HASIL', '']}>
+        {#each p?.members || [] as m, i}
+          <tr
+            ><td><strong>{m.memberName}</strong><small>{m.memberId}</small></td><td
+              >{m.bankName || 'Bank belum tersedia'}<small class="finance-account"
+                >{m.bankAccount || 'Rekening belum tersedia'}</small
+              ><small>a.n. {m.accountName}</small></td
+            ><td>{m.contractCount}</td><td class="money"><strong>{money(m.amount)}</strong></td><td
+              ><button
+                type="button"
+                class="btn secondary small-btn"
+                data-finance-action="detail"
+                data-index={i}>Rincian</button
+              ></td
+            ></tr
+          >
+        {:else}
+          <EmptyTableRow columns={5} message={'Tidak ada akad yang terjadwal pada tanggal ini.'} />
+        {/each}
+      </DataTable>
       <div class="finance-total">
         <span>Total bagi hasil</span><strong>{money(p?.total)}</strong>
       </div>

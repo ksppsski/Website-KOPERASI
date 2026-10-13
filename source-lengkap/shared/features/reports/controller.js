@@ -1,3 +1,5 @@
+import { workflowService } from '../../services/workflow.js';
+import { registerReports } from '../../services/reports.js';
 /**
  * Laporan koperasi: unggahan manajer dan akses anggota.
  * Tampilan halaman berada di shared/components/reports/.
@@ -6,7 +8,7 @@
  */
 export function initializeReports() {
   'use strict';
-  const wf = () => window.KsppsWorkflow,
+  const wf = () => workflowService,
     $ = (s) => document.querySelector(s),
     esc = (v) =>
       String(v ?? '').replace(
@@ -187,5 +189,5 @@ export function initializeReports() {
     state.loaded = false;
     state.error = '';
   });
-  window.KsppsReports = { getViewContext: () => ({ state, names, manager, cards, upload }), mount };
+  registerReports({ getViewContext: () => ({ state, names, manager, cards, upload }), mount });
 }

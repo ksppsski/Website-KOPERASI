@@ -39,7 +39,11 @@ export async function membershipLetter(env, p) {
   await env.DB.batch([
     stmt(
       env,
-      `INSERT INTO membership_letters (profile_id,owner,reconciled_at,snapshot,created_at) SELECT ?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM membership_letters WHERE profile_id=?) ON CONFLICT(profile_id) DO NOTHING`,
+      `
+  INSERT INTO membership_letters (profile_id,owner,reconciled_at,snapshot,created_at) SELECT
+  ?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM membership_letters WHERE profile_id=?) ON
+  CONFLICT(profile_id) DO NOTHING
+`,
       p.id,
       p.owner,
       r.checked_at,
@@ -177,7 +181,9 @@ export async function buildMembershipLetter(letter) {
     row('Nomor Anggota', snap.memberNumber, true);
     y += 8;
     text(
-      `Telah resmi disahkan sebagai Anggota KSPPS Syirkah Kebaikan Indonesia terhitung sejak tanggal ${effective} dan berhak memperoleh layanan serta kewajiban sesuai dengan ketentuan yang berlaku di koperasi.`,
+      'Telah resmi disahkan sebagai Anggota KSPPS Syirkah Kebaikan Indonesia ' +
+        `terhitung sejak tanggal ${effective} dan berhak memperoleh layanan ` +
+        'serta kewajiban sesuai dengan ketentuan yang berlaku di koperasi.',
       72,
       468,
     );

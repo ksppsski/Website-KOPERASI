@@ -49,10 +49,12 @@ export async function browser(entry, { fetch, compare, hash = 'masuk' } = {}) {
               }),
             );
             build.onLoad({ filter: /shared\/create-portal\.js$/ }, ({ path }) => ({
-              contents: readFileSync(path, 'utf8').replace(
-                'return (model) => flushSync(() => view.set(model));',
-                `return (model) => { const expected = model.html?.(); flushSync(() => view.set(model)); window.__view = model; window.__compare?.(model, expected, document.querySelector('#app')); };`,
-              ),
+              contents:
+                "import { workflowService as test_workflowService } from './services/workflow.js';\nObject.defineProperty(window, 'KsppsWorkflow', { get: () => test_workflowService });\nimport { activityService as test_activityService } from './services/activity.js';\nObject.defineProperty(window, 'KsppsActivity', { get: () => test_activityService });\nimport { financeService as test_financeService } from './services/finance.js';\nObject.defineProperty(window, 'KsppsFinance', { get: () => test_financeService });\nimport { maturityService as test_maturityService } from './services/maturity.js';\nObject.defineProperty(window, 'KsppsMaturity', { get: () => test_maturityService });\nimport { withdrawalService as test_withdrawalService } from './services/withdrawal.js';\nObject.defineProperty(window, 'KsppsWithdrawal', { get: () => test_withdrawalService });\nimport { reportsService as test_reportsService } from './services/reports.js';\nObject.defineProperty(window, 'KsppsReports', { get: () => test_reportsService });\nimport { staffAccessService as test_staffAccessService } from './services/staff-access.js';\nObject.defineProperty(window, 'KsppsStaffAccess', { get: () => test_staffAccessService });\n" +
+                readFileSync(path, 'utf8').replace(
+                  'return (model) => flushSync(() => view.set(model));',
+                  `return (model) => { const expected = model.html?.(); flushSync(() => view.set(model)); window.__view = model; window.__compare?.(model, expected, document.querySelector('#app')); };`,
+                ),
               loader: 'js',
             }));
           },

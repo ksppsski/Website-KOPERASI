@@ -17,12 +17,13 @@
     "test:withdrawal": "node tests/withdrawal-lifecycle.mjs",
     "dev": "vite --host 0.0.0.0",
     "check": "svelte-check --fail-on-warnings",
-    "format": "prettier --write frontend-user frontend-petugas frontend-avalist shared backend/src backend/scripts tests *.html *.js *.json *.md docs",
+    "format": "prettier --write frontend-user frontend-petugas frontend-avalist shared backend/src backend/scripts scripts tests *.html *.js *.json *.md docs",
     "test:parity": "node tests/portal-parity.mjs && node tests/landing-interactions.mjs",
-    "test": "npm run check && npm run test:parity && npm run test:portal && npm run test:workflow && npm run test:finance && npm run test:activity && npm run test:savings && npm run test:manager && npm run test:access && npm run test:maturity && npm run test:withdrawal && npm run test:avalist",
+    "test": "npm run check && npm run check:architecture && npm run test:parity && npm run test:portal && npm run test:workflow && npm run test:finance && npm run test:activity && npm run test:savings && npm run test:manager && npm run test:access && npm run test:maturity && npm run test:withdrawal && npm run test:avalist",
     "build:frontend": "vite build",
     "build:backend": "node backend/scripts/build.mjs",
-    "test:avalist": "node tests/avalist-lifecycle.mjs && node tests/avalist-ui.mjs && node tests/avalist-portal.mjs"
+    "test:avalist": "node tests/avalist-lifecycle.mjs && node tests/avalist-ui.mjs && node tests/avalist-portal.mjs",
+    "check:architecture": "node scripts/check-architecture.mjs"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^6.2.4",

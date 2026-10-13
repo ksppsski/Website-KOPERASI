@@ -30,7 +30,11 @@ export async function claimAvalistEmail(env, id, identity) {
   await env.DB.batch([
     stmt(
       env,
-      'UPDATE avalist_email_access SET bound_user_id=?,claimed_at=?,claim_token=? WHERE email=? AND bound_user_id IS NULL AND EXISTS (SELECT 1 FROM avalist_people WHERE id=person_id AND active=1 AND user_id=?)',
+      `
+  UPDATE avalist_email_access SET bound_user_id=?,claimed_at=?,claim_token=? WHERE email=?
+  AND bound_user_id IS NULL AND EXISTS (SELECT 1 FROM avalist_people WHERE id=person_id AND
+  active=1 AND user_id=?)
+`,
       id,
       at,
       token,
@@ -51,7 +55,8 @@ export async function claimAvalistEmail(env, id, identity) {
     ),
     stmt(
       env,
-      `INSERT INTO staff_accounts(user_id,role,display_name,email,granted_by,created_at,updated_at) SELECT ?,'avalist',?,?,?,?,? WHERE EXISTS (${won}) ON CONFLICT(user_id) DO NOTHING`,
+      `INSERT INTO staff_accounts(user_id,role,display_name,email,granted_by,created_at,updated_at)
+      SELECT ?,'avalist',?,?,?,?,? WHERE EXISTS (${won}) ON CONFLICT(user_id) DO NOTHING`,
       id,
       identity.name,
       email,
@@ -64,7 +69,8 @@ export async function claimAvalistEmail(env, id, identity) {
     ),
     stmt(
       env,
-      `INSERT INTO staff_access_requests(user_id,request_code,display_name,email,status,requested_at) SELECT ?,?,?,?,'approved',? WHERE EXISTS (${won}) ON CONFLICT(user_id) DO UPDATE SET status='approved'`,
+      `INSERT INTO staff_access_requests(user_id,request_code,display_name,email,status,requested_at)
+      SELECT ?,?,?,?,'approved',? WHERE EXISTS (${won}) ON CONFLICT(user_id) DO UPDATE SET status='approved'`,
       id,
       crypto.randomUUID(),
       identity.name,

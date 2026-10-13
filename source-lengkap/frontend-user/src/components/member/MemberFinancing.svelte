@@ -1,4 +1,6 @@
 <script>
+  import { workflowService } from '../../../../shared/services/workflow.js';
+  import { withdrawalService } from '../../../../shared/services/withdrawal.js';
   import Tabs from '../../../../shared/components/Tabs.svelte';
   import Badge from '../../../../shared/components/Badge.svelte';
 
@@ -9,8 +11,7 @@
 
 {#if context}
   {#if !savingsState()?.active}
-    {@html serviceLocked('Pembiayaan') ?? ''}{@html (window.KsppsWithdrawal?.memberFinancing() ||
-      '') ??
+    {@html serviceLocked('Pembiayaan') ?? ''}{@html (withdrawalService?.memberFinancing() || '') ??
       ''}
   {:else}
     {@html heading(
@@ -19,11 +20,11 @@
       '<button type="button" class="btn" data-action="apply-finance">' +
         icon('plus') +
         'Ajukan pembiayaan</button>',
-    ) ?? ''}{@html (window.KsppsWithdrawal?.memberFinancing() || '') ?? ''}<Tabs
+    ) ?? ''}{@html (withdrawalService?.memberFinancing() || '') ?? ''}<Tabs
       items={['Semua', 'Aktif', 'Pengajuan']}
       current={state.financeTab}
       name={'finance'}
-    />{#if state.financeTab !== 'Pengajuan' && !window.KsppsWorkflow?.getFinancing()?.length}
+    />{#if state.financeTab !== 'Pengajuan' && !workflowService?.getFinancing()?.length}
       <div class="content-grid">
         <article class="contract">
           <div class="contract-top">

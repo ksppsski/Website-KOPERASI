@@ -43,9 +43,13 @@ export async function restartMembership(env, account, body) {
     at = now();
   const result = await stmt(
     env,
-    `INSERT INTO membership_accounts (account_id,current_owner,updated_at)
- SELECT ?,?,? WHERE EXISTS (SELECT 1 FROM member_profiles WHERE owner=? AND status='closed')
- ON CONFLICT(account_id) DO UPDATE SET current_owner=excluded.current_owner,updated_at=excluded.updated_at WHERE membership_accounts.current_owner=?`,
+    `
+  INSERT INTO membership_accounts (account_id,current_owner,updated_at) SELECT ?,?,? WHERE
+  EXISTS (SELECT 1 FROM member_profiles WHERE owner=? AND status= 'closed' ) ON
+  CONFLICT(account_id) DO UPDATE SET
+  current_owner=excluded.current_owner,updated_at=excluded.updated_at WHERE
+  membership_accounts.current_owner=?
+`,
     account,
     next,
     at,
@@ -62,7 +66,12 @@ export async function withdrawalEligibility(env, owner) {
   const capital = (
     await stmt(
       env,
-      `SELECT w.id,w.contract_number,w.project_code,w.status,w.contract_data,d.choice,cr.paid_at FROM workflow_requests w LEFT JOIN maturity_decisions d ON d.request_id=w.id LEFT JOIN capital_returns cr ON cr.request_id=w.id WHERE w.owner=? AND w.kind='capital' AND w.status NOT IN ('rejected','cancelled')`,
+      `
+  SELECT w.id,w.contract_number,w.project_code,w.status,w.contract_data,d.choice,cr.paid_at
+  FROM workflow_requests w LEFT JOIN maturity_decisions d ON d.request_id=w.id LEFT JOIN
+  capital_returns cr ON cr.request_id=w.id WHERE w.owner=? AND w.kind= 'capital' AND w.status
+  NOT IN ( 'rejected' , 'cancelled' )
+`,
       owner,
     ).all()
   ).results
@@ -156,7 +165,11 @@ export async function approveWithdrawal(env, owner, row, note) {
     env,
     stmt(
       env,
-      "UPDATE workflow_requests SET status='finance_pending',note=?,updated_at=?,version=version+1 WHERE id=? AND owner=? AND version=? AND status IN ('pending','reviewing')",
+      `
+  UPDATE workflow_requests SET status= 'finance_pending'
+  ,note=?,updated_at=?,version=version+1 WHERE id=? AND owner=? AND version=? AND status IN (
+  'pending' , 'reviewing' )
+`,
       note,
       at,
       row.id,
@@ -174,8 +187,13 @@ export async function approveWithdrawal(env, owner, row, note) {
     [
       stmt(
         env,
-        `INSERT INTO withdrawal_settlements (request_id,owner,profile_id,amount,bank_name,bank_account,account_name,admin_at,admin_by)
- SELECT ?,?,?,?,?,?,?,?,? WHERE EXISTS (SELECT 1 FROM workflow_requests WHERE id=? AND status='finance_pending' AND updated_at=? AND version=?) ON CONFLICT(request_id) DO NOTHING`,
+        `
+  INSERT INTO withdrawal_settlements
+  (request_id,owner,profile_id,amount,bank_name,bank_account,account_name,admin_at,admin_by)
+  SELECT ?,?,?,?,?,?,?,?,? WHERE EXISTS (SELECT 1 FROM workflow_requests WHERE id=? AND
+  status= 'finance_pending' AND updated_at=? AND version=?) ON CONFLICT(request_id) DO
+  NOTHING
+`,
         row.id,
         owner,
         p.id,
@@ -198,7 +216,11 @@ export async function withdrawalQueue(env, actor, role) {
   const rows = (
     await stmt(
       env,
-      `SELECT r.*,p.member_number,p.id profile_id FROM workflow_requests r JOIN member_profiles p ON p.owner=r.owner WHERE r.kind='withdrawal' AND r.status IN ('finance_pending','manager_pending','completed') ORDER BY r.created_at`,
+      `
+  SELECT r.*,p.member_number,p.id profile_id FROM workflow_requests r JOIN member_profiles p
+  ON p.owner=r.owner WHERE r.kind= 'withdrawal' AND r.status IN ( 'finance_pending' ,
+  'manager_pending' , 'completed' ) ORDER BY r.created_at
+`,
     ).all()
   ).results;
   const items = [];
@@ -278,7 +300,11 @@ export async function payWithdrawal(env, actor, id, form, proof) {
       env,
       stmt(
         env,
-        "UPDATE workflow_requests SET status='manager_pending',updated_at=?,version=version+1 WHERE id=? AND version=? AND status='finance_pending' AND EXISTS (SELECT 1 FROM withdrawal_settlements WHERE request_id=? AND paid_at IS NULL)",
+        `
+  UPDATE workflow_requests SET status= 'manager_pending' ,updated_at=?,version=version+1
+  WHERE id=? AND version=? AND status= 'finance_pending' AND EXISTS (SELECT 1 FROM
+  withdrawal_settlements WHERE request_id=? AND paid_at IS NULL)
+`,
         at,
         id,
         r.version,
@@ -295,7 +321,12 @@ export async function payWithdrawal(env, actor, id, form, proof) {
       [
         stmt(
           env,
-          `UPDATE withdrawal_settlements SET paid_at=?,paid_by=?,transfer_date=?,reference=?,proof_key=?,proof_name=?,proof_type=? WHERE request_id=? AND paid_at IS NULL AND EXISTS (SELECT 1 FROM workflow_requests WHERE id=? AND status='manager_pending' AND version=? AND updated_at=?)`,
+          `
+  UPDATE withdrawal_settlements SET
+  paid_at=?,paid_by=?,transfer_date=?,reference=?,proof_key=?,proof_name=?,proof_type=? WHERE
+  request_id=? AND paid_at IS NULL AND EXISTS (SELECT 1 FROM workflow_requests WHERE id=? AND
+  status= 'manager_pending' AND version=? AND updated_at=?)
+`,
           at,
           actorId(env, actor),
           date,
@@ -338,7 +369,13 @@ export async function closeMembership(env, actor, id, body) {
     env,
     stmt(
       env,
-      `UPDATE workflow_requests SET status='completed',updated_at=?,version=version+1 WHERE id=? AND version=? AND status='manager_pending' AND EXISTS (SELECT 1 FROM withdrawal_settlements s JOIN member_profiles p ON p.id=s.profile_id WHERE s.request_id=? AND s.paid_at IS NOT NULL AND s.proof_key IS NOT NULL AND s.closed_at IS NULL AND p.status='approved')`,
+      `
+  UPDATE workflow_requests SET status= 'completed' ,updated_at=?,version=version+1 WHERE id=?
+  AND version=? AND status= 'manager_pending' AND EXISTS (SELECT 1 FROM
+  withdrawal_settlements s JOIN member_profiles p ON p.id=s.profile_id WHERE s.request_id=?
+  AND s.paid_at IS NOT NULL AND s.proof_key IS NOT NULL AND s.closed_at IS NULL AND p.status=
+  'approved' )
+`,
       at,
       id,
       r.version,
@@ -352,7 +389,11 @@ export async function closeMembership(env, actor, id, body) {
     [
       stmt(
         env,
-        "UPDATE withdrawal_settlements SET closed_at=?,closed_by=? WHERE request_id=? AND closed_at IS NULL AND EXISTS (SELECT 1 FROM workflow_requests WHERE id=? AND status='completed' AND updated_at=? AND version=?)",
+        `
+  UPDATE withdrawal_settlements SET closed_at=?,closed_by=? WHERE request_id=? AND closed_at
+  IS NULL AND EXISTS (SELECT 1 FROM workflow_requests WHERE id=? AND status= 'completed' AND
+  updated_at=? AND version=?)
+`,
         at,
         actorId(env, actor),
         id,
@@ -362,7 +403,11 @@ export async function closeMembership(env, actor, id, body) {
       ),
       stmt(
         env,
-        "UPDATE member_profiles SET status='closed',updated_at=?,version=version+1 WHERE owner=? AND status='approved' AND EXISTS (SELECT 1 FROM withdrawal_settlements WHERE request_id=? AND closed_at=?)",
+        `
+  UPDATE member_profiles SET status= 'closed' ,updated_at=?,version=version+1 WHERE owner=?
+  AND status= 'approved' AND EXISTS (SELECT 1 FROM withdrawal_settlements WHERE request_id=?
+  AND closed_at=?)
+`,
         at,
         r.owner,
         id,
@@ -385,11 +430,17 @@ export async function financingList(env, owner, staff = false) {
       staff
         ? stmt(
             env,
-            'SELECT f.*,p.member_number,p.id profile_id,p.data FROM financing_contracts f JOIN member_profiles p ON p.owner=f.owner ORDER BY f.created_at DESC',
+            `
+  SELECT f.*,p.member_number,p.id profile_id,p.data FROM financing_contracts f JOIN
+  member_profiles p ON p.owner=f.owner ORDER BY f.created_at DESC
+`,
           )
         : stmt(
             env,
-            'SELECT f.*,p.member_number,p.id profile_id,p.data FROM financing_contracts f JOIN member_profiles p ON p.owner=f.owner WHERE f.owner=? ORDER BY f.created_at DESC',
+            `
+  SELECT f.*,p.member_number,p.id profile_id,p.data FROM financing_contracts f JOIN
+  member_profiles p ON p.owner=f.owner WHERE f.owner=? ORDER BY f.created_at DESC
+`,
             owner,
           )
     ).all()
@@ -447,7 +498,11 @@ export async function recordFinancing(env, actor, body) {
       env,
       stmt(
         env,
-        'INSERT INTO financing_contracts (id,owner,number,purpose,amount,start_date,end_date,created_at,created_by) VALUES (?,?,?,?,?,?,?,?,?)',
+        `
+  INSERT INTO financing_contracts
+  (id,owner,number,purpose,amount,start_date,end_date,created_at,created_by) VALUES
+  (?,?,?,?,?,?,?,?,?)
+`,
         id,
         p.owner,
         number,

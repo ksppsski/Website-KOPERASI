@@ -282,7 +282,9 @@ export async function reconcile(env, owner, body) {
       env,
       stmt(
         env,
-        `UPDATE finance_reconciliations SET proof_key=?, expected_amount=?, received_amount=?, transfer_date=?, reference=?, status=?, note=?, checked_by=?, checked_at=?, version=version+1 WHERE owner=? AND target_kind=? AND target_id=? AND version=? AND ${guard}`,
+        `UPDATE finance_reconciliations SET proof_key=?, expected_amount=?, received_amount=?,
+       transfer_date=?, reference=?, status=?, note=?, checked_by=?, checked_at=?, version=version+1
+      WHERE owner=? AND target_kind=? AND target_id=? AND version=? AND ${guard}`,
         ...args,
         owner,
         kind,
@@ -305,7 +307,9 @@ export async function reconcile(env, owner, body) {
       env,
       stmt(
         env,
-        `INSERT INTO finance_reconciliations (id,owner,target_kind,target_id,proof_key,expected_amount,received_amount,transfer_date,reference,status,note,checked_by,checked_at,version) SELECT ?,?,?,?,?,?,?,?,?,?,?,?,?,1 WHERE ${guard} ON CONFLICT(owner,target_kind,target_id) DO NOTHING`,
+        `INSERT INTO finance_reconciliations (id,owner,target_kind,target_id,proof_key,expected_amount,
+      received_amount,transfer_date,reference,status,note,checked_by,checked_at,version)
+      SELECT ?,?,?,?,?,?,?,?,?,?,?,?,?,1 WHERE ${guard} ON CONFLICT(owner,target_kind,target_id) DO NOTHING`,
         crypto.randomUUID(),
         owner,
         kind,

@@ -1,18 +1,23 @@
 # Website KSPPS Syirkah Kebaikan Indonesia
 
-Sumber aplikasi sudah disinkronkan dengan **revisi v36** pada 13 Oktober 2026. Kode terbaru berada di **[`source-lengkap/`](source-lengkap/)**. Gunakan folder tersebut sebagai direktori kerja saat melanjutkan pengembangan di Codex.
+Sumber aplikasi sudah disinkronkan dengan **revisi v37** pada 14 Oktober 2026. Kode terbaru berada di **[`source-lengkap/`](source-lengkap/)**. Gunakan folder tersebut sebagai direktori kerja saat melanjutkan pengembangan di Codex.
 
 | Bagian | Lokasi | Status |
 | --- | --- | --- |
-| Aplikasi terbaru | `source-lengkap/` | Svelte 5 + Vite, Worker, skema/migrasi, template dokumen dan pengujian v36 |
+| Aplikasi terbaru | `source-lengkap/` | Svelte 5 + Vite, Worker, skema/migrasi, template dokumen dan pengujian v37 |
 | Website GitHub Pages | `docs/` | Pratinjau statis v18, tanpa login, database atau transaksi aktif |
 | Identitas versi | `VERSI.json` | Versi sumber aplikasi dan versi pratinjau dicatat terpisah |
 | Panduan domain | `PANDUAN-DOMAIN.md` | Domain dan alur penerbitan |
 
 Domain yang tercatat di `docs/CNAME`: **syirkahkebaikanindonesia.com**. Pembaruan kode di `source-lengkap/` belum memindahkan backend atau data ke domain tersebut. Folder `docs/` tetap menjadi sumber pratinjau statis yang sudah ada, sehingga portal tidak berpura-pura menerima pendaftaran atau transaksi tanpa backend.
 
+## Panduan tim IT
+
+Mulai dari **[Peta kode dan panduan pemeliharaan](source-lengkap/docs/PETA-KODE.md)**. Kode aplikasi dipisahkan per fitur, hubungan antarmodul memakai import eksplisit, dan pemeriksaan otomatis mencegah import melingkar serta baris source yang terlalu panjang. Framework tetap Svelte 5 + Vite.
+
 ## Revisi yang sudah masuk
 
+- Refactor v37: controller kecil, komponen Svelte terpisah, endpoint/aturan server per fitur, dan panduan penelusuran bug.
 - Status normal berwarna hijau/biru; pengingat top up dan peringatan memakai merah.
 - Penawaran yang terpenuhi tetap terlihat di portal anggota selama 3 × 24 jam. Riwayat penawaran tetap ada di portal Manajer.
 - Portal Avalist terpisah di `/avalist.html`, dengan pendaftaran email oleh Manajer tanpa menjadikan avalist sebagai petugas.

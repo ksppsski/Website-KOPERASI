@@ -1,4 +1,5 @@
 <script>
+  import { workflowService } from '../../../../shared/services/workflow.js';
   import Badge from '../../../../shared/components/Badge.svelte';
   import Icon from '../../../../shared/components/Icon.svelte';
 
@@ -26,7 +27,7 @@
     '<button type="button" class="btn" data-action="deposit">' +
       icon('plus') +
       'Setor simpanan wajib</button>',
-  ) ?? ''}{@html (window.KsppsWorkflow?.savingsNotice() || '') ?? ''}
+  ) ?? ''}{@html (workflowService?.savingsNotice() || '') ?? ''}
   <div class="balance-breakdown">
     <div class="stat">
       <div class="stat-top">Simpanan pokok</div>
@@ -79,16 +80,21 @@
           <thead
             ><tr><th>TANGGAL</th><th>KEWAJIBAN</th><th>TERALOKASI</th><th>STATUS</th></tr></thead
           ><tbody
-            >{@html ((v?.periods || [])
-              .slice()
-              .reverse()
-              .map(
-                (x) =>
-                  `<tr><td>${shortDate(x.date + 'T12:00:00Z')}</td><td>${rupiah(x.amount)}</td><td>${rupiah(x.allocated)}</td><td>${badge(x.status, x.status === 'Terpenuhi' ? 'green' : 'amber')}</td></tr>`,
-              )
-              .join('') ||
-              '<tr><td colspan="4">Belum ada jadwal.</td></tr>') ??
-              ''}</tbody
+            >{#each (v?.periods || []).slice().reverse() as period}
+              <tr>
+                <td>{shortDate(period.date + 'T12:00:00Z')}</td>
+                <td>{rupiah(period.amount)}</td>
+                <td>{rupiah(period.allocated)}</td>
+                <td
+                  ><Badge
+                    text={period.status}
+                    variant={period.status === 'Terpenuhi' ? 'green' : 'amber'}
+                  /></td
+                >
+              </tr>
+            {:else}
+              <tr><td colspan="4">Belum ada jadwal.</td></tr>
+            {/each}</tbody
           >
         </table>
       </div>
@@ -126,5 +132,5 @@
     </div>
     <p class="table-note">Setoran menambah saldo setelah rekonsiliasi Finance.</p>
   </section>
-  {@html (window.KsppsWorkflow?.savingsDeposits() || '') ?? ''}
+  {@html (workflowService?.savingsDeposits() || '') ?? ''}
 {/if}

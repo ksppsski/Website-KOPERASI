@@ -1,4 +1,6 @@
 <script>
+  import DataTable from '../../../../shared/components/DataTable.svelte';
+  import EmptyTableRow from '../../../../shared/components/EmptyTableRow.svelte';
   let { context } = $props();
   let { esc, money, date, state, btn, heading, table, stats, loading, error } = $derived(context);
 </script>
@@ -43,16 +45,28 @@
       ],
     ]) ?? ''}
     <section class="panel">
-      {@html table(
-        ['ANGGOTA / AKAD', 'PROJECT', 'BERAKHIR', 'MODAL', 'PILIHAN', 'PENGEMBALIAN'],
-        r.items
-          .map(
-            (x) =>
-              `<tr><td><strong>${esc(x.memberName)}</strong><small>${esc(x.memberNumber)}<br>${esc(x.contractNumber)}</small></td><td>${esc(x.projectCode || '—')}</td><td>${date(x.endDate)}</td><td class="money">${money(x.amount)}</td><td>${labels[x.choice]}<small>${x.confirmedAt ? date(x.confirmedAt) : ''}</small></td><td>${x.choice === 'return' ? (x.paidAt ? 'Selesai · ' + date(x.paidAt) : 'Terjadwal') : '—'}</td></tr>`,
-          )
-          .join(''),
-        'Tidak ada akad berakhir pada periode ini.',
-      ) ?? ''}
+      <DataTable
+        headers={['ANGGOTA / AKAD', 'PROJECT', 'BERAKHIR', 'MODAL', 'PILIHAN', 'PENGEMBALIAN']}
+      >
+        {#each r.items as x}
+          <tr
+            ><td
+              ><strong>{x.memberName}</strong><small>{x.memberNumber}<br />{x.contractNumber}</small
+              ></td
+            ><td>{x.projectCode || '—'}</td><td>{date(x.endDate)}</td><td class="money"
+              >{money(x.amount)}</td
+            ><td>{labels[x.choice]}<small>{x.confirmedAt ? date(x.confirmedAt) : ''}</small></td><td
+              >{x.choice === 'return'
+                ? x.paidAt
+                  ? 'Selesai · ' + date(x.paidAt)
+                  : 'Terjadwal'
+                : '—'}</td
+            ></tr
+          >
+        {:else}
+          <EmptyTableRow columns={6} message={'Tidak ada akad berakhir pada periode ini.'} />
+        {/each}
+      </DataTable>
     </section>
   {/if}
 {/if}
