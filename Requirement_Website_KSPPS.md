@@ -1,3 +1,5 @@
+> Dokumen requirement awal. Untuk struktur dan fitur yang berlaku pada revisi v36, gunakan [to-do terbaru](source-lengkap/to-do.md) dan [alur aplikasi](source-lengkap/docs/WORKFLOWS.md).
+
 # Requirement Website KSPPS
 
 KSPPS Syirkah Kebaikan Indonesia

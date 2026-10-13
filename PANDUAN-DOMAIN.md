@@ -1,5 +1,7 @@
 # Menghubungkan domain
 
+Catatan sinkronisasi 13 Oktober 2026: domain yang sudah tercatat adalah **syirkahkebaikanindonesia.com** di `docs/CNAME`. Folder `docs/` berisi pratinjau statis v18. Kode aplikasi terbaru v36 berada di `source-lengkap/`; mengubah source tersebut belum mengaktifkan backend di domain. Untuk aplikasi operasional, lanjutkan dengan [panduan pindah hosting](source-lengkap/docs/PINDAH-HOSTING.md).
+
 Pastikan website sudah tampil di alamat GitHub Pages dahulu.
 
 1. Buka repository → **Settings → Pages → Custom domain**. Isi domain Anda tanpa `https://`, lalu simpan.
@@ -19,7 +21,7 @@ Ganti `USERNAME` dengan username GitHub atau nama organisasi pemilik repository.
 3. Tunggu pemeriksaan DNS berhasil; perubahan dapat membutuhkan sampai 24 jam. Aktifkan **Enforce HTTPS** saat tersedia.
 4. Buka `https://alamat-domain-anda`.
 
-Tidak ada file CNAME yang diisi sembarang domain di paket ini. Pengaturan Custom domain GitHub akan mengelolanya. GitHub juga menyarankan verifikasi kepemilikan domain.
+File `docs/CNAME` sudah berisi domain milik koperasi. Pengaturan Custom domain GitHub harus sesuai dengan file tersebut. GitHub juga menyarankan verifikasi kepemilikan domain.
 
 Petunjuk resmi dan nilai DNS terbaru:
 https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site

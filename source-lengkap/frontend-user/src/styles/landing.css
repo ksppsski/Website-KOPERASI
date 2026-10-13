@@ -1,0 +1,2536 @@
+:root {
+  color-scheme: light dark;
+  background-color: var(
+    --background,
+    var(--color-background-primary, light-dark(rgb(255 255 255), rgb(24 24 24)))
+  ) !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(--color-background-primary, light-dark(rgb(255 255 255), rgb(24 24 24)));
+  --foreground: var(--color-text-primary, light-dark(rgb(26 28 31), rgb(255 255 255)));
+  --card: color-mix(in oklab, var(--foreground) 5%, var(--background));
+  --card-foreground: var(--color-text-primary, light-dark(rgb(26 28 31), rgb(255 255 255)));
+  --popover: var(--color-background-secondary, light-dark(rgb(255 255 255), rgb(45 45 45)));
+  --popover-foreground: var(--color-text-primary, light-dark(rgb(26 28 31), rgb(255 255 255)));
+  --primary: var(--color-text-info, light-dark(rgb(51 156 255), rgb(131 195 255)));
+  --primary-foreground: var(--color-text-inverse, light-dark(rgb(255 255 255), rgb(13 13 13)));
+  --secondary: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%))
+  );
+  --secondary-foreground: var(--color-text-primary, light-dark(rgb(26 28 31), rgb(255 255 255)));
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: var(
+    --color-text-secondary,
+    light-dark(rgb(26 28 31 / 49.4%), rgb(255 255 255 / 49.8%))
+  );
+  --accent: var(--color-background-info, light-dark(rgb(229 242 255), rgb(13 39 63)));
+  --accent-foreground: var(--color-text-info, light-dark(rgb(51 156 255), rgb(131 195 255)));
+  --destructive: var(--color-text-warning, light-dark(rgb(226 85 7), rgb(255 133 73)));
+  --border: var(--color-border-secondary, light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%)));
+  --input: var(
+    --color-border-primary,
+    light-dark(rgb(26 28 31 / 11.8%), color-mix(in oklab, rgb(0 0 0) 10%, transparent))
+  );
+  --ring: var(--color-ring-primary, light-dark(rgb(51 156 255), rgb(131 195 255 / 76%)));
+  --font-size-base: var(--font-text-md-size, 14px);
+  --blue: light-dark(rgb(51 156 255), rgb(51 156 255));
+  --orange: light-dark(rgb(226 85 7), rgb(251 106 34));
+  --green: light-dark(rgb(0 162 64), rgb(64 201 119));
+  --red: light-dark(rgb(224 46 42), rgb(255 103 100));
+  --purple: light-dark(rgb(146 79 247), rgb(173 123 249));
+  --yellow: light-dark(rgb(255 195 0), rgb(255 210 64));
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(rgb(243 136 59), rgb(245 154 86));
+  --viz-series-3: light-dark(rgb(93 201 119), rgb(116 213 139));
+  --viz-series-4: light-dark(rgb(235 119 177), rgb(240 143 192));
+  --viz-series-5: light-dark(rgb(155 121 236), rgb(170 145 239));
+  --viz-series-6: light-dark(rgb(58 185 177), rgb(90 203 194));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, 'Segoe UI', sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --icon-size: 16px;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --corner-shape: round;
+  --radius: var(--border-radius-lg, 10px);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 17 17'%3E%3Cpath d='M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z'/%3E%3C/svg%3E");
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html > body {
+  /* Preserve MCP aliases for older inline renderers without creating :root cycles. */
+  --color-background-primary: var(--background, light-dark(rgb(255 255 255), rgb(24 24 24)));
+  --color-text-primary: var(--foreground, light-dark(rgb(26 28 31), rgb(255 255 255)));
+  --color-border-secondary: var(--border, light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%)));
+
+  margin: 0;
+  padding: var(--visualize-paint-gutter, 0px);
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans) !important;
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+:root:not([data-app-block-surface], [data-visualize-standalone]) > body {
+  padding: 12px;
+}
+
+.cursor-interaction {
+  cursor: var(--cursor-interaction, pointer);
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: var(--cursor-interaction, pointer);
+  font-weight: var(--font-weight-medium, 500);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  corner-shape: var(--corner-shape);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+}
+
+.table :is(th, td) {
+  padding-block: 10px;
+  padding-inline: 0 24px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table-responsive > .table :is(th, td) {
+  overflow-wrap: break-word;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table :is(caption, thead th) {
+  font-weight: 600;
+}
+
+.table thead th {
+  padding-block: 8px;
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.table.table-sm :is(th, td) {
+  padding-block: 6px;
+}
+
+.table.table-sm :is(th, td):not(:last-child) {
+  padding-inline-end: 16px;
+}
+
+.table :is(.text-end, [align='right']) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(.text-center, [align='center']) {
+  text-align: center;
+}
+
+.table .text-nowrap {
+  white-space: nowrap;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  corner-shape: var(--corner-shape);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget > :not(.card, .progress) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(20rem, var(--tooltip-available-width, calc(100vw - 10px)), calc(100vw - 10px));
+  max-height: min(var(--tooltip-available-height, calc(100vh - 10px)), calc(100vh - 10px));
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* The shared runtime owns data-tooltip; suppress AppBlock's pseudo-tooltip. */
+main [data-tooltip]::after {
+  content: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+hr {
+  width: 100%;
+  height: 1px;
+  margin-block: 6px;
+  border: 0;
+  background: var(--border);
+}
+
+.nav {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+.progress {
+  display: flex;
+  height: 8px;
+  margin-block: calc((var(--line-height-normal, 1.5em) - 8px) / 2);
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+}
+
+.progress-bar:only-child {
+  border-radius: var(--radius-full);
+}
+
+.progress-bar {
+  height: 100%;
+  flex-shrink: 0;
+  border: 0;
+  background: var(--viz-series-1);
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls > .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls > .form-label > :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.nav-link,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn,
+.nav-link {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: var(--cursor-interaction, pointer);
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover,
+.nav-link:not(:disabled):not([aria-disabled='true']):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--primary-foreground);
+  background: var(--foreground);
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(in srgb, var(--primary-foreground) 50%, transparent);
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.nav-pills .nav-link {
+  min-width: 0;
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.nav-justified .nav-link {
+  flex: 1 1 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.nav-pills .nav-link.active {
+  color: var(--foreground);
+  background: var(--muted);
+}
+
+.btn:disabled,
+.nav-link:disabled,
+.nav-link[aria-disabled='true'] {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type='file'] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type='file']::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type='file']:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type='color'] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type='color']::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type='color']::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+  corner-shape: var(--corner-shape);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type='checkbox'] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  corner-shape: var(--corner-shape);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch) .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type='checkbox']:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input[type='checkbox']:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: '';
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type='radio'] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type='radio']:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px), var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: '';
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is([aria-pressed='true'], [aria-selected='true'], .is-selected) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed='true'], [aria-selected='true'], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible,
+.nav-link:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@media (pointer: coarse) {
+  .btn,
+  .nav-link,
+  .form-control,
+  .form-select {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Keep small-screen WebKit from zooming when a text field receives focus. */
+  .form-control,
+  .form-select {
+    font-size: max(16px, var(--font-size-normal));
+  }
+
+  .form-control[type='file']::file-selector-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .form-control-color[type='color'] {
+    width: 44px;
+    height: 44px;
+  }
+
+  .form-control:is(
+    [type='date'],
+    [type='datetime-local'],
+    [type='month'],
+    [type='time'],
+    [type='week']
+  ) {
+    min-width: 0;
+    max-width: 100%;
+    padding-block: 8px;
+  }
+
+  .form-check {
+    min-height: 44px;
+    padding-inline: 15px;
+  }
+
+  .form-check-input {
+    position: relative;
+  }
+
+  .form-check-input::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    content: '';
+    transform: translate(-50%, -50%);
+  }
+
+  .form-check-label {
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .form-range {
+    height: 44px;
+    touch-action: pan-y;
+  }
+
+  .form-range::-webkit-slider-runnable-track {
+    height: 44px;
+  }
+
+  .form-range::-moz-range-track {
+    height: 44px;
+  }
+
+  .form-range::-webkit-slider-thumb {
+    margin-top: 12px;
+  }
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget > svg {
+  width: 100%;
+}
+
+/* Model-authored chart rules can otherwise stretch icons after these styles load. */
+svg.lucide {
+  display: block;
+  width: var(--icon-size) !important;
+  height: var(--icon-size) !important;
+  flex: none;
+  margin: 0 !important;
+  stroke-width: 1.6;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+
+html > body {
+  padding: 0;
+}
+
+#ski-web .ski-access .ski-access-login {
+  display: flex;
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px 10px;
+  min-height: 44px;
+  font-size: 11px;
+  cursor: pointer;
+}
+#ski-web .ski-access .ski-access-login:focus-visible {
+  outline: 3px solid var(--ski-cyan);
+  outline-offset: 3px;
+}
+
+/* KSPPS: approved card motion. The open pose follows the original reference. */
+#ski-web .ski-art[data-ski-motion] {
+  --ski-motion-time: 1050ms;
+  --ski-motion-ease: cubic-bezier(0.22, 0.8, 0.2, 1);
+  container-type: inline-size;
+  height: auto;
+  display: block;
+  isolation: isolate;
+}
+#ski-web .ski-art[data-ski-motion] .ski-motion-scene {
+  --ski-unit: calc(100cqw / 594);
+  width: 100%;
+  height: calc(360 * var(--ski-unit));
+  min-height: calc(299.1 * var(--ski-unit) + 60.9px);
+  position: relative;
+}
+#ski-web .ski-art[data-ski-motion] .ski-orbit {
+  z-index: 0;
+  left: calc(134 * var(--ski-unit));
+  top: calc(15 * var(--ski-unit));
+  width: calc(330 * var(--ski-unit));
+  height: calc(330 * var(--ski-unit));
+  border: 0;
+  transform: rotate(0deg);
+  transform-origin: center;
+  transition: transform var(--ski-motion-time) var(--ski-motion-ease);
+}
+#ski-web .ski-art[data-ski-motion] .ski-orbit:after {
+  inset: calc(-12 * var(--ski-unit));
+  border-width: calc(1 * var(--ski-unit));
+}
+#ski-web .ski-art[data-ski-motion] .ski-dot {
+  width: calc(13 * var(--ski-unit));
+  height: calc(13 * var(--ski-unit));
+  right: calc(23 * var(--ski-unit));
+  top: calc(60 * var(--ski-unit));
+  box-shadow: 0 0 0 calc(8 * var(--ski-unit)) light-dark(#e1f3f8, #17404d);
+}
+#ski-web .ski-art[data-ski-motion].is-open .ski-orbit {
+  transform: rotate(360deg);
+}
+#ski-web .ski-art[data-ski-motion] .ski-membership {
+  z-index: 3;
+  left: calc(25 * var(--ski-unit));
+  top: calc(40 * var(--ski-unit));
+  width: calc(290 * var(--ski-unit));
+  height: calc(182 * var(--ski-unit));
+  display: block;
+  align-content: start;
+  text-align: left;
+  border: 0;
+  padding: calc(23 * var(--ski-unit)) calc(26 * var(--ski-unit));
+  border-radius: calc(16 * var(--ski-unit));
+  font: inherit;
+  cursor: pointer;
+  box-shadow: 0 calc(22 * var(--ski-unit)) calc(35 * var(--ski-unit)) #002d5a22;
+  transform: translate3d(calc(129 * var(--ski-unit)), calc(49 * var(--ski-unit)), 0) rotate(0deg);
+  transition: transform var(--ski-motion-time) var(--ski-motion-ease);
+  -webkit-tap-highlight-color: transparent;
+}
+#ski-web .ski-art[data-ski-motion].is-open .ski-membership {
+  transform: translate3d(0, 0, 0) rotate(-5deg);
+}
+#ski-web .ski-art[data-ski-motion] .ski-membership:after {
+  box-sizing: content-box;
+  width: calc(170 * var(--ski-unit));
+  height: calc(170 * var(--ski-unit));
+  border-width: calc(23 * var(--ski-unit));
+  border-radius: calc(60 * var(--ski-unit));
+  right: calc(-35 * var(--ski-unit));
+  top: calc(22 * var(--ski-unit));
+}
+#ski-web .ski-art[data-ski-motion] .ski-membership-brand {
+  width: 100%;
+  max-width: none;
+  height: auto;
+  margin: calc(3 * var(--ski-unit)) 0 calc(24 * var(--ski-unit));
+  pointer-events: none;
+}
+#ski-web .ski-art[data-ski-motion] .ski-membership span {
+  font-size: max(11px, calc(11 * var(--ski-unit)));
+  line-height: 1.6;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+#ski-web .ski-art[data-ski-motion] .ski-access {
+  z-index: 2;
+  left: calc(324 * var(--ski-unit));
+  top: calc(78.5 * var(--ski-unit));
+  right: auto;
+  bottom: auto;
+  width: calc(270 * var(--ski-unit));
+  padding: calc(21 * var(--ski-unit)) calc(21 * var(--ski-unit)) calc(13 * var(--ski-unit));
+  border-width: calc(1 * var(--ski-unit));
+  border-radius: calc(15 * var(--ski-unit));
+  box-shadow: 0 calc(18 * var(--ski-unit)) calc(38 * var(--ski-unit)) #00315d13;
+  opacity: 0;
+  visibility: hidden;
+  transform-origin: 0 0;
+  transform: translate3d(calc(-92.5 * var(--ski-unit)), calc(32 * var(--ski-unit)), 0) scale(0.5);
+  transition:
+    transform var(--ski-motion-time) var(--ski-motion-ease),
+    opacity 240ms ease,
+    visibility 0s linear var(--ski-motion-time);
+}
+#ski-web .ski-art[data-ski-motion].is-open .ski-access {
+  opacity: 1;
+  visibility: visible;
+  transform: translate3d(0, 0, 0) scale(1);
+  transition:
+    transform var(--ski-motion-time) var(--ski-motion-ease),
+    opacity 420ms ease 90ms,
+    visibility 0s;
+}
+#ski-web .ski-art[data-ski-motion] .ski-access-head {
+  margin-bottom: calc(12 * var(--ski-unit));
+}
+#ski-web .ski-art[data-ski-motion] .ski-access-head strong {
+  font:
+    700 max(13px, calc(13 * var(--ski-unit)))/1.3 'Manrope',
+    Arial,
+    sans-serif;
+}
+#ski-web .ski-art[data-ski-motion] .ski-access-row {
+  height: calc(53 * var(--ski-unit));
+  padding: calc(11 * var(--ski-unit)) 0;
+  gap: calc(10 * var(--ski-unit));
+  border-top-width: calc(1 * var(--ski-unit));
+  font-size: max(11px, calc(12 * var(--ski-unit)));
+  line-height: 1.6;
+  font-weight: 400;
+}
+#ski-web .ski-art[data-ski-motion] .ski-tiny-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  padding: 0;
+  width: calc(30 * var(--ski-unit));
+  height: calc(30 * var(--ski-unit));
+  border-radius: calc(7 * var(--ski-unit));
+}
+#ski-web .ski-art[data-ski-motion] .ski-tiny-icon svg,
+#ski-web .ski-art[data-ski-motion] .ski-access-login svg {
+  width: calc(16 * var(--ski-unit));
+  height: calc(16 * var(--ski-unit));
+  flex: none;
+}
+#ski-web .ski-art[data-ski-motion] .ski-access-login {
+  min-height: 44px;
+  height: calc(44 * var(--ski-unit));
+  margin-top: calc(10 * var(--ski-unit));
+  padding: calc(12 * var(--ski-unit)) calc(10 * var(--ski-unit));
+  gap: calc(9 * var(--ski-unit));
+  border-radius: calc(9 * var(--ski-unit));
+  font-size: max(11px, calc(11 * var(--ski-unit)));
+  line-height: 1.6;
+  font-weight: 700;
+  white-space: nowrap;
+}
+#ski-web .ski-art[data-ski-motion] .ski-membership:focus-visible {
+  outline: 3px solid var(--ski-cyan);
+  outline-offset: 5px;
+}
+#ski-web .ski-motion-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+@container (max-width:439px) {
+  #ski-web .ski-art[data-ski-motion] .ski-motion-scene {
+    --ski-unit: 1px;
+    height: 590px;
+  }
+  #ski-web .ski-art[data-ski-motion] .ski-orbit {
+    width: min(300px, calc(100% - 24px));
+    height: auto;
+    aspect-ratio: 1;
+    left: 50%;
+    top: 145px;
+    transform: translateX(-50%) rotate(0deg);
+  }
+  #ski-web .ski-art[data-ski-motion].is-open .ski-orbit {
+    transform: translateX(-50%) rotate(360deg);
+  }
+  #ski-web .ski-art[data-ski-motion] .ski-membership {
+    width: min(290px, calc(100% - 44px));
+    left: 50%;
+    top: 42px;
+    transform: translate3d(-50%, 165px, 0) rotate(0deg);
+  }
+  #ski-web .ski-art[data-ski-motion].is-open .ski-membership {
+    transform: translate3d(-50%, 0, 0) rotate(-5deg);
+  }
+  #ski-web .ski-art[data-ski-motion] .ski-access {
+    width: min(270px, calc(100% - 24px));
+    left: 50%;
+    top: 260px;
+    transform-origin: center;
+    transform: translate3d(-50%, -101px, 0) scale(0.4);
+  }
+  #ski-web .ski-art[data-ski-motion].is-open .ski-access {
+    transform: translate3d(-50%, 0, 0) scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #ski-web .ski-art[data-ski-motion] .ski-orbit,
+  #ski-web .ski-art[data-ski-motion] .ski-membership,
+  #ski-web .ski-art[data-ski-motion] .ski-access {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+}
+
+#ski-web {
+  --ski-navy: #004080;
+  --ski-cyan: #02b3d2;
+  --ski-ink: light-dark(#102e4a, #e7f2fb);
+  --ski-muted: light-dark(#617488, #aabcca);
+  --ski-paper: light-dark(#ffffff, #111f2d);
+  --ski-soft: light-dark(#f4f8fb, #162735);
+  --ski-line: light-dark(#dee8ef, #304353);
+  --ski-mist: light-dark(#e9f6fa, #173d4b);
+  --ski-link: light-dark(#004080, #7bd7eb);
+  background: var(--ski-paper);
+  color: var(--ski-ink);
+  font:
+    14px/1.6 'DM Sans',
+    Arial,
+    sans-serif;
+  position: relative;
+  isolation: isolate;
+}
+#ski-web * {
+  box-sizing: border-box;
+}
+#ski-web h1,
+#ski-web h2,
+#ski-web h3,
+#ski-web p {
+  margin: 0;
+}
+#ski-web button,
+#ski-web a {
+  -webkit-tap-highlight-color: transparent;
+}
+#ski-web button {
+  font: inherit;
+}
+#ski-web button,
+#ski-web a,
+#ski-web summary {
+  cursor: var(--cursor-interaction, pointer);
+}
+#ski-web a {
+  color: inherit;
+  text-decoration: none;
+}
+#ski-web button:focus-visible,
+#ski-web a:focus-visible,
+#ski-web summary:focus-visible {
+  outline: 3px solid var(--ski-cyan);
+  outline-offset: 4px;
+}
+#ski-web [hidden] {
+  display: none !important;
+}
+#ski-web .ski-wrap {
+  padding-left: 5.5%;
+  padding-right: 5.5%;
+}
+#ski-web .ski-topline {
+  background: var(--ski-navy);
+  color: #e3f6ff;
+  padding: 7px 5.5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  letter-spacing: 0.025em;
+}
+#ski-web .ski-topline span:last-child {
+  color: #8ce3ef;
+}
+#ski-web .ski-header {
+  min-height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  border-bottom: 1px solid var(--ski-line);
+}
+#ski-web .ski-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  flex-shrink: 0;
+}
+#ski-web .ski-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-size: 12px;
+}
+#ski-web .ski-nav a:hover {
+  color: var(--ski-link);
+}
+#ski-web .ski-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 13px 19px;
+  border: 0;
+  border-radius: 7px;
+  background: var(--ski-navy);
+  color: #fff;
+  font-weight: 600;
+  font-size: 12px;
+  min-height: 44px;
+}
+#ski-web .ski-button:hover {
+  background: #07558f;
+}
+#ski-web .ski-button.ski-outline {
+  border: 1px solid var(--ski-line);
+  color: var(--ski-link);
+  background: var(--ski-paper);
+}
+#ski-web .ski-button.ski-cyan {
+  background: var(--ski-cyan);
+  color: #002e4e;
+}
+#ski-web .ski-button.ski-cyan:hover {
+  background: #37c7df;
+}
+#ski-web .ski-menu-button {
+  display: none;
+  padding: 10px;
+  border: 1px solid var(--ski-line);
+  background: var(--ski-paper);
+  color: var(--ski-ink);
+  border-radius: 7px;
+}
+#ski-web .ski-hero {
+  position: relative;
+  padding-top: 62px;
+  padding-bottom: 54px;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 34px;
+  align-items: center;
+  background: linear-gradient(115deg, var(--ski-paper) 42%, var(--ski-soft));
+}
+#ski-web .ski-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ski-link);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+#ski-web .ski-eyebrow:before {
+  content: '';
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--ski-cyan);
+}
+#ski-web .ski-hero h1 {
+  font:
+    800 clamp(34px, 4.8vw, 49px)/1.15 'Manrope',
+    Arial,
+    sans-serif;
+  letter-spacing: -2px;
+  margin: 20px 0;
+  max-width: 510px;
+}
+#ski-web .ski-hero h1 em {
+  font-style: normal;
+  color: var(--ski-link);
+  position: relative;
+}
+#ski-web .ski-hero h1 em:after {
+  content: '';
+  display: block;
+  height: 4px;
+  width: 122px;
+  border-radius: 8px;
+  background: var(--ski-cyan);
+  margin-top: 12px;
+}
+#ski-web .ski-hero-copy {
+  font-size: 14px;
+  max-width: 390px;
+  color: var(--ski-muted);
+  line-height: 1.85;
+}
+#ski-web .ski-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 25px;
+}
+#ski-web .ski-text-link {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--ski-link);
+  font-size: 12px;
+  font-weight: 600;
+}
+#ski-web .ski-caption {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 11px;
+  color: var(--ski-muted);
+  margin-top: 22px;
+}
+#ski-web .ski-caption svg {
+  color: var(--ski-cyan);
+}
+#ski-web .ski-art {
+  min-width: 0;
+  position: relative;
+  height: 355px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#ski-web .ski-orbit {
+  position: absolute;
+  border: 1px solid light-dark(#d8e9ef, #315060);
+  border-radius: 50%;
+  width: 330px;
+  height: 330px;
+}
+#ski-web .ski-orbit:after {
+  content: '';
+  position: absolute;
+  inset: 28px;
+  border: 1px solid light-dark(#d8e9ef, #315060);
+  border-radius: 50%;
+}
+#ski-web .ski-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--ski-cyan);
+  position: absolute;
+  right: 23px;
+  top: 60px;
+  box-shadow: 0 0 0 8px light-dark(#e1f3f8, #17404d);
+}
+#ski-web .ski-membership {
+  width: 290px;
+  height: 178px;
+  padding: 23px;
+  background: linear-gradient(125deg, #004080, #002b59);
+  color: #fff;
+  border-radius: 14px;
+  position: absolute;
+  top: 39px;
+  left: 4%;
+  transform: rotate(-7deg);
+  box-shadow: 0 22px 35px #002d5a22;
+  overflow: hidden;
+}
+#ski-web .ski-membership:after {
+  content: '';
+  position: absolute;
+  border: 23px solid #02b3d230;
+  width: 170px;
+  height: 170px;
+  border-radius: 60px;
+  transform: rotate(-37deg);
+  right: -35px;
+  top: 22px;
+}
+#ski-web .ski-membership span {
+  color: #8ee4f0;
+  font-size: 11px;
+}
+#ski-web .ski-access {
+  position: absolute;
+  right: 0;
+  bottom: 5px;
+  width: 267px;
+  background: var(--ski-paper);
+  box-shadow: 0 18px 44px #00315d16;
+  padding: 19px 20px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--ski-line);
+}
+#ski-web .ski-access-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 10px;
+}
+#ski-web .ski-access-head strong {
+  font:
+    700 13px 'Manrope',
+    Arial,
+    sans-serif;
+}
+#ski-web .ski-mini-status {
+  font-size: 11px;
+  color: var(--ski-link);
+  background: var(--ski-mist);
+  border-radius: 20px;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+#ski-web .ski-access-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid var(--ski-line);
+  font-size: 11px;
+}
+#ski-web .ski-access-row .ski-tiny-icon {
+  display: flex;
+  color: var(--ski-link);
+  background: var(--ski-soft);
+  padding: 7px;
+  border-radius: 7px;
+}
+#ski-web .ski-access-row > svg {
+  margin-left: auto;
+  color: var(--ski-muted);
+}
+#ski-web .ski-access-row span:nth-child(2) {
+  flex: 1;
+}
+#ski-web .ski-art-note {
+  position: absolute;
+  left: 4%;
+  bottom: 7px;
+  color: var(--ski-muted);
+  font-size: 11px;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  letter-spacing: 0.12em;
+}
+#ski-web .ski-values {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--ski-line);
+  border-bottom: 1px solid var(--ski-line);
+  padding-top: 20px;
+  padding-bottom: 20px;
+  gap: 20px;
+}
+#ski-web .ski-value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+}
+#ski-web .ski-value svg {
+  color: var(--ski-link);
+  width: 23px;
+  height: 23px;
+  flex-shrink: 0;
+}
+#ski-web .ski-value strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+}
+#ski-web .ski-value small {
+  display: block;
+  color: var(--ski-muted);
+  font-size: 11px;
+}
+#ski-web .ski-products {
+  padding-top: 47px;
+  padding-bottom: 44px;
+}
+#ski-web .ski-section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 25px;
+  margin-bottom: 24px;
+}
+#ski-web h2 {
+  font:
+    800 28px/1.3 'Manrope',
+    Arial,
+    sans-serif;
+  letter-spacing: -0.8px;
+  margin-top: 9px;
+}
+#ski-web .ski-section-heading > p {
+  max-width: 270px;
+  font-size: 12px;
+  color: var(--ski-muted);
+}
+#ski-web .ski-product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+#ski-web .ski-product {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: var(--ski-paper);
+  color: var(--ski-ink);
+  border: 1px solid var(--ski-line);
+  border-radius: 10px;
+  padding: 22px;
+  min-width: 0;
+}
+#ski-web .ski-product[aria-pressed='true'] {
+  background: var(--ski-mist);
+  border-color: var(--ski-cyan);
+}
+#ski-web .ski-product-top {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+  color: var(--ski-link);
+}
+#ski-web .ski-product-top > svg {
+  width: 27px;
+  height: 27px;
+}
+#ski-web .ski-product-top > span {
+  font-size: 11px;
+  color: var(--ski-muted);
+}
+#ski-web .ski-product-title {
+  font:
+    700 15px/1.4 'Manrope',
+    Arial,
+    sans-serif;
+}
+#ski-web .ski-product-description {
+  display: block;
+  font-size: 11px;
+  line-height: 1.8;
+  color: var(--ski-muted);
+  margin: 9px 0 18px;
+}
+#ski-web .ski-product-more {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ski-link);
+  margin-top: auto;
+}
+#ski-web .ski-product-detail {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  align-items: center;
+  gap: 28px;
+  padding: 20px 23px;
+  background: var(--ski-soft);
+  border-radius: 8px;
+  margin-top: 14px;
+}
+#ski-web .ski-product-detail h3 {
+  font:
+    700 13px 'Manrope',
+    Arial,
+    sans-serif;
+  margin-bottom: 5px;
+}
+#ski-web .ski-product-detail p {
+  font-size: 11px;
+  color: var(--ski-muted);
+}
+#ski-web .ski-detail-features {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px 18px;
+  font-size: 11px;
+  color: var(--ski-link);
+}
+#ski-web .ski-detail-features span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+#ski-web .ski-join {
+  background: var(--ski-navy);
+  color: #fff;
+  padding-top: 37px;
+  padding-bottom: 35px;
+}
+#ski-web .ski-join .ski-eyebrow {
+  color: #9ae5f0;
+}
+#ski-web .ski-join h2 {
+  max-width: 350px;
+  font-size: 26px;
+}
+#ski-web .ski-join-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+#ski-web .ski-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-top: 29px;
+}
+#ski-web .ski-step {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+#ski-web .ski-step-number {
+  color: #8be0ed;
+  font-size: 11px;
+  border-top: 1px solid #4981b3;
+  padding-top: 5px;
+  min-width: 25px;
+}
+#ski-web .ski-step h3 {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+#ski-web .ski-step p {
+  color: #bbd2e6;
+  font-size: 11px;
+  line-height: 1.7;
+}
+#ski-web .ski-bottom {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 45px;
+  padding-top: 41px;
+  padding-bottom: 40px;
+}
+#ski-web .ski-about h2 {
+  font-size: 22px;
+  margin-bottom: 13px;
+}
+#ski-web .ski-about p {
+  font-size: 12px;
+  color: var(--ski-muted);
+  line-height: 1.85;
+}
+#ski-web .ski-about .ski-text-link {
+  margin-top: 18px;
+}
+#ski-web .ski-faq h3 {
+  font:
+    700 15px 'Manrope',
+    Arial,
+    sans-serif;
+  margin-bottom: 15px;
+}
+#ski-web .ski-faq details {
+  border-bottom: 1px solid var(--ski-line);
+}
+#ski-web .ski-faq summary {
+  padding: 13px 0;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  list-style: none;
+  gap: 12px;
+}
+#ski-web .ski-faq summary::-webkit-details-marker {
+  display: none;
+}
+#ski-web .ski-faq summary:after {
+  content: '+';
+  color: var(--ski-link);
+  font-size: 18px;
+  font-weight: 400;
+}
+#ski-web .ski-faq details[open] summary:after {
+  content: '−';
+}
+#ski-web .ski-faq details p {
+  font-size: 11px;
+  color: var(--ski-muted);
+  padding-bottom: 14px;
+}
+#ski-web .ski-footer {
+  border-top: 1px solid var(--ski-line);
+  padding-top: 23px;
+  padding-bottom: 23px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  background: var(--ski-soft);
+}
+#ski-web .ski-footer p {
+  color: var(--ski-muted);
+  font-size: 11px;
+  margin-top: 3px;
+}
+#ski-web .ski-footer-end {
+  font-size: 11px;
+  color: var(--ski-muted);
+  text-align: right;
+}
+#ski-web .ski-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: #001e3a66;
+  padding: 110px 24px 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+#ski-web .ski-dialog {
+  background: var(--ski-paper);
+  color: var(--ski-ink);
+  width: 510px;
+  max-width: 100%;
+  padding: 27px;
+  border-radius: 15px;
+  box-shadow: 0 24px 70px #00234344;
+}
+#ski-web .ski-dialog-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+#ski-web .ski-dialog-top small {
+  color: var(--ski-link);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+#ski-web .ski-close {
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  background: var(--ski-soft);
+  border: 0;
+  color: var(--ski-ink);
+  border-radius: 50%;
+  min-width: 34px;
+  min-height: 34px;
+}
+#ski-web .ski-dialog h2 {
+  font-size: 24px;
+  margin: 16px 0 12px;
+}
+#ski-web .ski-dialog p {
+  font-size: 13px;
+  color: var(--ski-muted);
+}
+#ski-web .ski-dialog-list {
+  padding: 0;
+  margin: 18px 0;
+  list-style: none;
+}
+#ski-web .ski-dialog-list li {
+  border-top: 1px solid var(--ski-line);
+  padding: 11px 0;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 12px;
+}
+#ski-web .ski-dialog-list svg {
+  color: var(--ski-link);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+#ski-web .ski-dialog-note {
+  background: var(--ski-soft);
+  padding: 12px;
+  border-radius: 7px;
+  font-size: 11px !important;
+  margin-top: 18px;
+}
+@media (max-width: 850px) {
+  #ski-web .ski-nav {
+    gap: 14px;
+    font-size: 11px;
+  }
+  #ski-web .ski-header {
+    gap: 12px;
+  }
+  #ski-web .ski-header .ski-button {
+    padding: 10px 12px;
+    font-size: 11px;
+  }
+  #ski-web .ski-hero {
+    gap: 20px;
+  }
+  #ski-web .ski-membership {
+    width: 255px;
+    left: 0;
+  }
+  #ski-web .ski-access {
+    width: 235px;
+  }
+  #ski-web .ski-orbit {
+    width: 285px;
+    height: 285px;
+  }
+  #ski-web .ski-product {
+    padding: 18px;
+  }
+}
+@media (max-width: 680px) {
+  #ski-web .ski-wrap {
+    padding-left: 6%;
+    padding-right: 6%;
+  }
+  #ski-web .ski-topline {
+    padding-left: 6%;
+    padding-right: 6%;
+  }
+  #ski-web .ski-topline span:last-child {
+    display: none;
+  }
+  #ski-web .ski-header {
+    flex-wrap: wrap;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    min-height: 86px;
+  }
+  #ski-web .ski-menu-button {
+    display: flex;
+  }
+  #ski-web .ski-nav {
+    display: none;
+    order: 3;
+    flex-basis: 100%;
+    flex-wrap: wrap;
+    padding-top: 14px;
+    border-top: 1px solid var(--ski-line);
+    font-size: 12px;
+    justify-content: space-between;
+  }
+  #ski-web .ski-nav.ski-open {
+    display: flex;
+  }
+  #ski-web .ski-nav a {
+    padding: 8px 0;
+  }
+  #ski-web .ski-header > .ski-button {
+    margin-left: auto;
+  }
+  #ski-web .ski-hero {
+    grid-template-columns: 1fr;
+    padding-top: 35px;
+    padding-bottom: 30px;
+    gap: 20px;
+  }
+  #ski-web .ski-hero h1 {
+    max-width: 430px;
+    font-size: 42px;
+  }
+  #ski-web .ski-hero-copy {
+    max-width: 430px;
+  }
+  #ski-web .ski-art {
+    width: min(100%, 365px);
+    justify-self: center;
+    height: 330px;
+  }
+  #ski-web .ski-membership {
+    width: 280px;
+    left: 2%;
+  }
+  #ski-web .ski-access {
+    width: 245px;
+    right: 0;
+  }
+  #ski-web .ski-values {
+    gap: 18px;
+    grid-template-columns: 1fr;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  #ski-web .ski-value {
+    justify-content: flex-start;
+  }
+  #ski-web .ski-value small {
+    font-size: 11px;
+  }
+  #ski-web .ski-value strong {
+    font-size: 13px;
+  }
+  #ski-web .ski-section-heading {
+    display: block;
+  }
+  #ski-web .ski-section-heading > p {
+    max-width: none;
+    margin-top: 12px;
+  }
+  #ski-web h2 {
+    font-size: 27px;
+  }
+  #ski-web .ski-product-grid {
+    grid-template-columns: 1fr;
+  }
+  #ski-web .ski-product {
+    padding: 20px;
+  }
+  #ski-web .ski-product-top {
+    margin-bottom: 14px;
+  }
+  #ski-web .ski-product-description {
+    font-size: 12px;
+    margin-bottom: 14px;
+  }
+  #ski-web .ski-product-more {
+    font-size: 12px;
+  }
+  #ski-web .ski-product-detail {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  #ski-web .ski-detail-features {
+    justify-content: flex-start;
+    font-size: 11px;
+  }
+  #ski-web .ski-join-head {
+    display: block;
+  }
+  #ski-web .ski-join-head > .ski-button {
+    margin-top: 20px;
+  }
+  #ski-web .ski-steps {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  #ski-web .ski-step h3 {
+    font-size: 13px;
+  }
+  #ski-web .ski-step p {
+    font-size: 12px;
+  }
+  #ski-web .ski-bottom {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  #ski-web .ski-footer {
+    display: block;
+  }
+  #ski-web .ski-footer-end {
+    text-align: left;
+    margin-top: 15px;
+  }
+  #ski-web .ski-overlay {
+    padding: 90px 15px 15px;
+  }
+  #ski-web .ski-dialog {
+    padding: 22px;
+  }
+}
+@media (max-width: 370px) {
+  #ski-web .ski-header > .ski-button {
+    display: none;
+  }
+  #ski-web .ski-menu-button {
+    margin-left: auto;
+  }
+  #ski-web .ski-hero h1 {
+    font-size: 36px;
+  }
+  #ski-web .ski-hero .ski-actions {
+    gap: 18px;
+  }
+  #ski-web .ski-membership {
+    width: 238px;
+  }
+  #ski-web .ski-access {
+    width: 228px;
+  }
+  #ski-web .ski-orbit {
+    width: 260px;
+    height: 260px;
+  }
+  #ski-web .ski-art-note {
+    display: none;
+  }
+}
+#ski-web .ski-header {
+  min-height: 98px;
+}
+#ski-web .ski-nav {
+  font-size: 13px;
+}
+#ski-web .ski-hero {
+  padding-top: 52px;
+  padding-bottom: 48px;
+  background: linear-gradient(110deg, var(--ski-paper) 48%, var(--ski-soft));
+}
+#ski-web .ski-hero h1 {
+  font-size: clamp(36px, 4.7vw, 48px);
+  letter-spacing: -1.8px;
+  line-height: 1.18;
+  margin-top: 19px;
+  margin-bottom: 22px;
+}
+#ski-web .ski-hero h1 em:after {
+  height: 3px;
+  width: 100px;
+  margin-top: 13px;
+}
+#ski-web .ski-hero-copy {
+  font-size: 15px;
+  max-width: 355px;
+  line-height: 1.8;
+}
+#ski-web .ski-actions {
+  gap: 22px;
+  margin-top: 28px;
+  align-items: center;
+}
+#ski-web .ski-button {
+  padding: 13px 20px;
+  border-radius: 9px;
+  font-size: 13px;
+}
+#ski-web .ski-text-link {
+  font-size: 13px;
+}
+#ski-web .ski-art {
+  height: 360px;
+}
+#ski-web .ski-orbit {
+  background: light-dark(#edf7fb, #173240);
+  border-color: transparent;
+}
+#ski-web .ski-orbit:after {
+  border-color: light-dark(#d9ebf1, #2c4b5b);
+  inset: -12px;
+}
+#ski-web .ski-membership {
+  top: 40px;
+  height: 182px;
+  transform: rotate(-5deg);
+  border-radius: 16px;
+  padding: 23px 26px;
+}
+#ski-web .ski-membership span {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+#ski-web .ski-access {
+  width: 270px;
+  bottom: 3px;
+  padding: 21px 21px 13px;
+  border-radius: 15px;
+  box-shadow: 0 18px 38px #00315d13;
+}
+#ski-web .ski-access-row {
+  font-size: 12px;
+  padding: 11px 0;
+}
+#ski-web .ski-mini-status {
+  background: var(--ski-soft);
+  color: var(--ski-muted);
+  font-size: 11px;
+  padding: 3px 7px;
+}
+#ski-web .ski-values {
+  padding-top: 19px;
+  padding-bottom: 19px;
+  background: var(--ski-soft);
+  border-top: 0;
+  border-bottom: 0;
+}
+#ski-web .ski-value {
+  gap: 10px;
+}
+#ski-web .ski-value strong {
+  font-weight: 500;
+  font-size: 13px;
+}
+#ski-web .ski-value svg {
+  width: 20px;
+  height: 20px;
+}
+#ski-web .ski-products {
+  padding-top: 44px;
+  padding-bottom: 42px;
+}
+#ski-web .ski-section-heading {
+  margin-bottom: 25px;
+}
+#ski-web h2 {
+  font-size: 28px;
+  font-weight: 700;
+}
+#ski-web .ski-product-grid {
+  gap: 18px;
+}
+#ski-web .ski-product {
+  padding: 24px;
+  border-radius: 13px;
+}
+#ski-web .ski-product:hover {
+  background: var(--ski-soft);
+}
+#ski-web .ski-product[aria-pressed='true'] {
+  background: var(--ski-mist);
+}
+#ski-web .ski-product-top {
+  margin-bottom: 25px;
+}
+#ski-web .ski-product-top > svg {
+  padding: 10px;
+  width: 45px;
+  height: 45px;
+  border-radius: 11px;
+  background: var(--ski-soft);
+}
+#ski-web .ski-product-top > span {
+  font-size: 12px;
+  color: var(--ski-muted);
+}
+#ski-web .ski-product-title {
+  font-size: 16px;
+  line-height: 1.45;
+}
+#ski-web .ski-product-description {
+  font-size: 13px;
+  line-height: 1.75;
+  margin: 10px 0 23px;
+}
+#ski-web .ski-product-more {
+  font-size: 12px;
+  border-top: 1px solid var(--ski-line);
+  padding-top: 15px;
+}
+#ski-web .ski-product-detail {
+  border-radius: 10px;
+}
+#ski-web .ski-product-detail p {
+  font-size: 12px;
+}
+#ski-web .ski-join {
+  margin: 0 5.5%;
+  padding: 32px;
+  border-radius: 18px;
+  background: linear-gradient(110deg, #004080, #07365f);
+}
+#ski-web .ski-join h2 {
+  font-size: 27px;
+  max-width: 390px;
+}
+#ski-web .ski-join-head {
+  gap: 26px;
+}
+#ski-web .ski-steps {
+  gap: 23px;
+  margin-top: 28px;
+  padding-top: 25px;
+  border-top: 1px solid #ffffff26;
+}
+#ski-web .ski-step {
+  gap: 10px;
+}
+#ski-web .ski-step-number {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #ffffff14;
+  font-size: 11px;
+}
+#ski-web .ski-step h3 {
+  font-size: 13px;
+}
+#ski-web .ski-step p {
+  font-size: 12px;
+  line-height: 1.65;
+}
+#ski-web .ski-bottom {
+  padding-top: 46px;
+  padding-bottom: 43px;
+  gap: 60px;
+}
+#ski-web .ski-about h2 {
+  font-size: 25px;
+  line-height: 1.35;
+}
+#ski-web .ski-about p {
+  font-size: 13px;
+  line-height: 1.85;
+  max-width: 345px;
+}
+#ski-web .ski-faq h3 {
+  font-size: 16px;
+  margin-top: 4px;
+  margin-bottom: 14px;
+}
+#ski-web .ski-faq summary {
+  font-size: 13px;
+  padding: 14px 0;
+}
+#ski-web .ski-faq details p {
+  font-size: 12px;
+  line-height: 1.8;
+}
+#ski-web .ski-footer {
+  background: var(--ski-paper);
+}
+@media (max-width: 850px) {
+  #ski-web .ski-nav {
+    font-size: 11px;
+  }
+  #ski-web .ski-hero {
+    gap: 24px;
+  }
+  #ski-web .ski-membership {
+    width: 250px;
+    left: 0;
+  }
+  #ski-web .ski-access {
+    width: 242px;
+  }
+  #ski-web .ski-product {
+    padding: 20px;
+  }
+  #ski-web .ski-product-title {
+    font-size: 15px;
+  }
+  #ski-web .ski-product-description {
+    font-size: 12px;
+  }
+  #ski-web .ski-join {
+    padding: 29px;
+  }
+  #ski-web .ski-bottom {
+    gap: 38px;
+  }
+}
+@media (max-width: 680px) {
+  #ski-web .ski-header {
+    min-height: 86px;
+  }
+  #ski-web .ski-nav {
+    font-size: 12px;
+  }
+  #ski-web .ski-hero {
+    padding-top: 35px;
+    padding-bottom: 31px;
+    gap: 26px;
+  }
+  #ski-web .ski-hero h1 {
+    font-size: 41px;
+  }
+  #ski-web .ski-hero-copy {
+    max-width: 380px;
+    font-size: 14px;
+  }
+  #ski-web .ski-art {
+    height: 332px;
+    width: min(100%, 355px);
+  }
+  #ski-web .ski-membership {
+    width: 275px;
+    left: 3%;
+    top: 28px;
+  }
+  #ski-web .ski-access {
+    width: 248px;
+    bottom: 0;
+  }
+  #ski-web .ski-values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 22px;
+  }
+  #ski-web .ski-value strong {
+    font-size: 12px;
+  }
+  #ski-web .ski-value svg {
+    width: 18px;
+    height: 18px;
+  }
+  #ski-web .ski-products {
+    padding-top: 35px;
+    padding-bottom: 32px;
+  }
+  #ski-web .ski-product {
+    padding: 22px;
+  }
+  #ski-web .ski-product-top {
+    margin-bottom: 17px;
+  }
+  #ski-web .ski-product-description {
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+  #ski-web .ski-join {
+    margin: 0 6%;
+    padding: 25px;
+    border-radius: 14px;
+  }
+  #ski-web .ski-join h2 {
+    font-size: 25px;
+  }
+  #ski-web .ski-steps {
+    gap: 21px;
+    margin-top: 24px;
+    padding-top: 23px;
+  }
+  #ski-web .ski-bottom {
+    padding-top: 35px;
+    padding-bottom: 32px;
+    gap: 32px;
+  }
+}
+@media (max-width: 370px) {
+  #ski-web .ski-hero h1 {
+    font-size: 35px;
+  }
+  #ski-web .ski-art {
+    height: 326px;
+  }
+  #ski-web .ski-membership {
+    width: 236px;
+    left: 0;
+  }
+  #ski-web .ski-access {
+    width: 228px;
+    padding: 17px 16px 11px;
+  }
+  #ski-web .ski-access-row {
+    font-size: 11px;
+  }
+  #ski-web .ski-orbit {
+    width: 242px;
+    height: 242px;
+  }
+  #ski-web .ski-actions {
+    gap: 15px;
+  }
+  #ski-web .ski-join {
+    padding: 22px;
+  }
+}
+
+#ski-web .ski-brand-image {
+  display: block;
+  width: 210px;
+  max-width: 100%;
+  height: auto;
+}
+#ski-web .ski-brand-image--white {
+  display: none;
+}
+#ski-web .ski-membership-brand {
+  display: block;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 238px;
+  height: auto;
+  margin: 3px 0 24px;
+}
+#ski-web .ski-membership span {
+  position: relative;
+  z-index: 1;
+}
+#ski-web .ski-footer-brand {
+  display: block;
+  width: 190px;
+  margin-bottom: 12px;
+}
+:root[data-theme='dark'] #ski-web .ski-brand-image--color {
+  display: none;
+}
+:root[data-theme='dark'] #ski-web .ski-brand-image--white {
+  display: block;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) #ski-web .ski-brand-image--color {
+    display: none;
+  }
+  :root:not([data-theme='light']) #ski-web .ski-brand-image--white {
+    display: block;
+  }
+}
+@media (max-width: 850px) {
+  #ski-web .ski-brand-image {
+    width: 190px;
+  }
+}
+@media (max-width: 680px) {
+  #ski-web .ski-brand-image {
+    width: 180px;
+  }
+}
+@media (max-width: 480px) {
+  #ski-web .ski-header > .ski-button {
+    display: none;
+  }
+  #ski-web .ski-menu-button {
+    margin-left: auto;
+  }
+}
+#ski-web .ski-staff-link {
+  display: block;
+  border: 0;
+  background: none;
+  color: var(--ski-link);
+  padding: 0;
+  margin-top: 8px;
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 600;
+}
+#ski-web .ski-staff-link:hover {
+  text-decoration: underline;
+}
+@media (max-width: 680px) {
+  #ski-web .ski-staff-link {
+    margin-left: 0;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 1rem;
+}

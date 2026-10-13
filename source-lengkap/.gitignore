@@ -1,0 +1,8 @@
+.sites-runtime/
+.DS_Store
+node_modules/
+dist/server/
+dist/.openai/
+dist/
+backend/templates/spa-image2.png
+backend/templates/membership-letter-source.docx

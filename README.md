@@ -1,76 +1,50 @@
-# KSPPS — paket website untuk GitHub
+# Website KSPPS Syirkah Kebaikan Indonesia
 
-Paket ini berasal dari website KSPPS Syirkah Kebaikan Indonesia yang telah dikerjakan, versi v18 tanggal 22 September 2026. Warna, logo, susunan halaman, dan desain dasarnya dipertahankan. Versi siap tayang diberi penanda layanan belum aktif, bukan diubah menjadi desain baru.
+Sumber aplikasi sudah disinkronkan dengan **revisi v36** pada 13 Oktober 2026. Kode terbaru berada di **[`source-lengkap/`](source-lengkap/)**. Gunakan folder tersebut sebagai direktori kerja saat melanjutkan pengembangan di Codex.
 
-**HTML dan CSS saja belum cukup.** Website ini juga memakai JavaScript dan gambar. Semua sudah ada dalam paket; Anda tidak perlu menyalin potongan kode satu per satu.
+| Bagian | Lokasi | Status |
+| --- | --- | --- |
+| Aplikasi terbaru | `source-lengkap/` | Svelte 5 + Vite, Worker, skema/migrasi, template dokumen dan pengujian v36 |
+| Website GitHub Pages | `docs/` | Pratinjau statis v18, tanpa login, database atau transaksi aktif |
+| Identitas versi | `VERSI.json` | Versi sumber aplikasi dan versi pratinjau dicatat terpisah |
+| Panduan domain | `PANDUAN-DOMAIN.md` | Domain dan alur penerbitan |
 
-## Isi paket
+Domain yang tercatat di `docs/CNAME`: **syirkahkebaikanindonesia.com**. Pembaruan kode di `source-lengkap/` belum memindahkan backend atau data ke domain tersebut. Folder `docs/` tetap menjadi sumber pratinjau statis yang sudah ada, sehingga portal tidak berpura-pura menerima pendaftaran atau transaksi tanpa backend.
 
-| Folder / file | Kegunaan |
-|---|---|
-| `docs/` | Website statis siap ditayangkan melalui GitHub Pages. |
-| `docs/index.html` | Halaman utama koperasi. |
-| `docs/anggota.html` | Tampilan login, pendaftaran, dan portal anggota. |
-| `docs/petugas.html` | Pratinjau Admin, Finance, dan Manajer; tidak ditautkan dari halaman utama. |
-| `docs/assets/` | CSS, JavaScript, dan seluruh versi logo. |
-| `source-lengkap/` | Kode aplikasi lengkap, backend, struktur database, template akad, serta pengujian untuk tim IT. |
-| `PANDUAN-DOMAIN.md` | Cara menghubungkan domain milik Anda. |
-| `VERSI.json` | Identitas versi kode yang diekspor. |
+## Revisi yang sudah masuk
 
-## 1. Ekstrak ZIP
+- Status normal berwarna hijau/biru; pengingat top up dan peringatan memakai merah.
+- Penawaran yang terpenuhi tetap terlihat di portal anggota selama 3 × 24 jam. Riwayat penawaran tetap ada di portal Manajer.
+- Portal Avalist terpisah di `/avalist.html`, dengan pendaftaran email oleh Manajer tanpa menjadikan avalist sebagai petugas.
+- Penetapan dan pergantian avalist untuk pengajuan baru maupun akad berjalan, berdasarkan periode efektif dan persetujuan Manajer.
+- Fee avalist 1% atau 2%, dengan sisa alokasi menjadi hak koperasi. Pembayaran selesai tetap tersimpan; koreksi dicatat terpisah.
+- Total fee kumulatif, total hak fee bulanan, pembayaran pada bulan terpilih, dan rincian pembayaran untuk periode hak tersebut.
+- Alur anggota, Admin, Finance dan Manajer; rekonsiliasi, akad PDF, simpanan, jatuh tempo, pengunduran diri dan laporan.
 
-Ekstrak paket ini di komputer. Buka folder `kspps-untuk-github`. File `README.md` dan folder `docs` harus terlihat langsung di dalamnya.
+Rincian implementasi: [`source-lengkap/to-do.md`](source-lengkap/to-do.md) dan [`source-lengkap/docs/WORKFLOWS.md`](source-lengkap/docs/WORKFLOWS.md).
 
-Anda bisa mencoba membuka `docs/index.html` di browser. Untuk peninjauan semua halaman yang lebih konsisten, tim IT dapat menjalankan `python3 -m http.server 8080 --directory docs` dari folder paket, lalu membuka `http://localhost:8080`. Situs daring nantinya menggunakan HTTPS.
+## Menjalankan dan menguji kode terbaru
 
-## 2. Unggah ke GitHub
+Gunakan Node.js 22.12 atau lebih baru:
 
-1. Masuk atau buat akun di https://github.com.
-2. Buat repository baru, misalnya `kspps-website`. Repository adalah folder proyek di GitHub.
-3. Untuk GitHub Pages pada akun gratis, gunakan repository **Public**. Pilihan ini membuat kode di dalam repository terlihat publik. Repository private memerlukan paket GitHub yang mendukung Pages.
-4. Pilih **Add file → Upload files**. Unggah **isi folder hasil ekstrak**, bukan file ZIP atau folder pembungkusnya.
-5. Simpan dengan **Commit changes**.
+```sh
+cd source-lengkap
+npm ci
+npm test
+npm run build:frontend
+npm run dev
+```
 
-Untuk kebutuhan tampilan sekarang, cukup unggah folder `docs` dan panduan ini. Folder `source-lengkap` bisa Anda kirim terpisah kepada tim IT, atau unggah ke repository kode yang mereka kelola. Bila Anda memilih mengunggah semua isi paket sekaligus, tetap gunakan folder `docs` sebagai sumber Pages. Jangan memasukkan data anggota atau hasil unggahan ke repository.
+Build backend lengkap (`npm run build`) memerlukan file tanda tangan privat yang dipasang melalui `KSPPS_MEMBERSHIP_SIGNATURE_FILE`; lihat [panduan aset template](source-lengkap/backend/templates/README.md). Tanda tangan dan DOCX yang menyematkannya tidak dipublikasikan ke repository ini.
 
-Jika unggahan seluruh folder sekaligus melewati batas jumlah file di layar GitHub, unggah bertahap atau gunakan GitHub Desktop. Untuk publikasi statis, `docs` hanya berisi sekitar 20 file.
+`npm run dev` menjalankan frontend lokal. API, identitas pengguna, database D1 dan penyimpanan R2 memerlukan lingkungan backend yang sesuai. Build menghasilkan empat HTML pembuka dan bundle Worker di `dist/server/index.js`; hasil build tidak perlu diunggah sebagai source.
 
-## 3. Tampilkan website
+Dari root repository juga tersedia `npm run setup`, `npm run check`, `npm run build`, `npm run dev`, dan `npm run test:app`. `npm test` di root hanya memeriksa pratinjau statis. Gunakan `npm run test:all` untuk memeriksa pratinjau dan aplikasi terbaru sekaligus.
 
-Buka **Settings → Pages** di repository. Pada **Source**, pilih **Deploy from a branch**. Pilih branch `main` dan folder **`/docs`**, lalu **Save**. Setelah deployment berhasil, buka alamat yang ditampilkan GitHub.
+## Penerbitan dan data
 
-Tidak ada langkah instalasi Node.js atau build untuk versi statis ini. Anda juga dapat menyalin seluruh isi `docs` ke folder publik hosting statis lain.
+Perubahan file `docs/` yang dikirim ke branch sumber GitHub Pages akan diterbitkan melalui konfigurasi Pages yang sudah terpasang. Sumber aplikasi dalam `source-lengkap/` memerlukan alur build dan deployment backend tersendiri agar tampil sebagai aplikasi operasional pada domain sendiri.
 
-## 4. Pasang domain
+Sebelum berpindah hosting, ikuti [`source-lengkap/docs/PINDAH-HOSTING.md`](source-lengkap/docs/PINDAH-HOSTING.md). Kode masih memakai identitas terpercaya dari lingkungan Sites; login email/kata sandi mandiri belum diaktifkan. GitHub Pages tidak menjalankan Worker, D1 atau R2.
 
-Ikuti `PANDUAN-DOMAIN.md`. Domain adalah alamat website, sedangkan GitHub Pages menyediakan tempat menayangkan file tampilannya. Paket ini belum memasang domain tertentu karena nama domain baru Anda belum disebutkan.
-
-## Yang sudah dapat dilihat
-
-- Halaman utama, navigasi, warna, dan logo koperasi.
-- Tampilan login anggota dan empat langkah formulir pendaftaran.
-- Portal anggota dengan keadaan kosong: simpanan, penyertaan modal, pembiayaan, dokumen, laporan, profil, dan pengunduran diri.
-- Pratinjau ruang kerja Admin, Finance, serta Manajer melalui alamat langsung `petugas.html`.
-
-Di halaman masuk anggota, pilih **Jelajahi portal anggota**. Formulir pendaftaran memiliki tombol **Lihat langkah berikutnya** agar seluruh tampilannya dapat diperiksa tanpa mengisi data.
-
-## Yang belum aktif di versi statis
-
-Login sungguhan, pendaftaran, penyimpanan data, unggahan KTP/tanda tangan/bukti/laporan, persetujuan, transaksi, serta pembuatan akad PDF belum berjalan. Kolom formulir dinonaktifkan. Angka nol dan daftar kosong menunjukkan bahwa versi ini tidak terhubung ke database; bukan saldo atau laporan operasional.
-
-Tombol pilihan peran di pratinjau petugas hanya menampilkan rancangan layar. Halaman tersebut bersifat publik tanpa data, **bukan sistem autentikasi**. Memisahkan alamat petugas dan menghapus tautannya dari halaman utama tidak membatasi akses secara teknis. Pembatasan akun yang sesungguhnya ada dalam backend dan perlu diaktifkan tim IT saat pindah hosting.
-
-Tidak ada data anggota, password, token aktivasi Manajer, database, atau berkas unggahan dari website lama di dalam paket. Website yang sebelumnya sudah tayang tidak berubah akibat ekspor ini.
-
-## Saat siap mengaktifkan layanan
-
-Berikan `source-lengkap` kepada tim IT. Baca `source-lengkap/README.md` untuk kebutuhan database, penyimpanan berkas, login, dan build. Mengunggah source backend ke GitHub tidak otomatis menjalankannya.
-
-GitHub Pages digunakan di sini untuk **pratinjau tampilan tanpa transaksi atau pengumpulan data**. Portal koperasi operasional memerlukan hosting aplikasi yang sesuai, bukan layanan Pages statis.
-
-Referensi resmi (diperiksa 22 September 2026):
-- https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages
-- https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
-- https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits
-
-Untuk tim IT: pemeriksaan versi statis dapat dijalankan dengan `npm test` dari folder paket, tanpa instalasi dependensi. Pemeriksaan mencakup navigasi, formulir baca-saja, penolakan perubahan data, serta API yang tidak mengirim permintaan jaringan.
+Sinkronisasi ini hanya membawa source, template dan pengujian. Database anggota, berkas unggahan, password, token dan secret deployment tidak disertakan. Konfigurasi `.openai/hosting.json` hanya mempertahankan nama binding `DB` dan `BUCKET`.

@@ -3,6 +3,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node tests/static-preview.mjs"
+    "test": "node tests/static-preview.mjs",
+    "setup": "npm --prefix source-lengkap ci",
+    "dev": "npm --prefix source-lengkap run dev",
+    "check": "npm --prefix source-lengkap run check",
+    "build": "npm --prefix source-lengkap run build",
+    "test:preview": "node tests/static-preview.mjs",
+    "test:app": "npm --prefix source-lengkap test",
+    "test:all": "npm run test:preview && npm run test:app",
+    "build:frontend": "npm --prefix source-lengkap run build:frontend"
   }
 }

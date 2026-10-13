@@ -1,0 +1,232 @@
+/**
+ * Akses akun petugas dan pergantian role yang diizinkan server.
+ * Tampilan halaman berada di frontend-petugas/src/components/staff-access/.
+ * Fragmen HTML di sini dipakai untuk tabel dinamis dan dialog; nilai pengguna
+ * harus melalui esc(). Otorisasi dan aturan keuangan tetap diperiksa server.
+ */
+/* Account permissions are issued by the server, never chosen by a new visitor. */
+export function initializeStaffAccess() {
+  'use strict';
+  const esc = (v) =>
+    String(v ?? '').replace(
+      /[&<>"']/g,
+      (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
+    );
+  let token = new URLSearchParams(location.hash.slice(1)).get('setup') || '';
+  if (token) history.replaceState(null, '', '#masuk');
+  const state = {
+    loaded: false,
+    loading: false,
+    signedIn: false,
+    staff: null,
+    identity: null,
+    request: null,
+    configured: true,
+    error: '',
+    accounts: [],
+    accountsLoaded: false,
+    busy: false,
+  };
+  const names = { manager: 'Manajer', admin: 'Admin', finance: 'Finance', avalist: 'Avalist' };
+  const announce = () => window.dispatchEvent(new CustomEvent('kspps-access-loaded'));
+  async function api(path, body) {
+    const r = await fetch('/api/workflow/staff/' + path, {
+      method: body ? 'POST' : 'GET',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      ...(body ? { body: JSON.stringify(body) } : {}),
+    });
+    const data = await r.json();
+    if (!r.ok) {
+      const e = new Error(data.error || 'Akses belum dapat diproses.');
+      e.status = r.status;
+      throw e;
+    }
+    return data;
+  }
+  async function load() {
+    if (state.loading) return;
+    state.loading = true;
+    state.error = '';
+    try {
+      const r = await api('access');
+      Object.assign(state, r, { loaded: true, signedIn: true });
+    } catch (e) {
+      state.loaded = true;
+      state.signedIn = false;
+      if (e.status !== 401) state.error = e.message;
+    } finally {
+      state.loading = false;
+      announce();
+    }
+  }
+  function entry() {
+    if (!state.loaded) return '<p role="status">Memeriksa akses akun…</p>';
+    if (state.error)
+      return /* HTML */ `<p class="form-error" role="alert">${esc(state.error)}</p>
+        <button type="button" class="btn" data-access-action="refresh">Coba lagi</button>`;
+    if (!state.signedIn) {
+      const target = '/petugas.html' + (token ? '#setup=' + encodeURIComponent(token) : '');
+      return /* HTML */ `<p>Masuk menggunakan akun yang terdaftar sebagai petugas.</p>
+        <a
+          class="btn full"
+          target="_top"
+          href="/signin-with-chatgpt?return_to=${encodeURIComponent(target)}"
+          >Masuk dengan ChatGPT</a
+        >`;
+    }
+    const who = /* HTML */ `<div class="staff-login-box">
+      <span class="avatar">${esc((state.identity?.name || 'P').slice(0, 1))}</span>
+      <div>
+        <strong>${esc(state.identity?.name)}</strong><small>${esc(state.identity?.email)}</small>
+      </div>
+    </div>`;
+    if (state.staff?.accountRole)
+      return (
+        who +
+        /* HTML */ `<div class="staff-role-entry">
+            ${state.staff.allowedRoles
+              .filter((r) => r !== 'avalist')
+              .map(
+                (r, i) =>
+                  /* HTML */ `<button
+                    type="button"
+                    class="btn ${i ? 'secondary ' : ''}full"
+                    data-action="enter"
+                    data-role="${r}"
+                  >
+                    Buka portal ${names[r]}
+                  </button>`,
+              )
+              .join('')}
+            ${state.staff.allowedRoles.includes('avalist') ? '<a class="btn secondary full" href="/avalist.html">Buka Portal Avalist</a>' : ''}
+          </div>
+          <p class="field-hint">Hak akses akun: ${names[state.staff.accountRole]}.</p>`
+      );
+    if (token && !state.configured)
+      return (
+        who +
+        /* HTML */ `<p>Aktifkan akun di atas sebagai Manajer utama koperasi.</p>
+          <button type="button" class="btn full" data-access-action="activate">
+            Aktifkan akun Manajer
+          </button>
+          <p class="field-hint">Tautan ini hanya dapat digunakan untuk satu akun.</p>`
+      );
+    return (
+      who +
+      /* HTML */ `<p>Akun ini belum memiliki akses petugas.</p>
+        ${
+          state.request
+            ? /* HTML */ `<p class="field-hint">
+                  ${state.request.status === 'revoked' ? 'Akses telah dicabut. Hubungi Manajer.' : 'Permintaan akses sudah dikirim. Sampaikan kode berikut kepada Manajer.'}
+                </p>
+                <p class="access-code">${esc(state.request.code)}</p>`
+            : '<button type="button" class="btn full" data-access-action="request">Ajukan akses ke Manajer</button>'
+        }<button type="button" class="btn secondary full" data-access-action="refresh">
+          Periksa akses
+        </button>`
+    );
+  }
+
+  function accountRows() {
+    if (!state.accountsLoaded) return '<p role="status">Memuat permintaan akses…</p>';
+    return state.accounts.length
+      ? /* HTML */ `<div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>AKUN / KODE PERMINTAAN</th>
+                <th>AKSES</th>
+                <th>TINDAKAN</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${state.accounts
+                .map(
+                  (x) =>
+                    /* HTML */ `<tr>
+                      <td>
+                        <strong>${esc(x.name)}</strong><small>${esc(x.email)}</small
+                        ><small class="access-code">${esc(x.code)}</small>
+                      </td>
+                      <td>
+                        ${names[x.role] || (x.status === 'revoked' ? 'Dicabut' : 'Menunggu persetujuan')}
+                      </td>
+                      <td>
+                        <div class="wf-actions">
+                          ${['admin', 'finance', 'avalist'].map((r) => /* HTML */ `<button class="btn secondary small-btn" data-access-action="grant" data-code="${esc(x.code)}" data-role="${r}" ${x.role === r ? 'disabled' : ''}>${names[r]}</button>`).join('')}${x.role ? /* HTML */ `<button class="btn secondary small-btn" data-access-action="grant" data-code="${esc(x.code)}" data-role="revoke">Cabut akses</button>` : ''}
+                        </div>
+                      </td>
+                    </tr>`,
+                )
+                .join('')}
+            </tbody>
+          </table>
+        </div>`
+      : '<div class="empty-state">Belum ada permintaan akses petugas.</div>';
+  }
+  async function accounts() {
+    const el = document.querySelector('#staff-account-list');
+    try {
+      state.accounts = (await api('accounts')).accounts;
+      state.accountsLoaded = true;
+      if (el) el.innerHTML = accountRows();
+    } catch (e) {
+      if (el) el.innerHTML = /* HTML */ `<p class="form-error">${esc(e.message)}</p>`;
+    }
+  }
+  function mount() {
+    if (location.hash === '#manager-akses' && !state.accountsLoaded) void accounts();
+  }
+  document.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-access-action]');
+    if (!b || state.busy) return;
+    const action = b.dataset.accessAction;
+    if (action === 'refresh') {
+      void load();
+      return;
+    }
+    if (action === 'accounts') {
+      void accounts();
+      return;
+    }
+    state.busy = true;
+    b.disabled = true;
+    try {
+      if (action === 'activate') {
+        await api('activate', { token, confirm: true });
+        token = '';
+        await load();
+      }
+      if (action === 'request') {
+        await api('access-request', {});
+        await load();
+      }
+      if (action === 'grant') {
+        await api('accounts', { code: b.dataset.code, role: b.dataset.role });
+        await accounts();
+      }
+    } catch (error) {
+      const el = document.querySelector('#staff-access-error');
+      if (el) {
+        el.hidden = false;
+        el.textContent = error.message;
+      } else {
+        const toast = document.querySelector('#toast');
+        if (toast) {
+          toast.hidden = false;
+          toast.textContent = error.message;
+        }
+      }
+    } finally {
+      state.busy = false;
+      if (b.isConnected) b.disabled = false;
+    }
+  });
+  window.KsppsStaffAccess = {
+    getViewContext: () => ({ accountRows, accounts }),
+    entry,
+    load,
+    mount,
+  };
+}

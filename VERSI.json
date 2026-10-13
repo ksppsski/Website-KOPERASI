@@ -1,9 +1,23 @@
 {
   "name": "KSPPS Syirkah Kebaikan Indonesia",
-  "exportedAt": "2026-09-22",
-  "sourceCommit": "27ef77091976129cfa29364b7720e78083f2cb6e",
-  "sourceVersion": "v18",
+  "exportedAt": "2026-10-13",
+  "sourceCommit": "5537c57d41f0c48bc3d4b7662885e9a66755b4a6",
+  "sourceVersion": "v36",
+  "sourceFolder": "source-lengkap",
   "publishedFolder": "docs",
+  "staticPreviewVersion": "v18",
+  "staticPreviewExportedAt": "2026-09-22",
+  "customDomain": "syirkahkebaikanindonesia.com",
   "backendActiveInStaticVersion": false,
-  "sourceNotes": "Kode aplikasi asli disertakan; konfigurasi identitas deployment tidak disertakan. Tidak berisi database atau unggahan anggota."
+  "sourceNotes": "Sumber aplikasi Svelte, Worker, migrasi hingga 0014 dan pengujian disinkronkan ke v36. docs tetap pratinjau statis v18 yang sudah dipublikasikan. Database, unggahan, secrets, dan identitas deployment asal tidak disertakan.",
+  "exportAdjustments": [
+    "Identitas deployment asal dihapus dari konfigurasi hosting.",
+    "Panduan dan status fitur diperbarui untuk susunan repository GitHub.",
+    "Metadata pembuat pada template PDF surat keanggotaan dibersihkan; tampilan tetap identik.",
+    "Aset tanda tangan dan DOCX yang menyematkannya tidak dipublikasikan. Build backend memerlukan file PNG privat; tes memakai gambar sintetis."
+  ],
+  "privateAssetsExcluded": [
+    "source-lengkap/backend/templates/spa-image2.png",
+    "source-lengkap/backend/templates/membership-letter-source.docx"
+  ]
 }
