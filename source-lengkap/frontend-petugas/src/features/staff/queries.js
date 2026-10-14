@@ -1,17 +1,19 @@
-import { workflowService } from '../../../../shared/services/workflow.js';
+import { ReviewButtonView, ActivityLogsView, ActivityLogs2View } from './views/queries.svelte';
+import { view, fallbackView, snippetView } from '../../../../shared/runtime/view.js';
+
 /**
  * Pembacaan antrean anggota, aktivitas, dan persyaratan draf.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
-export function createStaffQueries({ runtime, esc, icon }) {
+export function createStaffQueries({ app, runtime, esc, icon }) {
   const member = (id) => runtime.state.members.find((x) => x.id === id);
 
   const name = (id) => member(id)?.name || 'Anggota contoh';
 
-  const workflowItems = () => workflowService?.getItems() || [];
+  const workflowItems = () => app.services.workflow?.getItems() || [];
 
-  const allProfiles = () => workflowService?.getProfiles() || [];
+  const allProfiles = () => app.services.workflow?.getProfiles() || [];
 
   const dateLabel = (value) =>
     value
@@ -24,14 +26,12 @@ export function createStaffQueries({ runtime, esc, icon }) {
       : '—';
 
   const reviewButton = (id = '', label = 'Periksa', registration = false) =>
-    /* HTML */ `<button
-      type="button"
-      class="btn secondary small-btn"
-      data-wf-action="${registration ? 'registration-review' : 'review'}"
-      data-id="${esc(id)}"
-    >
-      ${label} ${icon('chevron')}
-    </button>`;
+    snippetView(ReviewButtonView, {
+      registrationContent: registration ? 'registration-review' : 'review',
+      id: esc(id),
+      label: label,
+      icon: icon('chevron'),
+    });
 
   function candidateRows() {
     return allProfiles().map((p) => {
@@ -83,17 +83,14 @@ export function createStaffQueries({ runtime, esc, icon }) {
         text: 'Pendaftaran ' + p.data.name + ' · ' + p.status,
         time: p.updatedAt || p.createdAt,
       });
-    return (
+    return fallbackView(
       rows
         .sort((a, b) => new Date(b.time) - new Date(a.time))
         .slice(0, 5)
-        .map(
-          (x) =>
-            /* HTML */ `<div class="log-item">
-              ${esc(x.text)}<small>${dateLabel(x.time)}</small>
-            </div>`,
-        )
-        .join('') || '<div class="empty-state">Belum ada aktivitas pemeriksaan.</div>'
+        .map((x) =>
+          snippetView(ActivityLogsView, { text: esc(x.text), dateLabel: dateLabel(x.time) }),
+        ),
+      snippetView(ActivityLogs2View),
     );
   }
 

@@ -1,7 +1,10 @@
 <script>
+  import PageHeading from '../../../../shared/components/PageHeading.svelte';
+  import Content from '../../../../shared/components/Content.svelte';
+  import { getContext } from 'svelte';
+  const app = getContext('kspps-portal');
   import DataTable from '../../../../shared/components/DataTable.svelte';
   import EmptyTableRow from '../../../../shared/components/EmptyTableRow.svelte';
-  import { activityService } from '../../../../shared/services/activity.js';
   let { context } = $props();
   let {
     wf,
@@ -21,24 +24,24 @@
 
 {#if context}
   {@const p = state.payout}
-  {@html heading(
-    'Bagi Hasil Harian',
-    'Daftar nominal yang perlu ditransfer ke rekening anggota.',
-    datePicker(),
-  ) ?? ''}{#if !state.loaded || state.loading || state.error}
-    {@html loading() ?? ''}
+  <PageHeading
+    title={'Bagi Hasil Harian'}
+    description={'Daftar nominal yang perlu ditransfer ke rekening anggota.'}
+    action={datePicker()}
+  />{#if !state.loaded || state.loading || state.error}
+    <Content value={loading() ?? ''} />
   {:else}
-    {@html metrics() ?? ''}{#if p?.task}
-      {@html (activityService?.panel(p.task.targetId, 'payout') || '') ?? ''}
+    <Content value={metrics() ?? ''} />{#if p?.task}
+      <Content value={(app.services.activity?.panel(p.task.targetId, 'payout') || '') ?? ''} />
     {/if}{#if p?.task && !p.task.completedAt}
       <div class="wf-actions work-payout-action">
-        {@html action('payout-complete', 'Selesaikan persiapan') ?? ''}
+        <Content value={action('payout-complete', 'Selesaikan persiapan') ?? ''} />
       </div>
     {/if}
     <section class="panel">
       <div class="panel-head">
         <h2>Daftar transfer · {date(state.date)}</h2>
-        {@html action('csv', 'Unduh CSV', p?.members.length ? '' : 'disabled') ?? ''}
+        <Content value={action('csv', 'Unduh CSV', { disabled: !p?.members.length }) ?? ''} />
       </div>
       {#if p?.missingAccountCount}
         <p class="form-error">

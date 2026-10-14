@@ -1,82 +1,57 @@
+import {
+  BadgeView,
+  HeadingView,
+  ActionView,
+  Table2View,
+  Table3View,
+  TableView,
+  LoadingView,
+  Loading2View,
+  MetricsView,
+  QueueTable2View,
+  QueueTableView,
+  DatePickerView,
+} from './views/presentation.svelte';
+import { headingView, tableView } from '../../../../shared/lib/view-helpers.js';
+import { view, snippetView } from '../../../../shared/runtime/view.js';
+
 /**
  * Presentasi ringkasan Finance dan daftar rekonsiliasi.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 import { statusColor } from '../../../../shared/lib/status-colors.js';
-export function createFinancePresentation({ esc, state, money, date }) {
+export function createFinancePresentation({ app, esc, state, money, date }) {
   const badge = (r) =>
-    /* HTML */ `<span class="badge ${statusColor(r?.status)}"
-      >${esc(r?.label || 'Menunggu Finance')}</span
-    >`;
+    snippetView(BadgeView, {
+      statusColor: statusColor(r?.status),
+      label: esc(r?.label || 'Menunggu Finance'),
+    });
 
-  function heading(title, description, action = '') {
-    return /* HTML */ `<div class="page-heading">
-      <div>
-        <h1>${title}</h1>
-        <p class="subtext">${description}</p>
-      </div>
-      ${action}
-    </div>`;
-  }
+  const heading = headingView;
 
   const action = (a, label, attrs = '') =>
-    /* HTML */ `<button
-      type="button"
-      class="btn secondary small-btn"
-      data-finance-action="${a}"
-      ${attrs}
-    >
-      ${label}
-    </button>`;
+    snippetView(ActionView, { a: a, attrs: attrs, label: label });
 
-  function table(headers, rows, empty) {
-    return /* HTML */ `<div class="table-scroll">
-      <table>
-        <thead>
-          <tr>
-            ${headers.map((h) => /* HTML */ `<th>${h}</th>`).join('')}
-          </tr>
-        </thead>
-        <tbody>
-          ${
-            rows ||
-            /* HTML */ `<tr>
-              <td colspan="${headers.length}"><div class="empty-state">${empty}</div></td>
-            </tr>`
-          }
-        </tbody>
-      </table>
-    </div>`;
-  }
+  const table = tableView;
 
   function loading() {
     if (state.error)
-      return /* HTML */ `<div class="panel">
-        <p class="form-error" role="alert">${esc(state.error)}</p>
-        ${action('refresh', 'Coba lagi')}
-      </div>`;
-    return '<div class="panel"><p class="muted" role="status">Memuat data Finance…</p></div>';
+      return snippetView(LoadingView, {
+        error: esc(state.error),
+        action: action('refresh', 'Coba lagi'),
+      });
+    return snippetView(Loading2View);
   }
 
   function metrics() {
     const p = state.payout;
-    return /* HTML */ `<div class="stats finance-stats">
-      <div class="stat">
-        <div class="stat-top">Total bagi hasil</div>
-        <div class="stat-value finance-value">${money(p?.total)}</div>
-        <div class="stat-bottom">${date(state.date)} · 5% per akad</div>
-      </div>
-      <div class="stat">
-        <div class="stat-top">Anggota penerima</div>
-        <div class="stat-value">${p?.memberCount || 0}</div>
-        <div class="stat-bottom">${p?.transferCount || 0} rekening tujuan</div>
-      </div>
-      <div class="stat">
-        <div class="stat-top">Akad terjadwal</div>
-        <div class="stat-value">${p?.contractCount || 0}</div>
-        <div class="stat-bottom">Pembayaran bulanan</div>
-      </div>
-    </div>`;
+    return snippetView(MetricsView, {
+      money: money(p?.total),
+      date: date(state.date),
+      memberCount: p?.memberCount || 0,
+      transferCount: p?.transferCount || 0,
+      contractCount: p?.contractCount || 0,
+    });
   }
 
   function queueTable(limit = 0) {
@@ -85,38 +60,32 @@ export function createFinancePresentation({ esc, state, money, date }) {
     );
     return table(
       ['ANGGOTA / SETORAN', 'NOMINAL', 'REKONSILIASI', 'TINDAKAN'],
-      (limit ? items.slice(0, limit) : items)
-        .map(
-          (x) =>
-            /* HTML */ `<tr>
-              <td>
-                <strong>${esc(x.memberName)}</strong
-                ><small>${esc(x.memberId || '—')} · ${esc(x.label)}</small
-                >${x.projectCode ? /* HTML */ `<small class="offer-code">${esc(x.projectCode)}</small>` : ''}
-              </td>
-              <td class="money">${money(x.amount)}</td>
-              <td>${badge(x.reconciliation)}</td>
-              <td>
-                ${action('reconcile', x.reconciliation.status === 'approved' ? 'Lihat' : 'Periksa', `data-id="${esc(x.id)}" data-kind="${x.kind}"`)}
-              </td>
-            </tr>`,
-        )
-        .join(''),
+      (limit ? items.slice(0, limit) : items).map((x) =>
+        snippetView(QueueTableView, {
+          memberName: esc(x.memberName),
+          memberId: esc(x.memberId || '—'),
+          label: esc(x.label),
+          projectCodeContent: x.projectCode
+            ? snippetView(QueueTable2View, { projectCode: esc(x.projectCode) })
+            : '',
+          money: money(x.amount),
+          badge: badge(x.reconciliation),
+          action: action(
+            'reconcile',
+            x.reconciliation.status === 'approved' ? 'Lihat' : 'Periksa',
+            { 'data-id': esc(x.id), 'data-kind': x.kind },
+          ),
+        }),
+      ),
       'Belum ada bukti transfer yang sesuai.',
     );
   }
 
   function datePicker() {
-    return /* HTML */ `<div class="finance-date">
-      <label for="finance-date">Tanggal pembayaran</label
-      ><input
-        id="finance-date"
-        type="date"
-        min="1901-01-01"
-        max="9998-12-31"
-        value="${esc(state.date)}"
-      />${action('today', 'Hari ini')}
-    </div>`;
+    return snippetView(DatePickerView, {
+      date: esc(state.date),
+      action: action('today', 'Hari ini'),
+    });
   }
   return { badge, heading, action, table, loading, metrics, queueTable, datePicker };
 }

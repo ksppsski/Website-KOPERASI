@@ -1,13 +1,10 @@
 # Website KSPPS — Svelte
 
-**Sumber revisi v38**, disalin pada 14 Oktober 2026 dari commit `7a0afab2d89f09e6d7fd27051f085b1f746b4187`. Folder ini adalah sumber aplikasi terbaru untuk dilanjutkan di Codex. Panduan pindah hosting ada di [docs/PINDAH-HOSTING.md](docs/PINDAH-HOSTING.md).
-
 Website KSPPS Syirkah Kebaikan Indonesia menggunakan Svelte 5 + Vite untuk frontend dan Worker untuk backend. **Daftar pekerjaan dan status fitur ada di [to-do.md](to-do.md).**
 
 ## Panduan tim IT
 
 Buka **[Peta kode dan panduan pemeliharaan](docs/PETA-KODE.md)** untuk mencari file berdasarkan fitur atau gejala bug. Source tetap memakai Svelte 5; controller telah dipisahkan menjadi pembacaan data, formulir, tampilan, dan handler. Hubungan antarfitur memakai import eksplisit, dengan pemeriksaan otomatis untuk mencegah import melingkar.
-
 
 ## Bagian utama
 
@@ -59,10 +56,8 @@ Perintah ini menjalankan **tampilan lokal**. Data portal memerlukan API, autenti
 
 ```sh
 npm test
-npm run build:frontend
+npm run build
 ```
-
-Untuk `npm run build` lengkap, sediakan gambar tanda tangan privat melalui `KSPPS_MEMBERSHIP_SIGNATURE_FILE` sesuai [panduan template](backend/templates/README.md). Berkas tanda tangan dan sumber Word yang menyematkannya dikecualikan dari GitHub publik; pengujian memakai gambar sintetis. Build backend menolak melanjutkan bila aset privat belum tersedia.
 
 `npm test` memeriksa Svelte, batas arsitektur, tampilan, interaksi dan aturan backend. `npm run build` menghasilkan empat HTML, aset frontend serta `dist/server/index.js`. URL `index.html`, `anggota.html`, `petugas.html`, `avalist.html`, rute `#...` dan API `/api/workflow` tetap digunakan.
 
@@ -74,6 +69,14 @@ Perintah terpisah tersedia untuk proses build: `npm run build:frontend`, lalu `n
 
 Pemisahan sumber mempertahankan tampilan, aturan server, template PDF dan data pratinjau. Ini belum mengaktifkan login email/kata sandi mandiri atau memindahkan database ke domain sendiri. API pratinjau masih memakai identitas ChatGPT; sebagian pengajuan pembiayaan/angsuran masih simulasi.
 
-Sebagian tabel/dialog tetap memakai HTML helper yang meng-escape nilai pengguna. Jangan memasukkan data pengguna mentah ke `{@html}`. Perubahan folder/frontend tidak menggantikan otorisasi server.
+Tabel, panel, dan dialog sekarang menggunakan komponen/snippet Svelte. `shared/runtime/` mengatur state per portal, region tampilan, serta pembersihan listener, timer, dan permintaan. Klien HTTP hanya mengirim permintaan dan membaca respons; aturan izin tetap diperiksa server.
 
 Tes frontend memakai DOM simulasi (JSDOM), bukan pemeriksaan visual browser nyata. Rincian aturan ada di [docs/WORKFLOWS.md](docs/WORKFLOWS.md), sedangkan riwayat migrasi di [docs/MIGRASI-SVELTE.md](docs/MIGRASI-SVELTE.md).
+
+## Build dari satu sumber
+
+- `npm run build`: frontend dan backend untuk hosting aplikasi.
+- `npm run build:preview`: empat halaman yang sama di `dist-preview/`, tanpa koneksi API. Formulir tidak menerima data pribadi dan semua transaksi ditolak.
+- `npm run test:preview`: memeriksa portal anggota, petugas, dan avalist pada mode statis, termasuk tidak adanya permintaan jaringan.
+
+Favicon dibuat otomatis saat build dari `public/assets/kspps-symbol.svg`. Jangan mengedit hasil `dist/` atau `dist-preview/`. Di repository GitHub, `npm run build:pages` menyalin hasil pratinjau ke `docs/`; Pages tetap memakai domain yang sudah dikonfigurasi.

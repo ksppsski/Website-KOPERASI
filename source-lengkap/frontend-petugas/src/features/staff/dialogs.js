@@ -1,9 +1,27 @@
+import {
+  DialogView,
+  DecisionFormView,
+  CandidateDialogView,
+  CandidateDialog2View,
+  DepositDialog2View,
+  DepositDialog3View,
+  DepositDialogView,
+  RequestDialog2View,
+  RequestDialog3View,
+  RequestDialogView,
+  MemberDialogView,
+  DraftDialogView,
+  ContractDialogView,
+} from './views/dialogs.svelte';
+import { view, snippetView } from '../../../../shared/runtime/view.js';
+
 /**
  * Dialog pemeriksaan petugas dan detail dokumen.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
 export function createStaffDialogs({
+  app,
   runtime,
   $,
   icon,
@@ -21,15 +39,10 @@ export function createStaffDialogs({
 }) {
   function dialog(title, body) {
     runtime.lastFocus = document.activeElement;
-    $('#dialog-content').innerHTML = /* HTML */ `<div class="dialog-inner">
-      <div class="dialog-head">
-        <h2 id="dialog-title">${title}</h2>
-        <button type="button" class="icon-btn" data-action="close" aria-label="Tutup">
-          ${icon('close')}
-        </button>
-      </div>
-      ${body}
-    </div>`;
+    app.ui.render(
+      $('#dialog-content'),
+      snippetView(DialogView, { title: title, icon: icon('close'), body: body }),
+    );
     modal.showModal();
   }
 
@@ -39,32 +52,20 @@ export function createStaffDialogs({
   }
 
   function decisionForm(kind, id, items, label) {
-    return /* HTML */ `<form
-      class="decision-form"
-      id="decision-form"
-      data-kind="${kind}"
-      data-id="${id}"
-    >
-      ${checks(items)}<label class="form-field"
-        ><span>Catatan petugas</span
-        ><textarea name="note" placeholder="Wajib diisi jika meminta perbaikan"></textarea>
-      </label>
-      <p class="form-error" id="decision-error" role="alert" hidden></p>
-      <div class="decision-actions">
-        <button type="submit" class="btn secondary" name="decision" value="return" formnovalidate>
-          Minta perbaikan</button
-        ><button type="submit" class="btn" name="decision" value="approve">${label}</button>
-      </div>
-      <p class="dialog-note">Perubahan ini hanya berlaku pada data contoh di portal petugas.</p>
-    </form>`;
+    return snippetView(DecisionFormView, {
+      kind: kind,
+      id: id,
+      checks: checks(items),
+      label: label,
+    });
   }
 
   function candidateDialog(id) {
     const x = runtime.state.candidates.find((x) => x.id === id);
     if (!x) return;
-    dialog(
-      'Pemeriksaan calon anggota',
-      `${statusHead(x)}${review([
+    dialog('Pemeriksaan calon anggota', [
+      statusHead(x),
+      review([
         ['Nama lengkap', x.name],
         ['Nomor identitas', x.identity],
         ['WhatsApp', x.phone],
@@ -73,22 +74,20 @@ export function createStaffDialogs({
         ['Pekerjaan', x.job],
         ['Ahli waris', x.heir],
         ['Setoran awal (contoh)', rupiah(x.amount)],
-      ])}${x.note ? /* HTML */ `<div class="info-box">Catatan: ${esc(x.note)}</div>` : ''}${
-        x.status === 'Disetujui'
-          ? /* HTML */ `<div class="info-box">
-              Keanggotaan contoh aktif dengan nomor <strong>${x.memberId}</strong>.
-            </div>`
-          : decisionForm(
-              'candidate',
-              id,
-              [
-                ['identity', 'Data identitas dan persyaratan sesuai.'],
-                ['funds', 'Setoran keanggotaan sudah dicocokkan.'],
-              ],
-              'Setujui keanggotaan',
-            )
-      }`,
-    );
+      ]),
+      x.note ? snippetView(CandidateDialogView, { note: esc(x.note) }) : '',
+      x.status === 'Disetujui'
+        ? snippetView(CandidateDialog2View, { memberId: x.memberId })
+        : decisionForm(
+            'candidate',
+            id,
+            [
+              ['identity', 'Data identitas dan persyaratan sesuai.'],
+              ['funds', 'Setoran keanggotaan sudah dicocokkan.'],
+            ],
+            'Setujui keanggotaan',
+          ),
+    ]);
   }
 
   function depositDialog(id) {
@@ -96,25 +95,22 @@ export function createStaffDialogs({
     if (!x) return;
     dialog(
       'Pemeriksaan setoran',
-      /* HTML */ `${statusHead(x)}${review([
+      snippetView(DepositDialogView, {
+        statusHead: statusHead(x),
+        review: review([
           ['Anggota', name(x.member)],
           ['Nomor anggota', x.member],
           ['Jenis setoran', x.type],
           ['Periode / referensi', x.period],
           ['Nominal pengajuan', rupiah(x.amount)],
-        ])}
-        <div class="staff-proof">
-          <div class="eyebrow">Bukti pembayaran · Contoh</div>
-          <h3>${esc(name(x.member))}</h3>
-          <div class="proof-amount">${rupiah(x.proof)}</div>
-          <div class="proof-status">
-            <span>Nominal pada pencatatan dana</span
-            ><strong>${x.amount === x.proof ? 'Sesuai' : 'Berbeda'}</strong>
-          </div>
-        </div>
-        ${x.note ? /* HTML */ `<div class="info-box">Catatan: ${esc(x.note)}</div>` : ''}${
+        ]),
+        fieldName: esc(name(x.member)),
+        rupiah: rupiah(x.proof),
+        amountContent: x.amount === x.proof ? 'Sesuai' : 'Berbeda',
+        noteContent: x.note ? snippetView(DepositDialog2View, { note: esc(x.note) }) : '',
+        statusContent:
           x.status === 'Terverifikasi'
-            ? '<div class="info-box">Setoran contoh sudah diverifikasi. Pemeriksaan tidak dapat diulang.</div>'
+            ? snippetView(DepositDialog3View)
             : decisionForm(
                 'deposit',
                 id,
@@ -124,8 +120,8 @@ export function createStaffDialogs({
                   ['reconciled', 'Dana masuk sudah direkonsiliasi.'],
                 ],
                 'Verifikasi setoran',
-              )
-        }`,
+              ),
+      }),
     );
   }
 
@@ -134,7 +130,9 @@ export function createStaffDialogs({
     if (!x) return;
     dialog(
       'Tinjauan pengajuan layanan',
-      /* HTML */ `${statusHead(x)}${review([
+      snippetView(RequestDialogView, {
+        statusHead: statusHead(x),
+        review: review([
           ['Anggota', name(x.member)],
           ['Layanan', x.type],
           ['Kebutuhan', x.purpose],
@@ -143,19 +141,17 @@ export function createStaffDialogs({
           ...(x.type === 'Penyertaan Modal'
             ? [['Status dana', x.funds ? 'Terverifikasi' : 'Menunggu verifikasi']]
             : []),
-        ])}${x.note ? /* HTML */ `<div class="info-box">Catatan: ${esc(x.note)}</div>` : ''}${
+        ]),
+        noteContent: x.note ? snippetView(RequestDialog2View, { note: esc(x.note) }) : '',
+        statusContent:
           x.status === 'Disetujui'
-            ? /* HTML */ `<div class="info-box">
-                  Pengajuan sudah disetujui untuk proses penyiapan
-                  akad.${
-                    x.type === 'Penyertaan Modal' && !x.funds
-                      ? ' Verifikasi setoran diperlukan sebelum draf dibuat.'
-                      : ''
-                  }
-                </div>
-                <div class="form-actions">
-                  <a href="#akad" class="btn full">Lihat penyiapan akad ${icon('arrow')}</a>
-                </div>`
+            ? snippetView(RequestDialog3View, {
+                typeContent:
+                  x.type === 'Penyertaan Modal' && !x.funds
+                    ? ' Verifikasi setoran diperlukan sebelum draf dibuat.'
+                    : '',
+                icon: icon('arrow'),
+              })
             : decisionForm(
                 'request',
                 id,
@@ -164,15 +160,12 @@ export function createStaffDialogs({
                   ['purposeChecked', 'Kebutuhan dan rincian pengajuan sudah ditinjau.'],
                 ],
                 'Setujui pengajuan',
-              )
-        }
-        <p class="staff-dialog-note">
-          ${
-            x.type === 'Pembiayaan'
-              ? 'Harga jual, margin, dan jadwal final tetap memerlukan kesepakatan dalam akad.'
-              : 'Penyertaan modal untuk pengadaan kebutuhan barang Mitra sesuai akad.'
-          }
-        </p>`,
+              ),
+        typeContent:
+          x.type === 'Pembiayaan'
+            ? 'Harga jual, margin, dan jadwal final tetap memerlukan kesepakatan dalam akad.'
+            : 'Penyertaan modal untuk pengadaan kebutuhan barang Mitra sesuai akad.',
+      }),
     );
   }
 
@@ -181,26 +174,18 @@ export function createStaffDialogs({
     if (!x) return;
     dialog(
       'Rincian anggota',
-      /* HTML */ `${statusHead({ ...x, status: 'Aktif' })}
-        <h3>${esc(x.name)}</h3>
-        ${review([
+      snippetView(MemberDialogView, {
+        statusHead: statusHead({ ...x, status: 'Aktif' }),
+        fieldName: esc(x.name),
+        review: review([
           ['Nomor anggota', x.id],
           ['Tanggal bergabung', x.since],
           ['Status keanggotaan', 'Aktif'],
-        ])}
-        <div class="member-ledger">
-          <div>
-            <span>Simpanan pokok & wajib</span><strong>${rupiah(x.pokok + x.wajib)}</strong>
-          </div>
-          <div><span>Penyertaan modal aktif</span><strong>${rupiah(x.modal)}</strong></div>
-          <div><span>Sisa tagihan pembiayaan</span><strong>${rupiah(x.tagihan)}</strong></div>
-          <div><span>Status akses portal</span><strong>Aktif</strong></div>
-        </div>
-        <p class="staff-dialog-note">
-          Ini gambaran data yang dikelola petugas untuk masing-masing anggota. Penyertaan modal dan
-          pengunduran diri dapat dicoba melalui alur pengajuan yang tersambung. Saldo pada ringkasan
-          ini tetap data contoh.
-        </p>`,
+        ]),
+        rupiah: rupiah(x.pokok + x.wajib),
+        rupiahValue: rupiah(x.modal),
+        rupiahValueValue: rupiah(x.tagihan),
+      }),
     );
   }
 
@@ -213,22 +198,17 @@ export function createStaffDialogs({
     }
     dialog(
       'Siapkan draf akad',
-      /* HTML */ `${review([
+      snippetView(DraftDialogView, {
+        review: review([
           ['Referensi pengajuan', x.id],
           ['Anggota', name(x.member)],
           ['Jenis akad', x.type === 'Pembiayaan' ? 'Murabahah' : 'Penyertaan Modal'],
           ['Nilai pengajuan', rupiah(x.amount)],
           ['Usulan periode', x.period],
-        ])}
-        <form id="draft-form" data-id="${id}">
-          ${checks([['finalCheck', 'Data anggota dan rincian pengajuan sudah diperiksa.']])}
-          <p class="form-error" id="decision-error" role="alert" hidden></p>
-          <div class="decision-actions">
-            <button type="button" class="btn secondary" data-action="close">Batal</button
-            ><button type="submit" class="btn">Buat draf contoh</button>
-          </div>
-        </form>
-        <p class="dialog-note">Draf ini hanya ringkasan contoh, bukan naskah akad resmi.</p>`,
+        ]),
+        id: id,
+        checks: checks([['finalCheck', 'Data anggota dan rincian pengajuan sudah diperiksa.']]),
+      }),
     );
   }
 
@@ -237,25 +217,18 @@ export function createStaffDialogs({
     if (!x) return;
     dialog(
       'Pratinjau dokumen akad',
-      /* HTML */ `<article class="document-preview">
-          ${logo()}
-          <div class="watermark">Dokumen contoh · Tidak berlaku sebagai akad</div>
-          <h3>${x.type === 'Pembiayaan' ? 'Akad Murabahah' : 'Akad Penyertaan Modal'}</h3>
-          ${review([
-            ['Nomor dokumen', x.id],
-            ['Anggota', name(x.member)],
-            ['Referensi pengajuan', x.request || 'PM-2026-001'],
-            ['Nilai', rupiah(x.amount)],
-            ['Tanggal', x.date],
-            ['Status', x.status],
-          ])}
-          <p>Naskah dan ketentuan akad resmi akan disusun serta diperiksa oleh tim koperasi.</p>
-        </article>
-        <div class="form-actions">
-          <button type="button" class="btn secondary full" data-action="close">
-            Tutup pratinjau
-          </button>
-        </div>`,
+      snippetView(ContractDialogView, {
+        logo: logo(),
+        typeContent: x.type === 'Pembiayaan' ? 'Akad Murabahah' : 'Akad Penyertaan Modal',
+        review: review([
+          ['Nomor dokumen', x.id],
+          ['Anggota', name(x.member)],
+          ['Referensi pengajuan', x.request || 'PM-2026-001'],
+          ['Nilai', rupiah(x.amount)],
+          ['Tanggal', x.date],
+          ['Status', x.status],
+        ]),
+      }),
     );
   }
   return {

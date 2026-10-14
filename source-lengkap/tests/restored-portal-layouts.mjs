@@ -185,9 +185,19 @@ const signed = {
   contractData: agreementRules('2026-01-21'),
 };
 const member = await harness();
-assert.match(member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /password-field/);
+assert.match(
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /password-field/,
+);
 assert(
-  !member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' ').includes('value="anggota@'),
+  !member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' ')
+    .includes('value="anggota@'),
 );
 await member.click({ action: 'enter-portal' });
 for (const token of [
@@ -199,21 +209,56 @@ for (const token of [
   'Belum terdaftar',
   'Rp0',
 ])
-  assert(member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' ').includes(token), token);
+  assert(
+    member.app.innerHTML
+      .replace(/<!--.*?-->/g, '')
+      .replaceAll('&amp;', '&')
+      .replace(/\s+/g, ' ')
+      .includes(token),
+    token,
+  );
 assert(
-  !member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' ').includes('Anggota Demo'),
+  !member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' ')
+    .includes('Anggota Demo'),
 );
 await member.update({ profile, items: [signed] });
-assert.match(member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /SKI-2026-0042/);
-assert.match(member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /Rp160\.000/);
+assert.match(
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /SKI-2026-0042/,
+);
+assert.match(
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /Rp160\.000/,
+);
 await member.route('simpanan');
 assert.match(
-  member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /balance-breakdown/,
 );
-assert.match(member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /Rp100\.000/);
 assert.match(
-  member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /Rp100\.000/,
+);
+assert.match(
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Simpanan Lainnya/,
 );
 member.nodes['#savings-filter'].value = 'Simpanan Lainnya';
@@ -221,44 +266,101 @@ await member.document.emit('change', {
   target: { id: 'savings-filter', value: 'Simpanan Lainnya' },
 });
 assert.match(
-  member.nodes['#savings-rows'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.nodes['#savings-rows'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Rp50\.000/,
 );
 assert(
   !member.nodes['#savings-rows'].innerHTML
+    .replace(/<!--.*?-->/g, '')
     .replaceAll('&amp;', '&')
     .replace(/\s+/g, ' ')
     .includes('Rp100.000'),
 );
 await member.route('modal');
-assert.match(member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /contract-list/);
-assert.match(member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /0007\/SPK-SKI/);
-assert(!member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' ').includes('NaN'));
-assert.match(member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /1 Feb 2026/);
-await member.route('pembiayaan');
-assert.match(member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /content-grid/);
 assert.match(
-  member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /contract-list/,
+);
+assert.match(
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /0007\/SPK-SKI/,
+);
+assert(
+  !member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' ')
+    .includes('NaN'),
+);
+assert.match(
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /1 Feb 2026/,
+);
+await member.route('pembiayaan');
+assert.match(
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /content-grid/,
+);
+assert.match(
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Angsuran berikutnya/,
 );
 assert(
-  !member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' ').includes('MRB-2026-003'),
+  !member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' ')
+    .includes('MRB-2026-003'),
 );
 await member.route('dokumen');
-assert.match(member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /document-grid/);
 assert.match(
-  member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /document-grid/,
+);
+assert.match(
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /href="\/api\/workflow\/contract-test\/signed\?download=1"/,
 );
 member.nodes['#document-search'].value = 'tidak-cocok';
 await member.document.emit('input', { target: { id: 'document-search', value: 'tidak-cocok' } });
 assert.match(
-  member.nodes['#document-list'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.nodes['#document-list'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Belum ada dokumen/,
 );
 // The displayed dates must agree with the authoritative server across month/year boundaries.
 for (const day of ['2026-01-21', '2026-12-21', '2028-01-21', '2026-01-20', '2028-02-19']) {
-  const actual = member.window.KsppsWorkflow.getViewContext().automaticPreview(day),
+  member.window.__portal.ui.render(
+    member.document.querySelector('#dialog-content'),
+    member.window.KsppsWorkflow.getViewContext().automaticPreview(day),
+  );
+  const actual = member.document.querySelector('#dialog-content').textContent,
     expected = agreementRules(day);
   for (const field of ['effectiveDate', 'endDate'])
     assert(
@@ -282,7 +384,14 @@ for (const token of [
   'Aktivitas petugas',
   'timeline',
 ])
-  assert(staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' ').includes(token), token);
+  assert(
+    staff.app.innerHTML
+      .replace(/<!--.*?-->/g, '')
+      .replaceAll('&amp;', '&')
+      .replace(/\s+/g, ' ')
+      .includes(token),
+    token,
+  );
 const pending = {
   ...signed,
   id: 'pending-test',
@@ -293,22 +402,53 @@ const pending = {
   signedUrl: null,
 };
 await staff.update({ profile: { ...profile, status: 'pending' }, items: [pending] });
-assert.match(staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /2 menunggu/);
 assert.match(
-  staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /2 menunggu/,
+);
+assert.match(
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /data-wf-action="registration-review"/,
 );
 assert.match(
-  staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /data-wf-action="review"/,
 );
 await staff.route('pendaftaran');
-assert(!staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' ').includes('staff-search'));
-assert(!staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' ').includes('staff-member'));
-assert.match(staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /SKI-2026-0042/);
+assert(
+  !staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' ')
+    .includes('staff-search'),
+);
+assert(
+  !staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' ')
+    .includes('staff-member'),
+);
+assert.match(
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /SKI-2026-0042/,
+);
 await staff.document.emit('change', { target: { id: 'staff-filter', value: 'Disetujui' } });
 assert(
   !staff.nodes['#staff-table'].innerHTML
+    .replace(/<!--.*?-->/g, '')
     .replaceAll('&amp;', '&')
     .replace(/\s+/g, ' ')
     .includes('ANGGOTA UJI'),
@@ -318,16 +458,41 @@ await staff.update({
   items: [signed, { ...pending, id: 'ready-test', status: 'ready', statusLabel: 'Siap dibuat' }],
 });
 await staff.route('anggota');
-assert.match(staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /Rp110\.000/);
-assert.match(staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /Rp7\.000\.000/);
+assert.match(
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /Rp110\.000/,
+);
+assert.match(
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /Rp7\.000\.000/,
+);
 await staff.route('akad');
 for (const token of ['Penyiapan akad', '1 pengajuan', 'Daftar dokumen', '0007/SPK-SKI', 'Buat PDF'])
-  assert(staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' ').includes(token), token);
+  assert(
+    staff.app.innerHTML
+      .replace(/<!--.*?-->/g, '')
+      .replaceAll('&amp;', '&')
+      .replace(/\s+/g, ' ')
+      .includes(token),
+    token,
+  );
 console.log(
   'PASS: restored member/staff layouts with empty/current data, savings/document/status filters, live queues and document links, and browser/server date parity.',
 );
 
-assert.match(staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /id="staff-role"/);
+assert.match(
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /id="staff-role"/,
+);
 assert.equal(await staff.window.KsppsWorkflow.setStaffRole('finance'), true);
 await staff.route('finance-ringkasan');
 await new Promise((resolve) => setImmediate(resolve));
@@ -337,9 +502,17 @@ for (const token of [
   'Bukti transfer masuk',
   'Bagi Hasil Harian',
 ])
-  assert(staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' ').includes(token), token);
+  assert(
+    staff.app.innerHTML
+      .replace(/<!--.*?-->/g, '')
+      .replaceAll('&amp;', '&')
+      .replace(/\s+/g, ' ')
+      .includes(token),
+    token,
+  );
 assert(
   !staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
     .replaceAll('&amp;', '&')
     .replace(/\s+/g, ' ')
     .includes('href="#pendaftaran"'),
@@ -347,29 +520,50 @@ assert(
 );
 await staff.route('finance-rekonsiliasi');
 assert.match(
-  staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /finance-queue-table/,
 );
 await staff.route('finance-bagi-hasil');
 assert.match(
-  staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /id="finance-date"/,
 );
-assert.match(staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /Daftar transfer/);
 assert.match(
-  staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /Daftar transfer/,
+);
+assert.match(
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Tidak ada akad yang terjadwal/,
 );
 await staff.route('akad');
 assert.match(
-  staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Ringkasan Finance/,
   'Admin routes redirect within Finance view',
 );
 await staff.window.KsppsWorkflow.setStaffRole('admin');
 await staff.route('ringkasan');
 assert.match(
-  staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Antrean pemeriksaan/,
 );
 console.log(
@@ -379,25 +573,33 @@ console.log(
 // Monitoring navigation and data are reserved for the Manager role.
 assert(
   !staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
     .replaceAll('&amp;', '&')
     .replace(/\s+/g, ' ')
     .includes('href="#waktu-kerja"'),
 );
 await staff.route('waktu-kerja');
 assert.match(
-  staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Antrean pemeriksaan/,
 );
 await staff.window.KsppsWorkflow.setStaffRole('finance');
 await staff.route('waktu-kerja');
 assert(
   !staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
     .replaceAll('&amp;', '&')
     .replace(/\s+/g, ' ')
     .includes('href="#waktu-kerja"'),
 );
 assert.match(
-  staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Ringkasan Finance/,
 );
 await staff.window.KsppsWorkflow.setStaffRole('manager');
@@ -414,23 +616,41 @@ for (const token of [
   'bukan jam kerja aktif',
   'Hari ini + 7 hari sebelumnya',
 ])
-  assert(staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' ').includes(token), token);
+  assert(
+    staff.app.innerHTML
+      .replace(/<!--.*?-->/g, '')
+      .replaceAll('&amp;', '&')
+      .replace(/\s+/g, ' ')
+      .includes(token),
+    token,
+  );
 assert(
   !staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
     .replaceAll('&amp;', '&')
     .replace(/\s+/g, ' ')
     .includes('href="#pendaftaran"'),
 );
 assert(
   !staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
     .replaceAll('&amp;', '&')
     .replace(/\s+/g, ' ')
     .includes('href="#finance-rekonsiliasi"'),
 );
 await staff.route('manager-penawaran');
-assert.match(staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /Buat penawaran/);
 assert.match(
-  staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /Buat penawaran/,
+);
+assert.match(
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /data-workflow="manager-offers"/,
 );
 await staff.route('waktu-kerja');
@@ -462,18 +682,40 @@ await staff.update({
 });
 await new Promise((resolve) => setImmediate(resolve));
 assert.match(
-  staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /08\.00\.00/,
   'timestamps shown in WITA',
 );
-assert.match(staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /2 mnt 0 dtk/);
-assert.match(staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /5 mnt 0 dtk/);
 assert.match(
-  staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /2 mnt 0 dtk/,
+);
+assert.match(
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /5 mnt 0 dtk/,
+);
+assert.match(
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /&lt;script&gt;unsafe&lt;\/script&gt;/,
 );
 assert(
-  !staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' ').includes('<script>unsafe'),
+  !staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' ')
+    .includes('<script>unsafe'),
 );
 console.log(
   'PASS: populated KPI report, WITA timestamps, duration rendering and escaped member data.',
@@ -482,14 +724,27 @@ console.log(
 const registrationUi = await harness();
 await registrationUi.route('daftar');
 assert.match(
-  registrationUi.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  registrationUi.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /<input type="file" id="registration-ktp"[^>]*required/,
 );
 assert.match(
-  registrationUi.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  registrationUi.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /JPG atau PNG/,
 );
-const identityHtml = registrationUi.window.KsppsWorkflow.identityMedia({
+const renderIdentity = (profile) => {
+  registrationUi.window.__portal.ui.render(
+    registrationUi.document.querySelector('#dialog-content'),
+    registrationUi.window.KsppsWorkflow.identityMedia(profile),
+  );
+  return registrationUi.document.querySelector('#dialog-content').innerHTML;
+};
+const identityHtml = renderIdentity({
   ...profile,
   signatureUrl: '/api/workflow/profile/signature',
   ktpUrl: '/api/workflow/profile/ktp',
@@ -499,10 +754,13 @@ assert(
   identityHtml.indexOf('class="wf-signature"') < identityHtml.indexOf('class="wf-ktp"'),
   'KTP follows signature in the two-column grid',
 );
-assert.match(identityHtml, /<img src="\/api\/workflow\/profile\/ktp\?v=1"/);
+assert.equal(
+  registrationUi.document.querySelector('.wf-ktp img').getAttribute('src'),
+  '/api/workflow/profile/ktp?v=1',
+);
 assert.match(identityHtml, /Sudah diperiksa Admin/);
 assert.match(identityHtml, /aria-label="Lihat foto KTP ukuran penuh"/);
-assert.match(registrationUi.window.KsppsWorkflow.identityMedia(profile), /Foto KTP belum diunggah/);
+assert.match(renderIdentity(profile), /Foto KTP belum diunggah/);
 const responsiveCss = source('workflow.css');
 assert.match(
   responsiveCss,
@@ -532,25 +790,36 @@ await staff.document.emit('click', {
   },
 });
 assert.match(
-  staff.nodes['#dialog-content'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /name="ktp"/,
 );
 assert.match(
-  staff.nodes['#dialog-content'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Foto KTP terbaca dan sesuai data calon anggota/,
 );
 assert.match(
-  staff.nodes['#dialog-content'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /class="wf-identity-media"/,
 );
 assert(
   !staff.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
     .replaceAll('&amp;', '&')
     .replace(/\s+/g, ' ')
     .includes('WAKTU KERJA'),
 );
 assert(
   !staff.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
     .replaceAll('&amp;', '&')
     .replace(/\s+/g, ' ')
     .includes('Masuk ke antrean'),
@@ -602,29 +871,47 @@ for (const text of [
   'data-id="correction-capital"',
   'data-id="correction-savings"',
 ])
-  assert(member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' ').includes(text), text);
+  assert(
+    member.app.innerHTML
+      .replace(/<!--.*?-->/g, '')
+      .replaceAll('&amp;', '&')
+      .replace(/\s+/g, ' ')
+      .includes(text),
+    text,
+  );
 await member.route('modal');
 assert.match(
-  member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Simpanan belum aktif/,
 );
 assert(
   !member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
     .replaceAll('&amp;', '&')
     .replace(/\s+/g, ' ')
     .includes('data-action="apply-capital"'),
 );
 assert.match(
-  member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Perbaiki pengajuan/,
 );
 await member.route('pembiayaan');
 assert.match(
-  member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Simpanan belum aktif/,
 );
 assert(
   !member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
     .replaceAll('&amp;', '&')
     .replace(/\s+/g, ' ')
     .includes('data-action="apply-finance"'),
@@ -636,15 +923,24 @@ await member.document.emit('click', {
   },
 });
 assert.match(
-  member.nodes['#dialog-content'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Perbaiki penyertaan modal/,
 );
 assert.match(
-  member.nodes['#dialog-content'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Nominal tidak sesuai mutasi/,
 );
 assert.match(
-  member.nodes['#dialog-content'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /data-version="3"/,
 );
 member.nodes['#portal-dialog'].close();
@@ -657,41 +953,71 @@ await member.document.emit('click', {
   },
 });
 assert.match(
-  member.nodes['#dialog-content'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /wf-savings-form/,
 );
 assert.match(
-  member.nodes['#dialog-content'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Perbaiki setoran simpanan wajib/,
 );
 assert.match(
-  member.nodes['#dialog-content'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /value="120000" selected/,
 );
 member.nodes['#portal-dialog'].close();
 await member.route('simpanan');
 assert.match(
-  member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Sisa simpanan wajib di muka/,
 );
 assert.match(
-  member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Riwayat alokasi bulanan/,
 );
 assert.match(
-  member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Segera setor simpanan wajib/,
 );
 const atThreshold = { ...profile, savings: { ...profile.savings, remaining: 30000, low: true } };
 await member.update({ profile: atThreshold, items: [] });
 assert.match(
-  member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Sisa saldo di muka Rp30\.000/,
 );
-assert.match(member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /Segera setor/);
+assert.match(
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /Segera setor/,
+);
 await member.click({ action: 'notifications' });
 assert.match(
-  member.nodes['#dialog-content'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Rp30\.000/,
 );
 console.log(
@@ -717,10 +1043,17 @@ member.nodes['#portal-dialog'].close();
 await member.route('ringkasan');
 await member.update({ profile, items: [], offers: [openOffer, fullOffer] });
 assert.match(
-  member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /data-workflow="member-offers"/,
 );
-let cards = member.panel('member-offers').innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' ');
+let cards = member
+  .panel('member-offers')
+  .innerHTML.replace(/<!--.*?-->/g, '')
+  .replaceAll('&amp;', '&')
+  .replace(/\s+/g, ' ');
 assert.match(cards, /MRBH-2026-09-01/);
 assert.match(cards, /MRBH-2026-08-01/);
 assert.match(cards, /Rp200\.000\.000/);
@@ -765,15 +1098,24 @@ await member.document.emit('click', {
   },
 });
 assert.match(
-  member.nodes['#dialog-content'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /data-offer-id="offer-open"/,
 );
 assert.match(
-  member.nodes['#dialog-content'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /max="200000000"/,
 );
 assert.match(
-  member.nodes['#dialog-content'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /MRBH-2026-09-01/,
 );
 member.nodes['#portal-dialog'].close();
@@ -783,7 +1125,11 @@ await member.update({
   offers: [openOffer],
 });
 assert.match(
-  member.panel('member-offers').innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member
+    .panel('member-offers')
+    .innerHTML.replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /data-id="offer-open" disabled/,
 );
 staff.nodes['#portal-dialog'].close();
@@ -799,7 +1145,11 @@ await staff.update({ profile, items: [], offers: [openOffer, expiredOffer] });
 assert.match(staff.panel('manager-offers').innerHTML, /MRBH-2026-08-01/);
 assert.match(staff.panel('manager-offers').innerHTML, /Tidak ditampilkan di portal anggota/);
 assert.match(
-  staff.panel('manager-offers').innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff
+    .panel('manager-offers')
+    .innerHTML.replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /MRBH-2026-09-01/,
 );
 await staff.document.emit('click', {
@@ -808,15 +1158,24 @@ await staff.document.emit('click', {
   },
 });
 assert.match(
-  staff.nodes['#dialog-content'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /name="projectCode"[^>]+required/,
 );
 assert.match(
-  staff.nodes['#dialog-content'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /name="quota"[^>]+required/,
 );
 assert.match(
-  staff.nodes['#dialog-content'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Buka penawaran/,
 );
 console.log(
@@ -827,33 +1186,48 @@ const onlyAdmin = await harness(true, 'admin');
 await onlyAdmin.click({ action: 'enter', role: 'admin' });
 assert(
   !onlyAdmin.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
     .replaceAll('&amp;', '&')
     .replace(/\s+/g, ' ')
     .includes('id="staff-role"'),
 );
 assert.match(
-  onlyAdmin.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  onlyAdmin.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Antrean pemeriksaan/,
 );
 const onlyFinance = await harness(true, 'finance');
 await onlyFinance.click({ action: 'enter', role: 'finance' });
 assert(
   !onlyFinance.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
     .replaceAll('&amp;', '&')
     .replace(/\s+/g, ' ')
     .includes('id="staff-role"'),
 );
 assert(
   !onlyFinance.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
     .replaceAll('&amp;', '&')
     .replace(/\s+/g, ' ')
     .includes('href="#pendaftaran"'),
 );
 await staff.window.KsppsWorkflow.setStaffRole('manager');
 await staff.route('manager-laporan');
-assert.match(staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /Laporan Koperasi/);
 assert.match(
-  staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /Laporan Koperasi/,
+);
+assert.match(
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /data-report-action="upload"/,
 );
 await staff.document.emit('click', {
@@ -862,31 +1236,48 @@ await staff.document.emit('click', {
   },
 });
 assert.match(
-  staff.nodes['#dialog-content'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /id="report-upload"/,
 );
 assert.match(
-  staff.nodes['#dialog-content'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /accept=".pdf,application\/pdf"/,
 );
 assert.match(
-  staff.nodes['#dialog-content'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /name="period" type="month" required/,
 );
 member.nodes['#portal-dialog'].close();
 await member.route('laporan');
 assert.match(
-  member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Laporan Koperasi/,
 );
 assert(
   !member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
     .replaceAll('&amp;', '&')
     .replace(/\s+/g, ' ')
     .includes('data-report-action="upload"'),
 );
 assert(
-  !member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' ').includes('petugas.html'),
+  !member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' ')
+    .includes('petugas.html'),
 );
 console.log(
   'PASS: account-restricted role picker, Manager report upload form, member report page without upload control, and member/staff entrance separation.',
@@ -921,7 +1312,10 @@ await member.update({
   offers: [openOffer],
 });
 assert.match(
-  member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Konfirmasi kelanjutan modal/,
 );
 await member.document.emit('click', {
@@ -949,11 +1343,17 @@ for (const term of [
 member.nodes['#portal-dialog'].close();
 await member.route('dokumen');
 assert.match(
-  member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /SPA SKI-2026-0042 a.n ANGGOTA UJI/,
 );
 assert.match(
-  member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /profile\/letter\?download=1/,
 );
 await staff.window.KsppsWorkflow.setStaffRole('admin');
@@ -971,10 +1371,34 @@ await staff.update({
   ],
   items: [],
 });
-assert.match(staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /ANGGOTA UJI/);
-assert.match(staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /ANGGOTA KEDUA/);
-assert(!staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' ').includes('staff-search'));
-assert(!staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' ').includes('staff-member'));
+assert.match(
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /ANGGOTA UJI/,
+);
+assert.match(
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /ANGGOTA KEDUA/,
+);
+assert(
+  !staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' ')
+    .includes('staff-search'),
+);
+assert(
+  !staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' ')
+    .includes('staff-member'),
+);
 await staff.document.emit('click', {
   target: {
     closest: (s) =>
@@ -984,11 +1408,17 @@ await staff.document.emit('click', {
   },
 });
 assert.match(
-  staff.nodes['#dialog-content'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /ANGGOTA KEDUA/,
 );
 assert.match(
-  staff.nodes['#dialog-content'].innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.nodes['#dialog-content'].innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /data-id="profile-second"/,
 );
 staff.nodes['#portal-dialog'].close();
@@ -996,21 +1426,37 @@ await staff.window.KsppsWorkflow.setStaffRole('finance');
 await staff.route('finance-pengembalian');
 await new Promise((resolve) => setImmediate(resolve));
 assert.match(
-  staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Pengembalian Modal/,
 );
 assert.match(
-  staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Belum ada pengembalian modal/,
 );
 assert(
-  !staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' ').includes('finance-search'),
+  !staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' ')
+    .includes('finance-search'),
 );
 await staff.window.KsppsWorkflow.setStaffRole('manager');
 await staff.route('manager-jatuh-tempo');
 await new Promise((resolve) => setImmediate(resolve));
 for (const term of ['Total akad berakhir', 'Lanjut', 'Pengembalian', 'Belum memilih'])
-  assert(staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' ').includes(term));
+  assert(
+    staff.app.innerHTML
+      .replace(/<!--.*?-->/g, '')
+      .replaceAll('&amp;', '&')
+      .replace(/\s+/g, ' ')
+      .includes(term),
+  );
 console.log(
   'PASS: H-30 member prompt, immutable-choice form, project choices, SPA download, aggregate Admin queue, exact selected registration, no name search, Finance returns and Manager maturity report.',
 );
@@ -1032,7 +1478,11 @@ await staff.window.KsppsWorkflow.setStaffRole('admin');
 await staff.route('pengunduran');
 await staff.update({ profiles: [profile], items: [resign] });
 assert.match(
-  staff.panel('staff-withdrawal').innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff
+    .panel('staff-withdrawal')
+    .innerHTML.replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Menunggu keputusan Admin/,
 );
 await staff.document.emit('click', {
@@ -1042,6 +1492,7 @@ await staff.document.emit('click', {
   },
 });
 let resignationDialog = staff.nodes['#dialog-content'].innerHTML
+  .replace(/<!--.*?-->/g, '')
   .replaceAll('&amp;', '&')
   .replace(/\s+/g, ' ');
 for (const term of [
@@ -1071,11 +1522,19 @@ await member.update({
   ],
 });
 assert.match(
-  member.panel('member-withdrawal').innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member
+    .panel('member-withdrawal')
+    .innerHTML.replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Alasan penolakan/,
 );
 assert.match(
-  member.panel('member-withdrawal').innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member
+    .panel('member-withdrawal')
+    .innerHTML.replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Alasan permohonan belum sesuai/,
 );
 await member.update({
@@ -1083,11 +1542,19 @@ await member.update({
   items: [{ ...resign, status: 'approved', statusLabel: 'Disetujui' }],
 });
 assert.match(
-  member.panel('member-withdrawal').innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member
+    .panel('member-withdrawal')
+    .innerHTML.replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Disetujui/,
 );
 assert.match(
-  member.panel('member-withdrawal').innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member
+    .panel('member-withdrawal')
+    .innerHTML.replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Keputusan Admin/,
 );
 console.log(
@@ -1137,18 +1604,29 @@ await staff.update({
 });
 await staff.route('finance-pengunduran');
 assert.match(
-  staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Pengembalian Simpanan Pokok/,
 );
-assert.match(staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /Rp100\.000/);
+assert.match(
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /Rp100\.000/,
+);
 assert(
   !staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
     .replaceAll('&amp;', '&')
     .replace(/\s+/g, ' ')
     .includes('href="#manager-pengunduran"'),
 );
 await detailClick(staff, returned.id);
 let transferDialog = staff.nodes['#dialog-content'].innerHTML
+  .replace(/<!--.*?-->/g, '')
   .replaceAll('&amp;', '&')
   .replace(/\s+/g, ' ');
 for (const t of [
@@ -1165,11 +1643,15 @@ await staff.window.KsppsWorkflow.setStaffRole('manager');
 await staff.update({ profile: null, items: [], withdrawals: [returned] });
 await staff.route('manager-pengunduran');
 assert.match(
-  staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Persetujuan Pengunduran Diri/,
 );
 await detailClick(staff, returned.id);
 let finalDialog = staff.nodes['#dialog-content'].innerHTML
+  .replace(/<!--.*?-->/g, '')
   .replaceAll('&amp;', '&')
   .replace(/\s+/g, ' ');
 for (const t of [
@@ -1183,11 +1665,19 @@ assert(!finalDialog.includes('resign-pay-form'));
 await member.route('pengunduran');
 await member.update({ profile, items: [returned] });
 assert.match(
-  member.panel('member-withdrawal').innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member
+    .panel('member-withdrawal')
+    .innerHTML.replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Simpanan pokok dikembalikan/,
 );
 assert.match(
-  member.panel('member-withdrawal').innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  member
+    .panel('member-withdrawal')
+    .innerHTML.replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Persetujuan final Manajer/,
 );
 await member.update({
@@ -1197,11 +1687,17 @@ await member.update({
 for (const route of ['ringkasan', 'modal', 'pembiayaan', 'daftar']) {
   await member.route(route);
   assert.match(
-    member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+    member.app.innerHTML
+      .replace(/<!--.*?-->/g, '')
+      .replaceAll('&amp;', '&')
+      .replace(/\s+/g, ' '),
     /dinonaktifkan permanen/,
   );
   assert.match(
-    member.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+    member.app.innerHTML
+      .replace(/<!--.*?-->/g, '')
+      .replaceAll('&amp;', '&')
+      .replace(/\s+/g, ' '),
     /Daftar ulang sebagai anggota/,
   );
   assert(
@@ -1237,11 +1733,26 @@ await staff.update({
 });
 await staff.route('pengajuan');
 assert.match(
-  staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '),
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
   /Kontrak Pembiayaan/,
 );
-assert.match(staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /PB-001/);
-assert.match(staff.app.innerHTML.replaceAll('&amp;', '&').replace(/\s+/g, ' '), /Catat kontrak/);
+assert.match(
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /PB-001/,
+);
+assert.match(
+  staff.app.innerHTML
+    .replace(/<!--.*?-->/g, '')
+    .replaceAll('&amp;', '&')
+    .replace(/\s+/g, ' '),
+  /Catat kontrak/,
+);
 console.log(
   'PASS: Finance refund form and proof, Manager final-only form, member progress timeline, closed membership blocks every service/registration view, and financing registry in Admin.',
 );

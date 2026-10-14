@@ -1,4 +1,5 @@
 <script>
+  import Content from '../../../../shared/components/Content.svelte';
   import TextField from '../../../../shared/components/TextField.svelte';
   import SelectField from '../../../../shared/components/SelectField.svelte';
 
@@ -83,5 +84,5 @@
   <p class="field-hint">
     Simpanan wajib dialokasikan sejak bulan pendaftaran, lalu pada tanggal yang sama setiap bulan.
   </p>
-  {@html registrationProofInput() ?? ''}
+  <Content value={registrationProofInput() ?? ''} />
 {/if}

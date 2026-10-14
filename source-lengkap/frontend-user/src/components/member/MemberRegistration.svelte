@@ -1,6 +1,8 @@
 <script>
-  import { workflowService } from '../../../../shared/services/workflow.js';
-  import { withdrawalService } from '../../../../shared/services/withdrawal.js';
+  import { isStaticPreview } from '../../../../shared/runtime/environment.js';
+  import Content from '../../../../shared/components/Content.svelte';
+  import { getContext } from 'svelte';
+  const app = getContext('kspps-portal');
   import SelectField from '../../../../shared/components/SelectField.svelte';
   import TextField from '../../../../shared/components/TextField.svelte';
   import ReviewList from '../../../../shared/components/ReviewList.svelte';
@@ -21,8 +23,10 @@
 </script>
 
 {#if context}
-  {#if workflowService?.getProfile()?.status === 'closed'}<MemberAuthLayout {context}
-      >{@html withdrawalService?.closedPage() || 'Keanggotaan ditutup.'}</MemberAuthLayout
+  {#if app.services.workflow?.getProfile()?.status === 'closed'}<MemberAuthLayout {context}
+      ><Content
+        value={app.services.withdrawal?.closedPage() || 'Keanggotaan ditutup.'}
+      /></MemberAuthLayout
     >{:else}
     {@const r = state.registration}
     {@const s = state.registrationStep}
@@ -48,7 +52,7 @@
         {/each}
       </ol>
       {#if s === 1}
-        {@html workflowService?.registrationAccess() || ''}
+        <Content value={app.services.workflow?.registrationAccess() || ''} />
       {/if}
       <form id="registration-form">
         {#if s === 1}
@@ -94,7 +98,7 @@
               placeholder: r.identityType === 'KTP' ? '16 digit NIK' : 'Nomor identitas',
               pattern: r.identityType === 'KTP' ? '[0-9]{16}' : '.{5,25}',
             }}
-          />{@html registrationKtpInput() ?? ''}<SelectField
+          /><Content value={registrationKtpInput() ?? ''} /><SelectField
             label={'Agama'}
             name={'religion'}
             items={['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu']}
@@ -308,12 +312,14 @@
               ['Bukti transfer simpanan', state.registrationProof?.name || 'Belum dilampirkan'],
               ['Foto KTP', state.registrationKtp?.name || 'Belum dilampirkan'],
             ]}
-          />{@html (workflowService?.identityMedia({
-            signatureUrl: r.signatureImage,
-            ktpUrl: state.registrationKtpUrl,
-          }) ||
-            '') ??
-            ''}
+          /><Content
+            value={(app.services.workflow?.identityMedia({
+              signatureUrl: r.signatureImage,
+              ktpUrl: state.registrationKtpUrl,
+            }) ||
+              '') ??
+              ''}
+          />
           <p class="field-hint">
             Data, foto KTP, bukti simpanan, dan tanda tangan disimpan di ruang demo Anda untuk
             diperiksa melalui portal petugas.
@@ -329,14 +335,21 @@
             <a class="small" href="#masuk">Sudah punya akun?</a>
           {/if}<button
             class="btn"
-            type="submit"
+            type={isStaticPreview ? 'button' : 'submit'}
+            disabled={isStaticPreview && s === 4}
+            onclick={isStaticPreview
+              ? () => {
+                  state.registrationStep = Math.min(4, s + 1);
+                  context.render();
+                }
+              : undefined}
             {...(s === 1 && state.registrationKtpBusy) || (s === 2 && state.registrationProofBusy)
               ? { disabled: true }
               : {}}
             >{#if s === 4}
-              Kirim pendaftaran
+              {isStaticPreview ? 'Pendaftaran belum aktif' : 'Kirim pendaftaran'}
             {:else}
-              Lanjutkan
+              {isStaticPreview ? 'Lihat langkah berikutnya' : 'Lanjutkan'}
             {/if}
             <Icon name={'arrow'} /></button
           >

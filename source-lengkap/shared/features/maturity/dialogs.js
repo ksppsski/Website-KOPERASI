@@ -1,22 +1,31 @@
-import { activityService } from '../../services/activity.js';
+import {
+  ShowView,
+  Decide2View,
+  Decide3View,
+  DecideView,
+  ReturnDialog2View,
+  ReturnDialog3View,
+  ReturnDialog4View,
+  ReturnDialog5View,
+  ReturnDialogView,
+} from './views/dialogs.svelte';
+import { view, snippetView } from '../../runtime/view.js';
+
 /**
  * Dialog keputusan akhir akad dan pencatatan pengembalian modal.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
-export function createMaturityDialogs({ $, btn, wf, esc, money, date, state }) {
+export function createMaturityDialogs({ app, $, btn, wf, esc, money, date, state }) {
   function show(title, body) {
     const modal = $('#portal-dialog');
     if (modal.open) modal.close();
-    $('#dialog-content').innerHTML = /* HTML */ `<div class="dialog-inner">
-      <div class="dialog-head">
-        <h2 id="dialog-title">${title}</h2>
-        ${btn('close', 'Tutup')}
-      </div>
-      ${body}
-    </div>`;
+    app.ui.render(
+      $('#dialog-content'),
+      snippetView(ShowView, { title: title, btn: btn('close', 'Tutup'), body: body }),
+    );
     modal.showModal();
-    activityService?.mount();
+    app.services.activity?.mount();
   }
 
   function decide(id) {
@@ -33,84 +42,29 @@ export function createMaturityDialogs({ $, btn, wf, esc, money, date, state }) {
     const canExtend = !!wf().getSavings()?.active && choices.length > 0;
     show(
       'Pilihan akhir akad',
-      /* HTML */ `<div class="wf-identity">
-          <strong>${esc(item.projectCode || 'Penyertaan modal')}</strong
-          ><span>${esc(item.contractNumber)}</span>
-        </div>
-        <dl class="review-list">
-          <div>
-            <dt>Modal</dt>
-            <dd>${money(item.amount)}</dd>
-          </div>
-          <div>
-            <dt>Jatuh tempo</dt>
-            <dd>${date(item.maturity.endDate)}</dd>
-          </div>
-        </dl>
-        <form id="maturity-choice-form" data-id="${esc(id)}">
-          <fieldset class="maturity-options">
-            <legend>Pilih satu</legend>
-            <label class="check"
-              ><input
-                type="radio"
-                name="choice"
-                value="extend"
-                required
-                ${canExtend ? '' : 'disabled'}
-              />Lanjut ke project baru</label
-            ><label class="check"
-              ><input type="radio" name="choice" value="return" required />Pengembalian modal</label
-            >
-          </fieldset>
-          ${
-            !canExtend
-              ? /* HTML */ `<p class="field-hint">
-                  ${
-                    wf().getSavings()?.active
-                      ? 'Belum ada project baru dengan kuota yang cukup.'
-                      : 'Simpanan harus aktif untuk melanjutkan modal.'
-                  }
-                </p>`
-              : ''
-          }
-          <div id="maturity-project" hidden>
-            <label class="form-field"
-              ><span>Project baru *</span
-              ><select name="offerId">
-                <option value="">Pilih project</option>
-                ${choices
-                  .map(
-                    (o) =>
-                      /* HTML */ `<option value="${esc(o.id)}">
-                        ${esc(o.projectCode)} · ${esc(o.title)}
-                      </option>`,
-                  )
-                  .join('')}
-              </select></label
-            >
-            <p class="field-hint">
-              Modal yang sama dialihkan tanpa setoran baru dan tanpa tambahan masa tunggu 10 hari.
-              Efektif pada jatuh tempo; jika konfirmasi terlambat, efektif sejak tanggal konfirmasi.
-              Tanggal 31 dialihkan ke tanggal 1.
-            </p>
-            <label class="check"
-              ><input type="checkbox" name="signatureConsent" />Saya menyetujui penggunaan tanda
-              tangan terdaftar pada akad lanjutan.</label
-            >
-          </div>
-          <p id="maturity-return-note" class="info-box" hidden>
-            Pengembalian tetap dijadwalkan pada ${date(item.maturity.endDate)}, meskipun
-            dikonfirmasi lebih awal.
-          </p>
-          <label class="check"
-            ><input type="checkbox" name="confirm" required />Saya memahami pilihan ini hanya dapat
-            dikonfirmasi satu kali dan tidak dapat diganti.</label
-          >
-          <p class="form-error" id="maturity-error" role="alert" hidden></p>
-          <div class="form-actions">
-            <button class="btn" type="submit">Konfirmasi pilihan</button>
-          </div>
-        </form>`,
+      snippetView(DecideView, {
+        projectCode: esc(item.projectCode || 'Penyertaan modal'),
+        contractNumber: esc(item.contractNumber),
+        money: money(item.amount),
+        date: date(item.maturity.endDate),
+        id: esc(id),
+        canExtendContent: canExtend ? {} : { disabled: true },
+        canExtendContent2: !canExtend
+          ? snippetView(Decide2View, {
+              activeContent: wf().getSavings()?.active
+                ? 'Belum ada project baru dengan kuota yang cukup.'
+                : 'Simpanan harus aktif untuk melanjutkan modal.',
+            })
+          : '',
+        choicesRows: choices.map((o) =>
+          snippetView(Decide3View, {
+            id: esc(o.id),
+            projectCode: esc(o.projectCode),
+            title: esc(o.title),
+          }),
+        ),
+        date2: date(item.maturity.endDate),
+      }),
     );
   }
 
@@ -119,70 +73,35 @@ export function createMaturityDialogs({ $, btn, wf, esc, money, date, state }) {
     if (!x) return;
     show(
       'Pengembalian modal',
-      /* HTML */ `${x.status === 'due' ? activityService?.panel(id, 'principal-return') || '' : ''}
-        <dl class="review-list">
-          ${[
-            ['Anggota', x.memberName],
-            ['Nomor akad', x.contractNumber],
-            ['Jatuh tempo', date(x.dueDate)],
-            ['Modal', money(x.amount)],
-            ['Bank', x.bankName],
-            ['Rekening tujuan', x.bankAccount],
-            ['Atas nama', x.accountName],
-          ]
-            .map(
-              ([k, v]) =>
-                /* HTML */ `<div>
-                  <dt>${k}</dt>
-                  <dd>${esc(v)}</dd>
-                </div>`,
-            )
-            .join('')}
-        </dl>
-        ${
+      snippetView(ReturnDialogView, {
+        statusContent:
+          x.status === 'due' ? app.services.activity?.panel(id, 'principal-return') || '' : '',
+        Rows: [
+          ['Anggota', x.memberName],
+          ['Nomor akad', x.contractNumber],
+          ['Jatuh tempo', date(x.dueDate)],
+          ['Modal', money(x.amount)],
+          ['Bank', x.bankName],
+          ['Rekening tujuan', x.bankAccount],
+          ['Atas nama', x.accountName],
+        ].map(([k, v]) => snippetView(ReturnDialog2View, { k: k, v: esc(v) })),
+        statusContent2:
           x.status === 'scheduled'
-            ? /* HTML */ `<p class="info-box">Dapat diproses mulai ${date(x.dueDate)}.</p>`
+            ? snippetView(ReturnDialog3View, { date: date(x.dueDate) })
             : x.status === 'paid'
-              ? /* HTML */ `<p class="info-box">
-                    Pengembalian dicatat ${date(x.paidAt)}. Referensi: ${esc(x.reference)}.
-                  </p>
-                  <a class="btn secondary" href="${esc(x.proofUrl)}" target="_blank" rel="noopener"
-                    >Lihat bukti pengembalian</a
-                  >`
-              : /* HTML */ `<form id="maturity-return-form" data-id="${esc(id)}">
-                  <label class="form-field"
-                    ><span>Nominal pengembalian (Rp)</span
-                    ><input
-                      type="number"
-                      name="amount"
-                      value="${x.amount}"
-                      readonly
-                      required /></label
-                  ><label class="form-field"
-                    ><span>Tanggal transfer *</span
-                    ><input
-                      type="date"
-                      name="transferDate"
-                      min="${x.dueDate}"
-                      max="${state.returns.today}"
-                      value="${state.returns.today}"
-                      required /></label
-                  ><label class="form-field"
-                    ><span>Referensi transfer *</span
-                    ><input name="reference" minlength="3" maxlength="160" required /></label
-                  ><label class="form-field"
-                    ><span>Bukti pengembalian *</span
-                    ><input type="file" name="proof" accept=".jpg,.jpeg,.png,.pdf" required
-                  /></label>
-                  <p class="field-hint">JPG, PNG, atau PDF · Maks. 10 MB</p>
-                  <label class="check"
-                    ><input type="checkbox" name="confirm" required />Modal sudah ditransfer ke
-                    rekening anggota sesuai nominal dan bukti.</label
-                  >
-                  <p class="form-error" id="maturity-error" role="alert" hidden></p>
-                  <button class="btn" type="submit">Catat pengembalian selesai</button>
-                </form>`
-        }`,
+              ? snippetView(ReturnDialog4View, {
+                  date: date(x.paidAt),
+                  reference: esc(x.reference),
+                  proofUrl: esc(x.proofUrl),
+                })
+              : snippetView(ReturnDialog5View, {
+                  id: esc(id),
+                  amount: x.amount,
+                  dueDate: x.dueDate,
+                  today: state.returns.today,
+                  todayValue: state.returns.today,
+                }),
+      }),
     );
   }
 

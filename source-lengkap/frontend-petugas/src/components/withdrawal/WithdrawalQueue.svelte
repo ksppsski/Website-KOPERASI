@@ -1,4 +1,5 @@
 <script>
+  import Content from '../../../../shared/components/Content.svelte';
   let { context, route, key = route } = $props();
   let { wf, state, button, table, record } = $derived(context);
 </script>
@@ -33,8 +34,8 @@
     </div>
     <div class="wf-actions">
       {#if financing}
-        {@html button('record', 'Catat kontrak') ?? ''}
-      {/if}{@html button('refresh', 'Perbarui') ?? ''}
+        <Content value={button('record', 'Catat kontrak') ?? ''} />
+      {/if}<Content value={button('refresh', 'Perbarui') ?? ''} />
     </div>
   </div>
   <section class="panel">
@@ -44,10 +45,12 @@
       {#if !state.loaded}
         <p role="status">Memuat data…</p>
       {:else}
-        {@html table(
-          manager ? state.items.filter((x) => x.status !== 'finance_pending') : state.items,
-          financing,
-        ) ?? ''}
+        <Content
+          value={table(
+            manager ? state.items.filter((x) => x.status !== 'finance_pending') : state.items,
+            financing,
+          ) ?? ''}
+        />
       {/if}
     {/if}
   </section>

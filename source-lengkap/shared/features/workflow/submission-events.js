@@ -1,13 +1,13 @@
-import { activityService } from '../../services/activity.js';
+import { workStage } from './presentation.js';
 /**
  * Pengiriman formulir workflow, pemeriksaan versi, dan penanganan konflik.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
 export function bindWorkflowSubmissions({
+  app,
   state,
   staff,
-  workStage,
   runtime,
   setBusy,
   api,
@@ -20,7 +20,8 @@ export function bindWorkflowSubmissions({
   downloadPdf,
   errorMessage,
 }) {
-  document.addEventListener(
+  app.scope.listen(
+    document,
     'submit',
     async (event) => {
       const form = event.target;
@@ -48,7 +49,7 @@ export function bindWorkflowSubmissions({
       }
       if (
         staff &&
-        activityService &&
+        app.services.activity &&
         ['wf-review-form', 'wf-generate-form', 'wf-signed-form', 'wf-registration-review'].includes(
           form.id,
         )
@@ -57,7 +58,7 @@ export function bindWorkflowSubmissions({
           target = form.id === 'wf-registration-review' ? form.dataset.id : item?.id,
           stage =
             form.id === 'wf-registration-review' ? 'registration' : item ? workStage(item) : '';
-        if (!(await activityService.requireStarted(target, stage))) return;
+        if (!(await app.services.activity.requireStarted(target, stage))) return;
       }
       const data = new FormData(form);
       let path, body;
@@ -159,7 +160,9 @@ export function bindWorkflowSubmissions({
               p.id === result.profile.id ? result.profile : p,
             );
           else state.profile = result.profile;
-          window.dispatchEvent(new CustomEvent('kspps-profile-loaded', { detail: state.profile }));
+          app.events.dispatchEvent(
+            new CustomEvent('kspps-profile-loaded', { detail: state.profile }),
+          );
           mount();
           if (form.id === 'wf-ktp-form') {
             close();

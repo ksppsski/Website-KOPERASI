@@ -143,7 +143,9 @@ nextPost = new Promise((resolve) => (releasePost = resolve));
 submit();
 await h.settle();
 window.dispatchEvent(new window.Event('focus'));
-window.dispatchEvent(new window.CustomEvent('kspps-profile-loaded', { detail: profile }));
+window.__portal.events.dispatchEvent(
+  new window.CustomEvent('kspps-profile-loaded', { detail: profile }),
+);
 await h.settle();
 assert(dialog.open);
 assert.equal(document.querySelector('#wf-capital-form'), form);

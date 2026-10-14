@@ -1,26 +1,20 @@
-import { workflowService } from '../../../../shared/services/workflow.js';
-import { maturityService } from '../../../../shared/services/maturity.js';
+import { RecentActivityView } from './views/queries.svelte';
+import { formatDate } from '../../../../shared/lib/formatters.js';
+import { view, fallbackView, snippetView } from '../../../../shared/runtime/view.js';
+
 /**
  * Pembacaan data anggota, simpanan, akad, dan notifikasi.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
-export function createMemberQueries({ heading, rupiah, activity, esc }) {
-  const workflowItems = () => workflowService?.getItems() || [];
+export function createMemberQueries({ app, heading, rupiah, activity, esc }) {
+  const workflowItems = () => app.services.workflow?.getItems() || [];
 
-  const savingsEntries = () => workflowService?.getSavingsEntries() || [];
+  const savingsEntries = () => app.services.workflow?.getSavingsEntries() || [];
 
-  const shortDate = (value) =>
-    value
-      ? new Date(value).toLocaleDateString('id-ID', {
-          day: 'numeric',
-          month: 'short',
-          year: 'numeric',
-          timeZone: 'Asia/Makassar',
-        })
-      : '—';
+  const shortDate = formatDate;
 
-  const savingsState = () => workflowService?.getSavings();
+  const savingsState = () => app.services.workflow?.getSavings();
 
   function savingsHistory() {
     const v = savingsState();
@@ -49,25 +43,27 @@ export function createMemberQueries({ heading, rupiah, activity, esc }) {
         type: 'Simpanan Wajib',
         note: x.finance?.note || 'Menunggu rekonsiliasi Finance',
         amount: x.amount,
-        status: workflowService?.needsCorrection(x) ? 'Perlu perbaikan' : 'Menunggu Finance',
+        status: app.services.workflow?.needsCorrection(x) ? 'Perlu perbaikan' : 'Menunggu Finance',
       }));
     return [...history, ...pending].sort((a, b) => b.at.localeCompare(a.at));
   }
 
   function memberAlerts() {
-    return (
-      (maturityService?.reminders() || '') +
-      (workflowService?.corrections() || '') +
-      (savingsState()?.low ? workflowService.savingsNotice() : '')
-    );
+    return [
+      app.services.maturity?.reminders() || null,
+      app.services.workflow?.corrections() || null,
+      savingsState()?.low ? app.services.workflow.savingsNotice() : '',
+    ];
   }
 
   function serviceLocked(title) {
-    return (
-      heading(title, 'Status simpanan harus aktif untuk mengajukan layanan.') +
-      (workflowService?.accessPanel() || '') +
-      (workflowService?.corrections() || '')
-    );
+    return [
+      [
+        heading(title, 'Status simpanan harus aktif untuk mengajukan layanan.'),
+        app.services.workflow?.accessPanel() || '',
+      ],
+      app.services.workflow?.corrections() || '',
+    ];
   }
 
   function currentContracts() {
@@ -100,7 +96,7 @@ export function createMemberQueries({ heading, rupiah, activity, esc }) {
   }
 
   function recentActivity() {
-    const p = workflowService?.getProfile(),
+    const p = app.services.workflow?.getProfile(),
       rows = workflowItems().map((x) => ({
         title:
           x.kind === 'capital'
@@ -118,7 +114,7 @@ export function createMemberQueries({ heading, rupiah, activity, esc }) {
         title: 'Pendaftaran anggota',
         at: p.updatedAt || p.createdAt,
         value: p.memberNumber || '',
-        status: workflowService?.needsCorrection(p)
+        status: app.services.workflow?.needsCorrection(p)
           ? 'Perlu perbaikan'
           : {
               pending: 'Menunggu pemeriksaan',
@@ -127,12 +123,12 @@ export function createMemberQueries({ heading, rupiah, activity, esc }) {
             }[p.status],
         icon: 'user',
       });
-    return (
+    return fallbackView(
       rows
         .sort((a, b) => new Date(b.at) - new Date(a.at))
         .slice(0, 5)
-        .map((x) => activity(esc(x.title), shortDate(x.at), esc(x.value), esc(x.status), x.icon))
-        .join('') || '<li class="empty-state">Belum ada aktivitas keanggotaan.</li>'
+        .map((x) => activity(esc(x.title), shortDate(x.at), esc(x.value), esc(x.status), x.icon)),
+      snippetView(RecentActivityView),
     );
   }
   return {

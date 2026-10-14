@@ -1,4 +1,6 @@
 <script>
+  import Region from '../../../../shared/components/Region.svelte';
+  import Content from '../../../../shared/components/Content.svelte';
   let { context } = $props();
   let { wf, state, queue, dateKey, button, panel, summary, results, csv } = $derived(context);
 </script>
@@ -15,19 +17,16 @@
         <p class="subtext">Aktivitas Admin dan Finance · WITA</p>
       </div>
       <div class="wf-actions">
-        {@html button('refresh', 'Perbarui') ?? ''}{@html button(
-          'csv',
-          'Unduh CSV',
-          state.loaded ? '' : 'disabled',
-        ) ?? ''}
+        <Content value={button('refresh', 'Perbarui') ?? ''} /><Content
+          value={button('csv', 'Unduh CSV', { disabled: !state.loaded }) ?? ''}
+        />
       </div>
     </div>
-    {@html queue() ?? ''}
+    <Content value={queue() ?? ''} />
     <div class="work-period-actions">
-      {@html button('today', 'Hari ini') ?? ''}{@html button(
-        'week',
-        'Hari ini + 7 hari sebelumnya',
-      ) ?? ''}<span class="field-hint">{earliest} — {latest}</span>
+      <Content value={button('today', 'Hari ini') ?? ''} /><Content
+        value={button('week', 'Hari ini + 7 hari sebelumnya') ?? ''}
+      /><span class="field-hint">{earliest} — {latest}</span>
     </div>
     <section class="panel work-filters">
       <label class="form-field"
@@ -64,7 +63,7 @@
         /></label
       >
     </section>
-    <div id="work-results">{@html results() ?? ''}</div>
+    <div id="work-results"><Region name="work-results" value={results() ?? ''} /></div>
     <details class="panel work-method">
       <summary>Cara membaca catatan KPI</summary>
       <p>

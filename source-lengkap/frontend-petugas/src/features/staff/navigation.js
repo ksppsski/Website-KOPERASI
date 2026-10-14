@@ -1,10 +1,12 @@
-import { workflowService } from '../../../../shared/services/workflow.js';
+import { Picker2View, PickerView, Picker3View, RolePickerView } from './views/navigation.svelte';
+import { view, snippetView } from '../../../../shared/runtime/view.js';
+
 /**
  * Menu dan tujuan halaman berdasarkan peran akun petugas.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
-export function createStaffNavigation({}) {
+export function createStaffNavigation({ app }) {
   const adminPages = {
     ringkasan: ['Ringkasan', 'home'],
     pendaftaran: ['Pendaftaran Anggota', 'user'],
@@ -45,7 +47,7 @@ export function createStaffNavigation({}) {
 
   const pages = { ...adminPages, ...financePages, ...managerPages, ...avalistPages };
 
-  const activeRole = () => workflowService?.getStaff()?.role || 'admin';
+  const activeRole = () => app.services.workflow?.getStaff()?.role || 'admin';
 
   const menuPages = () =>
     activeRole() === 'avalist'
@@ -69,30 +71,26 @@ export function createStaffNavigation({}) {
           : 'ringkasan';
 
   function rolePicker() {
-    const s = workflowService?.getStaff(),
+    const s = app.services.workflow?.getStaff(),
       roles = (s?.allowedRoles || []).filter((r) => r !== 'avalist');
     const picker =
       roles.length > 1
-        ? /* HTML */ `<label class="staff-role-picker"
-            ><span>Buka portal</span
-            ><select id="staff-role" aria-label="Buka portal">
-              ${roles
-                .map(
-                  (r) =>
-                    /* HTML */ `<option value="${r}" ${activeRole() === r ? 'selected' : ''}>
-                      ${{ admin: 'Admin', finance: 'Finance', manager: 'Manajer', avalist: 'Avalist' }[r]}
-                    </option>`,
-                )
-                .join('')}
-            </select></label
-          >`
-        : /* HTML */ `<p class="staff-label">${roleName()}</p>`;
-    return (
-      picker +
-      (s?.allowedRoles?.includes('avalist')
-        ? '<a class="staff-label" href="/avalist.html">Portal Avalist ↗</a>'
-        : '')
-    );
+        ? snippetView(PickerView, {
+            rolesRows: roles.map((r) =>
+              snippetView(Picker2View, {
+                r: r,
+                activeRoleContent: activeRole() === r ? { selected: true } : {},
+                rValue: {
+                  admin: 'Admin',
+                  finance: 'Finance',
+                  manager: 'Manajer',
+                  avalist: 'Avalist',
+                }[r],
+              }),
+            ),
+          })
+        : snippetView(Picker3View, { roleName: roleName() });
+    return [picker, s?.allowedRoles?.includes('avalist') ? snippetView(RolePickerView) : ''];
   }
   return {
     adminPages,

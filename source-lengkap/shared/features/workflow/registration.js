@@ -1,20 +1,35 @@
+import {
+  ProfileDetails2View,
+  ProfileDetailsView,
+  IdentityMedia2View,
+  IdentityMedia3View,
+  IdentityMedia4View,
+  IdentityMedia5View,
+  IdentityMediaView,
+  CompleteKtpDialogView,
+  ProfilePanelView,
+  AdminNoteView,
+  LetterLinkView,
+  ReviewRegistrationView,
+  ProfilePanel2View,
+  StaffRegistrationPanelView,
+  FinanceStatus2View,
+  FinanceStatus3View,
+  FinanceStatusView,
+  RegistrationReview2View,
+  RegistrationReview3View,
+  RegistrationReview4View,
+  RegistrationReviewView,
+} from './views/registration.svelte';
+import { needsCorrection, esc, date, action, empty, checks } from './presentation.js';
+import { view, snippetView } from '../../runtime/view.js';
+
 /**
  * Data pendaftaran, foto identitas, dan pemeriksaan admin.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 import { statusColor } from '../../lib/status-colors.js';
-export function createWorkflowRegistration({
-  needsCorrection,
-  esc,
-  date,
-  state,
-  show,
-  staff,
-  action,
-  empty,
-  workPanel,
-  checks,
-}) {
+export function createWorkflowRegistration({ app, state, show, staff, workPanel }) {
   const profileStatus = (p) =>
     needsCorrection(p)
       ? 'Perlu perbaikan'
@@ -27,8 +42,8 @@ export function createWorkflowRegistration({
 
   function profileDetails(p) {
     const d = p.data;
-    return /* HTML */ `<dl class="review-list">
-      ${[
+    return snippetView(ProfileDetailsView, {
+      Rows: [
         ['Nomor anggota', p.memberNumber || '—'],
         ['Nama lengkap', d.name],
         ['Identitas', d.identityType + ' · ' + d.identityNumber],
@@ -42,93 +57,42 @@ export function createWorkflowRegistration({
         ['Nomor rekening', d.bankAccount],
         ['Telepon', d.phone],
         ['Email', d.email],
-      ]
-        .map(
-          ([a, b]) =>
-            /* HTML */ `<div>
-              <dt>${a}</dt>
-              <dd>${esc(b)}</dd>
-            </div>`,
-        )
-        .join('')}
-    </dl>`;
+      ].map(([a, b]) => snippetView(ProfileDetails2View, { a: a, b: esc(b) })),
+    });
   }
 
   function identityMedia(p) {
     const version = p.version ? '?v=' + Number(p.version) : '',
       sig = p.signatureUrl ? esc(p.signatureUrl + version) : '',
       ktp = p.ktpUrl ? esc(p.ktpUrl + version) : '';
-    return /* HTML */ `<div class="wf-identity-media">
-      <div class="wf-signature">
-        <span>Tanda tangan anggota</span>${
-          sig
-            ? /* HTML */ `<div class="wf-media-image">
-                <img src="${sig}" alt="Tanda tangan anggota" width="250" height="85" />
-              </div>`
-            : '<p class="field-hint">Belum tersedia.</p>'
-        }
-      </div>
-      <div class="wf-ktp">
-        <span>Foto KTP</span>${
-          ktp
-            ? /* HTML */ `<a
-                  class="wf-media-image"
-                  href="${ktp}"
-                  target="_blank"
-                  rel="noopener"
-                  aria-label="Lihat foto KTP ukuran penuh"
-                  ><img src="${ktp}" alt="Foto KTP anggota" width="400" height="252"
-                /></a>
-                <p class="field-hint">
-                  ${
-                    p.ktpCheckedAt
-                      ? 'Sudah diperiksa Admin · ' + date(p.ktpCheckedAt)
-                      : 'Klik gambar untuk memperbesar.'
-                  }
-                </p>`
-            : '<p class="field-hint">Foto KTP belum diunggah.</p>'
-        }
-      </div>
-    </div>`;
+    return snippetView(IdentityMediaView, {
+      sigContent: sig
+        ? snippetView(IdentityMedia2View, { sig: sig })
+        : snippetView(IdentityMedia3View),
+      ktpContent: ktp
+        ? snippetView(IdentityMedia4View, {
+            ktp: ktp,
+            ktpValue: ktp,
+            ktpCheckedAtContent: p.ktpCheckedAt
+              ? 'Sudah diperiksa Admin · ' + date(p.ktpCheckedAt)
+              : 'Klik gambar untuk memperbesar.',
+          })
+        : snippetView(IdentityMedia5View),
+    });
   }
 
   function completeKtpDialog() {
     const p = state.profile;
     if (!p || p.ktpUrl) return;
-    show(
-      'Lengkapi foto KTP',
-      /* HTML */ `<p class="subtext">
-          Setelah diunggah, pendaftaran masuk kembali ke pemeriksaan Admin.
-        </p>
-        <form id="wf-ktp-form" data-version="${p.version}">
-          <label class="form-field"
-            ><span>Foto KTP *</span
-            ><input type="file" name="ktp" accept=".jpg,.jpeg,.png,image/jpeg,image/png" required
-          /></label>
-          <p class="field-hint">JPG atau PNG · Maks. 10 MB · Seluruh KTP terlihat jelas.</p>
-          <p class="form-error" id="wf-error" role="alert" hidden></p>
-          <div class="form-actions"><button type="submit" class="btn">Unggah KTP</button></div>
-        </form>`,
-    );
+    show('Lengkapi foto KTP', snippetView(CompleteKtpDialogView, { version: p.version }));
   }
 
   function profilePanel() {
     const p = state.profile;
-    if (!p)
-      return /* HTML */ `<div class="wf-empty">
-        <strong>Data akad belum tersedia</strong>
-        <p>Lengkapi pendaftaran beserta rekening dan tanda tangan.</p>
-        <a class="btn" href="anggota.html#daftar">Daftar anggota</a>
-      </div>`;
-    const adminNote = p.note ? /* HTML */ `<p class="wf-note">${esc(p.note)}</p>` : '';
+    if (!p) return snippetView(ProfilePanelView);
+    const adminNote = p.note ? snippetView(AdminNoteView, { note: esc(p.note) }) : '';
     const financeNote = !staff && p.finance?.status === 'correction' ? financeStatus(p) : '';
-    const letterLink = p.letter
-      ? /* HTML */ `<div class="wf-actions">
-          <a class="btn secondary" href="${esc(p.letter.url)}?download=1">
-            Unduh surat keanggotaan
-          </a>
-        </div>`
-      : '';
+    const letterLink = p.letter ? snippetView(LetterLinkView, { url: esc(p.letter.url) }) : '';
     const completeIdentity =
       !staff && !p.ktpUrl && p.status !== 'correction'
         ? action('complete-ktp', '', 'Lengkapi foto KTP', true)
@@ -138,47 +102,49 @@ export function createWorkflowRegistration({
         ? action('edit-registration', '', 'Perbaiki pendaftaran', true)
         : '';
     const reviewRegistration = staff
-      ? /* HTML */ `<div class="wf-actions">
-          ${action('registration-review', '', 'Periksa pendaftaran', true)}
-        </div>`
+      ? snippetView(ReviewRegistrationView, {
+          action: action('registration-review', '', 'Periksa pendaftaran', true),
+        })
       : '';
 
-    return /* HTML */ `<div class="wf-profile">
-      <div class="wf-card-head">
-        <strong>${esc(p.data.name)}</strong
-        ><span class="badge ${statusColor(profileStatus(p))}">${profileStatus(p)}</span>
-      </div>
-      ${adminNote}${financeNote}${profileDetails(p)}${identityMedia(p)}
-      ${letterLink}${completeIdentity}${correctRegistration}${reviewRegistration}
-    </div>`;
+    return snippetView(ProfilePanel2View, {
+      fieldName: esc(p.data.name),
+      statusColor: statusColor(profileStatus(p)),
+      profileStatus: profileStatus(p),
+      adminNote: adminNote,
+      financeNote: financeNote,
+      profileDetails: profileDetails(p),
+      identityMedia: identityMedia(p),
+      letterLink: letterLink,
+      completeIdentity: completeIdentity,
+      correctRegistration: correctRegistration,
+      reviewRegistration: reviewRegistration,
+    });
   }
 
   function staffRegistrationPanel() {
     return state.profiles.length
-      ? state.profiles
-          .map(
-            (p) =>
-              /* HTML */ `<div class="wf-card-head">
-                <div>
-                  <strong>${esc(p.data.name)}</strong>
-                  <p class="field-hint">
-                    ${esc(p.memberNumber || '—')} · Dikirim ${date(p.createdAt)} ·
-                    ${profileStatus(p)}
-                  </p>
-                </div>
-                ${action('registration-review', p.id, 'Lihat pendaftaran', true)}
-              </div>`,
-          )
-          .join('')
+      ? state.profiles.map((p) =>
+          snippetView(StaffRegistrationPanelView, {
+            fieldName: esc(p.data.name),
+            memberNumber: esc(p.memberNumber || '—'),
+            date: date(p.createdAt),
+            profileStatus: profileStatus(p),
+            action: action('registration-review', p.id, 'Lihat pendaftaran', true),
+          }),
+        )
       : empty('Belum ada pendaftaran anggota.');
   }
 
   function financeStatus(record) {
     const r = record?.finance;
-    return /* HTML */ `<div class="wf-note">
-      <strong>Rekonsiliasi Finance: ${esc(r?.label || 'Menunggu Finance')}</strong
-      >${r?.reference ? /* HTML */ `<p>Referensi ${esc(r.reference)} · ${date(r.checkedAt)}</p>` : ''}${r?.note ? /* HTML */ `<p>${esc(r.note)}</p>` : ''}
-    </div>`;
+    return snippetView(FinanceStatusView, {
+      label: esc(r?.label || 'Menunggu Finance'),
+      referenceContent: r?.reference
+        ? snippetView(FinanceStatus2View, { reference: esc(r.reference), date: date(r.checkedAt) })
+        : '',
+      noteContent: r?.note ? snippetView(FinanceStatus3View, { note: esc(r.note) }) : '',
+    });
   }
 
   function registrationReview(id) {
@@ -186,49 +152,33 @@ export function createWorkflowRegistration({
     if (!p) return;
     show(
       'Pemeriksaan pendaftaran',
-      /* HTML */ `${workPanel(p.id, 'registration')}${profileDetails(p)}${identityMedia(p)}<a
-          class="btn secondary small-btn"
-          href="${p.proofUrl}"
-          target="_blank"
-          rel="noopener"
-          >Lihat bukti simpanan</a
-        >${p.note ? /* HTML */ `<p class="wf-note">${esc(p.note)}</p>` : ''}${financeStatus(p)}${
+      snippetView(RegistrationReviewView, {
+        workPanel: workPanel(p.id, 'registration'),
+        profileDetails: profileDetails(p),
+        identityMedia: identityMedia(p),
+        proofUrl: p.proofUrl,
+        noteContent: p.note ? snippetView(RegistrationReview2View, { note: esc(p.note) }) : '',
+        financeStatus: financeStatus(p),
+        statusContent:
           p.status === 'pending'
-            ? /* HTML */ `<form
-                id="wf-registration-review"
-                data-id="${esc(p.id)}"
-                data-version="${p.version}"
-              >
-                ${checks([
+            ? snippetView(RegistrationReview3View, {
+                id: esc(p.id),
+                version: p.version,
+                checks: checks([
                   ['identity', 'Data identitas dan rekening sesuai.'],
                   ['ktp', 'Foto KTP terbaca dan sesuai data calon anggota.'],
                   ['signature', 'Tanda tangan dan persetujuan tersedia.'],
-                ])}<label class="form-field"
-                  ><span>Catatan perbaikan</span><textarea name="note" maxlength="1500"></textarea>
-                </label>
-                <p id="wf-error" class="form-error" hidden role="alert"></p>
-                <div class="wf-actions">
-                  <button
-                    class="btn secondary"
-                    type="submit"
-                    name="action"
-                    value="return"
-                    formnovalidate
-                  >
-                    Minta perbaikan</button
-                  ><button
-                    class="btn"
-                    type="submit"
-                    name="action"
-                    value="approve"
-                    ${p.finance?.status !== 'approved' || !p.ktpUrl ? 'disabled' : ''}
-                  >
-                    ${!p.ktpUrl ? 'Menunggu foto KTP' : p.finance?.status === 'approved' ? 'Setujui pendaftaran' : 'Menunggu Finance'}
-                  </button>
-                </div>
-              </form>`
-            : /* HTML */ `<p class="wf-note">${profileStatus(p)}</p>`
-        }`,
+                ]),
+                statusContent:
+                  p.finance?.status !== 'approved' || !p.ktpUrl ? { disabled: true } : {},
+                ktpUrlContent: !p.ktpUrl
+                  ? 'Menunggu foto KTP'
+                  : p.finance?.status === 'approved'
+                    ? 'Setujui pendaftaran'
+                    : 'Menunggu Finance',
+              })
+            : snippetView(RegistrationReview4View, { profileStatus: profileStatus(p) }),
+      }),
     );
   }
   return {

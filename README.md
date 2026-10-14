@@ -1,15 +1,15 @@
 # Website KSPPS Syirkah Kebaikan Indonesia
 
-Sumber aplikasi sudah disinkronkan dengan **revisi v38** pada 14 Oktober 2026. Kode terbaru berada di **[`source-lengkap/`](source-lengkap/)**. Gunakan folder tersebut sebagai direktori kerja saat melanjutkan pengembangan di Codex.
+Sumber aplikasi sudah disinkronkan dengan **revisi v39** pada 14 Oktober 2026. Kode terbaru berada di **[`source-lengkap/`](source-lengkap/)**. Gunakan folder tersebut sebagai direktori kerja saat melanjutkan pengembangan di Codex.
 
 | Bagian | Lokasi | Status |
 | --- | --- | --- |
-| Aplikasi terbaru | `source-lengkap/` | Svelte 5 + Vite, Worker, skema/migrasi, template dokumen dan pengujian v38 |
-| Website GitHub Pages | `docs/` | Pratinjau statis v18, tanpa login, database atau transaksi aktif |
-| Identitas versi | `VERSI.json` | Versi sumber aplikasi dan versi pratinjau dicatat terpisah |
+| Aplikasi terbaru | `source-lengkap/` | Svelte 5 + Vite, Worker, skema/migrasi, template dokumen dan pengujian v39 |
+| Website GitHub Pages | `docs/` | Hasil build Svelte dari sumber aplikasi yang sama; tanpa backend aktif |
+| Identitas versi | `VERSI.json` | Versi dan commit sumber yang dipakai aplikasi serta Pages |
 | Panduan domain | `PANDUAN-DOMAIN.md` | Domain dan alur penerbitan |
 
-Domain yang tercatat di `docs/CNAME`: **syirkahkebaikanindonesia.com**. Pembaruan kode di `source-lengkap/` belum memindahkan backend atau data ke domain tersebut. Folder `docs/` tetap menjadi sumber pratinjau statis yang sudah ada, sehingga portal tidak berpura-pura menerima pendaftaran atau transaksi tanpa backend.
+Domain yang tercatat di `docs/CNAME`: **syirkahkebaikanindonesia.com**. Pembaruan kode di `source-lengkap/` belum memindahkan backend atau data ke domain tersebut. Folder `docs/` kini dihasilkan dari sumber Svelte terbaru. Mode pratinjau menampilkan data kosong dan menonaktifkan pendaftaran, unggahan, login serta transaksi.
 
 ## Panduan tim IT
 
@@ -17,7 +17,9 @@ Mulai dari **[Peta kode dan panduan pemeliharaan](source-lengkap/docs/PETA-KODE.
 
 ## Revisi yang sudah masuk
 
-- Favicon adaptif v38: logo KSPPS biru muda/biru tua pada mode terang, logo putih pada mode gelap. Berlaku di aplikasi dan pratinjau statis `docs/`.
+- Tampilan memakai komponen/snippet Svelte; state dan layanan terpisah untuk setiap portal. Listener, timer dan permintaan API dibersihkan saat portal ditutup.
+- API transport, koordinasi state dan tampilan memiliki tanggung jawab terpisah.
+- Favicon vektor ringkas, dihasilkan otomatis saat build: logo KSPPS biru muda/biru tua pada mode terang, logo putih pada mode gelap. Berlaku di aplikasi dan pratinjau statis `docs/`.
 
 - Refactor v37: controller kecil, komponen Svelte terpisah, endpoint/aturan server per fitur, dan panduan penelusuran bug.
 - Status normal berwarna hijau/biru; pengingat top up dan peringatan memakai merah.
@@ -55,3 +57,18 @@ Perubahan file `docs/` yang dikirim ke branch sumber GitHub Pages akan diterbitk
 Sebelum berpindah hosting, ikuti [`source-lengkap/docs/PINDAH-HOSTING.md`](source-lengkap/docs/PINDAH-HOSTING.md). Kode masih memakai identitas terpercaya dari lingkungan Sites; login email/kata sandi mandiri belum diaktifkan. GitHub Pages tidak menjalankan Worker, D1 atau R2.
 
 Sinkronisasi ini hanya membawa source, template dan pengujian. Database anggota, berkas unggahan, password, token dan secret deployment tidak disertakan. Konfigurasi `.openai/hosting.json` hanya mempertahankan nama binding `DB` dan `BUCKET`.
+
+## Satu sumber Svelte untuk aplikasi dan Pages
+
+`source-lengkap/` adalah sumber pengembangan. `docs/` kini dihasilkan dari sumber yang sama, termasuk portal avalist.
+
+```sh
+npm run setup
+npm run build:pages
+npm run check:pages
+npm run test:preview
+```
+
+`build:pages` mempertahankan `docs/CNAME` dan tidak menyalin backend maupun dokumen privat. `check:pages` membandingkan seluruh hasil build serta sidik sumber; workflow GitHub menandai hasil Pages yang tertinggal. Commit hasil `docs/` bersama perubahan sumber agar publikasi Pages yang sudah terpasang memperbarui domain.
+
+Pages adalah pratinjau statis dengan data kosong. Formulir identitas, unggahan, autentikasi, dan transaksi tidak diaktifkan di mode ini. Gunakan hosting aplikasi dengan backend untuk layanan tersimpan. Panduan pencarian bug dan pembagian tanggung jawab ada di `source-lengkap/docs/PETA-KODE.md`.

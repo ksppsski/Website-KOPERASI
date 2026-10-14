@@ -1,6 +1,9 @@
 <script>
-  import { workflowService } from '../../../../shared/services/workflow.js';
-  import { withdrawalService } from '../../../../shared/services/withdrawal.js';
+  import Icon from '../../../../shared/components/Icon.svelte';
+  import PageHeading from '../../../../shared/components/PageHeading.svelte';
+  import Content from '../../../../shared/components/Content.svelte';
+  import { getContext } from 'svelte';
+  const app = getContext('kspps-portal');
   import Tabs from '../../../../shared/components/Tabs.svelte';
   import Badge from '../../../../shared/components/Badge.svelte';
 
@@ -11,20 +14,21 @@
 
 {#if context}
   {#if !savingsState()?.active}
-    {@html serviceLocked('Pembiayaan') ?? ''}{@html (withdrawalService?.memberFinancing() || '') ??
-      ''}
+    <Content value={serviceLocked('Pembiayaan') ?? ''} /><Content
+      value={(app.services.withdrawal?.memberFinancing() || '') ?? ''}
+    />
   {:else}
-    {@html heading(
-      'Pembiayaan',
-      'Rincian pengadaan barang, akad, dan jadwal pembayaran.',
-      '<button type="button" class="btn" data-action="apply-finance">' +
-        icon('plus') +
-        'Ajukan pembiayaan</button>',
-    ) ?? ''}{@html (withdrawalService?.memberFinancing() || '') ?? ''}<Tabs
+    <PageHeading
+      title={'Pembiayaan'}
+      description={'Rincian pengadaan barang, akad, dan jadwal pembayaran.'}
+      ><button type="button" class="btn" data-action="apply-finance"
+        ><Icon name="plus" />Ajukan pembiayaan</button
+      ></PageHeading
+    ><Content value={(app.services.withdrawal?.memberFinancing() || '') ?? ''} /><Tabs
       items={['Semua', 'Aktif', 'Pengajuan']}
       current={state.financeTab}
       name={'finance'}
-    />{#if state.financeTab !== 'Pengajuan' && !workflowService?.getFinancing()?.length}
+    />{#if state.financeTab !== 'Pengajuan' && !app.services.workflow?.getFinancing()?.length}
       <div class="content-grid">
         <article class="contract">
           <div class="contract-top">
@@ -51,6 +55,6 @@
           </div>
         </section>
       </div>
-    {/if}{@html requestPanel('Pembiayaan', state.financeTab === 'Pengajuan') ?? ''}
+    {/if}<Content value={requestPanel('Pembiayaan', state.financeTab === 'Pengajuan') ?? ''} />
   {/if}
 {/if}

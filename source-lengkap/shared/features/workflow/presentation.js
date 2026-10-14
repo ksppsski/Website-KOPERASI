@@ -1,128 +1,107 @@
-import { activityService } from '../../services/activity.js';
+import {
+  StatusView,
+  AuthView,
+  FrameView,
+  EmptyView,
+  LinksView,
+  Links2View,
+  Links3View,
+  Checks2View,
+  ChecksView,
+  InputView,
+} from './views/presentation.svelte';
+import { displayText, formatMoney, formatDate } from '../../lib/formatters.js';
+import { view, snippetView } from '../../runtime/view.js';
+
+import WorkflowAction from '../../components/workflow/WorkflowAction.svelte';
+
 /**
  * Format label, elemen dialog, dan status pengajuan.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 import { statusColor } from '../../lib/status-colors.js';
-export function createWorkflowPresentation({ staff }) {
-  const esc = (v) =>
-    String(v ?? '').replace(
-      /[&<>"']/g,
-      (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
-    );
+export const esc = displayText;
 
-  const money = (n) => 'Rp' + Number(n || 0).toLocaleString('id-ID');
+export const money = formatMoney;
 
-  const date = (value) =>
-    new Date(value).toLocaleDateString('id-ID', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-      timeZone: 'Asia/Makassar',
-    });
+export const date = formatDate;
 
-  const shortId = (item) =>
-    (item.kind === 'capital' ? 'PM-' : item.kind === 'savings' ? 'SW-' : 'PD-') +
-    item.id.slice(0, 8).toUpperCase();
+export const shortId = (item) =>
+  (item.kind === 'capital' ? 'PM-' : item.kind === 'savings' ? 'SW-' : 'PD-') +
+  item.id.slice(0, 8).toUpperCase();
 
-  const workPanel = (id, stage) => (staff ? activityService?.panel(id, stage) || '' : '');
+export const workStage = (item) =>
+  item.status === 'ready'
+    ? 'generate'
+    : ['generated', 'signed'].includes(item.status)
+      ? 'archive'
+      : item.kind;
 
-  const workStage = (item) =>
-    item.status === 'ready'
-      ? 'generate'
-      : ['generated', 'signed'].includes(item.status)
-        ? 'archive'
-        : item.kind;
+export const needsCorrection = (item) =>
+  item?.status === 'correction' ||
+  (['pending', 'reviewing'].includes(item?.status) && item?.finance?.status === 'correction');
 
-  const needsCorrection = (item) =>
-    item?.status === 'correction' ||
-    (['pending', 'reviewing'].includes(item?.status) && item?.finance?.status === 'correction');
+export const status = (item) =>
+  snippetView(StatusView, {
+    statusColor: statusColor(needsCorrection(item) ? 'correction' : item.statusLabel),
+    statusLabel: esc(item.statusLabel),
+  });
 
-  const status = (item) =>
-    /* HTML */ `<span
-      class="badge ${statusColor(needsCorrection(item) ? 'correction' : item.statusLabel)}"
-      >${esc(item.statusLabel)}</span
-    >`;
+export const action = (name, id, label, primary = false) =>
+  view(WorkflowAction, { name, id: id || '', label, primary });
 
-  const action = (name, id, label, primary = false) =>
-    /* HTML */ `<button
-      type="button"
-      class="btn ${primary ? '' : 'secondary'} small-btn"
-      data-wf-action="${name}"
-      data-id="${esc(id || '')}"
-    >
-      ${label}
-    </button>`;
+export const auth = () =>
+  snippetView(AuthView, {
+    encodeURIComponent: encodeURIComponent(location.pathname + location.hash),
+  });
 
-  const auth = () =>
-    /* HTML */ `<div class="wf-empty">
-      <strong>Simpan pengajuan demo Anda</strong>
-      <p>Masuk dengan ChatGPT untuk menyimpan pengajuan dan melihat hasil pemeriksaan.</p>
-      <a
-        class="btn"
-        target="_top"
-        href="/signin-with-chatgpt?return_to=${encodeURIComponent(location.pathname + location.hash)}"
-        >Lanjutkan dengan ChatGPT</a
-      ><small>Gunakan data contoh untuk mencoba alur pendaftaran dan akad.</small>
-    </div>`;
+export function frame(key, title) {
+  return snippetView(FrameView, {
+    title: title,
+    action: action('refresh', '', 'Perbarui'),
+    key: key,
+  });
+}
 
-  function frame(key, title) {
-    return /* HTML */ `<section class="panel wf-panel">
-      <div class="panel-head">
-        <h2>${title}</h2>
-        ${action('refresh', '', 'Perbarui')}
-      </div>
-      <div data-workflow="${key}"></div>
-    </section>`;
-  }
+export function empty(text) {
+  return snippetView(EmptyView, { text: text });
+}
 
-  function empty(text) {
-    return /* HTML */ `<div class="wf-empty"><strong>${text}</strong></div>`;
-  }
+export function links(item, staff = false) {
+  return [
+    item.proofUrl ? snippetView(LinksView, { proofUrl: item.proofUrl }) : '',
+    item.signedUrl
+      ? snippetView(Links2View, { signedUrl: item.signedUrl })
+      : item.contractUrl && staff
+        ? snippetView(Links3View, { contractUrl: item.contractUrl })
+        : '',
+  ];
+}
 
-  function links(item) {
-    return `${
-      item.proofUrl
-        ? /* HTML */ `<a
-            class="btn secondary small-btn"
-            href="${item.proofUrl}"
-            target="_blank"
-            rel="noopener"
-            >Lihat bukti</a
-          >`
-        : ''
-    }${
-      item.signedUrl
-        ? /* HTML */ `<a class="btn small-btn" href="${item.signedUrl}?download=1"
-            >Unduh akad lengkap</a
-          >`
-        : item.contractUrl && staff
-          ? /* HTML */ `<a class="btn secondary small-btn" href="${item.contractUrl}?download=1"
-              >Unduh PDF awal</a
-            >`
-          : ''
-    }`;
-  }
+export function checks(items) {
+  return snippetView(ChecksView, {
+    itemsRows: items.map(([name, label]) =>
+      snippetView(Checks2View, { fieldName: name, label: label }),
+    ),
+  });
+}
 
-  function checks(items) {
-    return /* HTML */ `<div class="review-checks">
-      <h3>Pemeriksaan petugas</h3>
-      ${items.map(([name, label]) => /* HTML */ `<label class="check"><input type="checkbox" name="${name}" required />${label}</label>`).join('')}
-    </div>`;
-  }
+export function input(label, name, value = '', type = 'text', extra = '') {
+  return snippetView(InputView, {
+    label: label,
+    fieldName: name,
+    type: type,
+    fieldValue: esc(value),
+    extra: extra,
+  });
+}
 
-  function input(label, name, value = '', type = 'text', extra = '') {
-    return /* HTML */ `<label class="form-field"
-      ><span>${label} *</span
-      ><input name="${name}" type="${type}" value="${esc(value)}" ${extra} required
-    /></label>`;
-  }
+export function createWorkflowPresentation({ app, staff }) {
   return {
     esc,
     money,
     date,
     shortId,
-    workPanel,
     workStage,
     needsCorrection,
     status,
@@ -130,8 +109,9 @@ export function createWorkflowPresentation({ staff }) {
     auth,
     frame,
     empty,
-    links,
     checks,
     input,
+    workPanel: (id, stage) => (staff ? app.services.activity?.panel(id, stage) || null : null),
+    links: (item) => links(item, staff),
   };
 }

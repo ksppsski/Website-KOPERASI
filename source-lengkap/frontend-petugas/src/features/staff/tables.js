@@ -1,9 +1,20 @@
+import {
+  CandidatesTable2View,
+  CandidatesTableView,
+  DepositsTable2View,
+  DepositsTableView,
+  RequestsTableView,
+  MembersTableView,
+} from './views/tables.svelte';
+import { view, snippetView } from '../../../../shared/runtime/view.js';
+
 /**
  * Tabel antrean, setoran, pengajuan, dan direktori anggota.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
 export function createStaffTables({
+  app,
   candidateRows,
   workflowItems,
   table,
@@ -52,18 +63,16 @@ export function createStaffTables({
   function candidatesTable() {
     return table(
       ['CALON ANGGOTA', 'DITERIMA', 'SETORAN AWAL', 'STATUS', ''],
-      filtered(candidateRows())
-        .map(
-          (x) =>
-            /* HTML */ `<tr>
-              <td><strong>${esc(x.name)}</strong><small>${esc(x.number)}</small></td>
-              <td>${x.date.replace(' · ', '<br>')}</td>
-              <td class="money">${rupiah(x.amount)}</td>
-              <td>${badge(x.status)}</td>
-              <td>${reviewButton(x.id, x.status === 'Disetujui' ? 'Lihat' : 'Periksa', true)}</td>
-            </tr>`,
-        )
-        .join(''),
+      filtered(candidateRows()).map((x) =>
+        snippetView(CandidatesTableView, {
+          fieldName: esc(x.name),
+          number: esc(x.number),
+          replace: x.date.replace(' · ', snippetView(CandidatesTable2View)),
+          rupiah: rupiah(x.amount),
+          badge: badge(x.status),
+          reviewButton: reviewButton(x.id, x.status === 'Disetujui' ? 'Lihat' : 'Periksa', true),
+        }),
+      ),
     );
   }
 
@@ -99,50 +108,37 @@ export function createStaffTables({
                 ? 'Perlu perbaikan'
                 : 'Menunggu verifikasi',
         })),
-      )
-        .map(
-          (x) =>
-            /* HTML */ `<tr>
-              <td><strong>${esc(x.name)}</strong><small>${esc(x.memberId || '—')}</small></td>
-              <td>${x.label}</td>
-              <td class="money">${rupiah(x.amount)}</td>
-              <td>
-                ${badge(x.status)}<small>${esc(x.finance?.reference || 'Menunggu Finance')}</small>
-              </td>
-              <td>
-                ${
-                  x.kind === 'savings'
-                    ? /* HTML */ `<a
-                        class="btn secondary small-btn"
-                        href="${esc(x.proofUrl)}"
-                        target="_blank"
-                        rel="noopener"
-                        >Lihat bukti</a
-                      >`
-                    : reviewButton(x.id, 'Lihat', x.registration)
-                }
-              </td>
-            </tr>`,
-        )
-        .join(''),
+      ).map((x) =>
+        snippetView(DepositsTableView, {
+          fieldName: esc(x.name),
+          memberId: esc(x.memberId || '—'),
+          label: x.label,
+          rupiah: rupiah(x.amount),
+          badge: badge(x.status),
+          reference: esc(x.finance?.reference || 'Menunggu Finance'),
+          kindContent:
+            x.kind === 'savings'
+              ? snippetView(DepositsTable2View, { proofUrl: esc(x.proofUrl) })
+              : reviewButton(x.id, 'Lihat', x.registration),
+        }),
+      ),
     );
   }
 
   function requestsTable() {
     return table(
       ['PENGAJUAN', 'ANGGOTA', 'NILAI', 'STATUS', ''],
-      filtered(runtime.state.requests)
-        .map(
-          (x) =>
-            /* HTML */ `<tr>
-              <td><strong>${x.type}</strong><small>${x.id}</small></td>
-              <td>${esc(name(x.member))}<small>${esc(x.purpose)}</small></td>
-              <td class="money">${rupiah(x.amount)}</td>
-              <td>${badge(x.status)}</td>
-              <td>${button('request', x.id, x.status === 'Disetujui' ? 'Lihat' : 'Tinjau')}</td>
-            </tr>`,
-        )
-        .join(''),
+      filtered(runtime.state.requests).map((x) =>
+        snippetView(RequestsTableView, {
+          type: x.type,
+          id: x.id,
+          fieldName: esc(name(x.member)),
+          purpose: esc(x.purpose),
+          rupiah: rupiah(x.amount),
+          badge: badge(x.status),
+          button: button('request', x.id, x.status === 'Disetujui' ? 'Lihat' : 'Tinjau'),
+        }),
+      ),
     );
   }
 
@@ -167,18 +163,16 @@ export function createStaffTables({
       }));
     return table(
       ['ANGGOTA', 'SIMPANAN POKOK & WAJIB', 'PENYERTAAN MODAL', 'STATUS', ''],
-      filtered(rows)
-        .map(
-          (x) =>
-            /* HTML */ `<tr>
-              <td><strong>${esc(x.name)}</strong><small>${esc(x.number)}</small></td>
-              <td class="money">${rupiah(x.savings)}</td>
-              <td class="money">${rupiah(x.capital)}</td>
-              <td>${badge(x.status)}</td>
-              <td>${reviewButton(x.id, 'Rincian', true)}</td>
-            </tr>`,
-        )
-        .join(''),
+      filtered(rows).map((x) =>
+        snippetView(MembersTableView, {
+          fieldName: esc(x.name),
+          number: esc(x.number),
+          rupiah: rupiah(x.savings),
+          rupiahValue: rupiah(x.capital),
+          badge: badge(x.status),
+          reviewButton: reviewButton(x.id, 'Rincian', true),
+        }),
+      ),
     );
   }
 

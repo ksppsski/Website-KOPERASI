@@ -1,54 +1,39 @@
+import {
+  RegistrationProofInputView,
+  RegistrationProofStatusView,
+  RegistrationProofStatus2View,
+} from './views/registration-proof.svelte';
+import { view, snippetView } from '../../../../shared/runtime/view.js';
+
 /**
  * Unggahan bukti transfer pendaftaran: validasi dan status berkas.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
-export function createRegistrationProof({ state, esc, icon, $, runtime, render }) {
+export function createRegistrationProof({ app, state, esc, icon, $, runtime, render }) {
   function registrationProofInput() {
-    return /* HTML */ `<div class="file-picker registration-proof">
-      <label class="field-label" for="registration-proof"
-        >Bukti transfer pembayaran simpanan <span aria-hidden="true">*</span></label
-      >
-      <p class="field-hint" id="registration-proof-help">
-        Wajib dilampirkan · JPG, PNG, atau PDF · Maks. 10 MB
-      </p>
-      <input
-        type="file"
-        id="registration-proof"
-        name="registrationProof"
-        accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf"
-        ${state.registrationProof ? '' : 'required'}
-        aria-describedby="registration-proof-help registration-proof-error"
-        aria-invalid="${Boolean(state.registrationProofError)}"
-      />
-      <div id="registration-proof-selected" aria-live="polite">${registrationProofStatus()}</div>
-      <p
-        class="form-error"
-        id="registration-proof-error"
-        role="alert"
-        ${state.registrationProofError ? '' : 'hidden'}
-      >
-        ${esc(state.registrationProofError)}
-      </p>
-      <p class="field-hint">Bukti simpanan tersimpan bersama pendaftaran.</p>
-    </div>`;
+    return snippetView(RegistrationProofInputView, {
+      registrationProofContent: state.registrationProof ? {} : { required: true },
+      registrationProofError2: Boolean(state.registrationProofError),
+      registrationProofStatus: registrationProofStatus(),
+      registrationProofErrorContent: state.registrationProofError ? {} : { hidden: true },
+      registrationProofError: esc(state.registrationProofError),
+    });
   }
 
   function registrationProofStatus() {
-    if (state.registrationProofBusy) return '<p class="field-hint">Memeriksa berkas…</p>';
+    if (state.registrationProofBusy) return snippetView(RegistrationProofStatusView);
     const file = state.registrationProof;
     if (!file) return '';
     const size =
       file.size < 1024 * 1024
         ? Math.max(1, Math.ceil(file.size / 1024)) + ' KB'
         : (file.size / 1024 / 1024).toLocaleString('id-ID', { maximumFractionDigits: 1 }) + ' MB';
-    return /* HTML */ `<div class="registration-proof-file">
-      ${icon('check')}
-      <div><strong>${esc(file.name)}</strong><span>${size} · Berkas terlampir</span></div>
-      <button class="link-button" type="button" data-action="remove-registration-proof">
-        Hapus
-      </button>
-    </div>`;
+    return snippetView(RegistrationProofStatus2View, {
+      icon: icon('check'),
+      fieldName: esc(file.name),
+      size: size,
+    });
   }
 
   function updateRegistrationProofView() {
@@ -57,7 +42,7 @@ export function createRegistrationProof({ state, esc, icon, $, runtime, render }
     input.required = !state.registrationProof;
     input.setCustomValidity(state.registrationProofError);
     input.setAttribute('aria-invalid', String(Boolean(state.registrationProofError)));
-    $('#registration-proof-selected').innerHTML = registrationProofStatus();
+    app.ui.render($('#registration-proof-selected'), registrationProofStatus());
     const error = $('#registration-proof-error');
     error.textContent = state.registrationProofError;
     error.hidden = !state.registrationProofError;

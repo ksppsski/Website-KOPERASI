@@ -1,4 +1,5 @@
 <script>
+  import PreviewBanner from '../../shared/components/PreviewBanner.svelte';
   import { tick } from 'svelte';
   import Header from './components/public/Header.svelte';
   import Values from './components/public/Values.svelte';
@@ -38,6 +39,8 @@
     }
   }
 </script>
+
+<PreviewBanner />
 
 <svelte:document onclick={handleClick} />
 <svelte:window

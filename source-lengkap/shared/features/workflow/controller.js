@@ -1,7 +1,15 @@
-import { registerWorkflow } from '../../services/workflow.js';
+import {
+  MountView,
+  Mount2View,
+  Mount3View,
+  ViewsView,
+  Views2View,
+} from './views/controller.svelte';
+import { view, snippetView } from '../../runtime/view.js';
 
 import { createWorkflowPresentation } from './presentation.js';
 import { createWorkflowClient } from './client.js';
+import { createWorkflowCoordinator } from './coordinator.js';
 import { createWorkflowOffers } from './offers.js';
 import { createWorkflowRequestViews } from './request-views.js';
 import { createWorkflowSavings } from './savings.js';
@@ -17,10 +25,10 @@ import { bindWorkflowSubmissions } from './submission-events.js';
  * Inisialisasi workflow: state, perakitan modul, dan lifecycle halaman.
  * Tampilan, formulir, dan handler berada pada file yang disebut di import.
  */
-export function initializeWorkflow() {
+export function initializeWorkflow(app) {
   'use strict';
 
-  const state = {
+  const state = app.state({
     staff: { role: null, accountRole: null, allowedRoles: [] },
     members: [],
     profiles: [],
@@ -35,7 +43,7 @@ export function initializeWorkflow() {
     unauthorized: false,
     filters: {},
     busy: false,
-  };
+  });
 
   const staff = location.pathname.endsWith('petugas.html');
 
@@ -51,26 +59,29 @@ export function initializeWorkflow() {
     const panels = document.querySelectorAll('[data-workflow]');
     panels.forEach((el) => {
       if (el.dataset.workflow === 'page-access' && panels.length > 1) {
-        el.innerHTML = '';
+        app.ui.render(el, '');
         return;
       }
       if (state.unauthorized) {
-        el.innerHTML = auth();
+        app.ui.render(el, auth());
         return;
       }
       if (!state.loaded && state.loading) {
-        el.innerHTML = '<p class="muted" role="status">Memuat pengajuan…</p>';
+        app.ui.render(el, snippetView(MountView));
         return;
       }
       if (state.error) {
-        el.innerHTML = /* HTML */ `<div class="wf-empty" role="alert">
-          <p>${esc(state.error)}</p>
-          ${action('refresh', '', 'Coba lagi')}
-        </div>`;
+        app.ui.render(
+          el,
+          snippetView(Mount2View, {
+            error: esc(state.error),
+            action: action('refresh', '', 'Coba lagi'),
+          }),
+        );
         return;
       }
       if (!state.loaded) {
-        el.innerHTML = '<p class="muted" role="status">Memuat pengajuan…</p>';
+        app.ui.render(el, snippetView(Mount3View));
         return;
       }
       const views = {
@@ -91,14 +102,16 @@ export function initializeWorkflow() {
         'staff-registration': staffRegistrationPanel,
         'registration-access': () =>
           state.profile
-            ? /* HTML */ `<p class="field-hint">
-                  Pendaftaran ${esc(state.profile.data.name)}: ${profileStatus(state.profile)}
-                </p>
-                <a class="btn secondary small-btn" href="#profil">Lihat data tersimpan</a
-                >${needsCorrection(state.profile) ? action('edit-registration', '', 'Perbaiki pendaftaran') : ''}`
-            : '<p class="field-hint">Data pendaftaran akan tersimpan di akun Anda.</p>',
+            ? snippetView(ViewsView, {
+                fieldName: esc(state.profile.data.name),
+                profileStatus: profileStatus(state.profile),
+                needsCorrectionContent: needsCorrection(state.profile)
+                  ? action('edit-registration', '', 'Perbaiki pendaftaran')
+                  : '',
+              })
+            : snippetView(Views2View),
       };
-      el.innerHTML = (views[el.dataset.workflow] || (() => ''))();
+      app.ui.render(el, (views[el.dataset.workflow] || (() => ''))());
     });
     const open = state.items.find(
       (x) =>
@@ -147,11 +160,29 @@ export function initializeWorkflow() {
     links,
     checks,
     input,
-  } = createWorkflowPresentation({
-    staff,
-  });
+  } = createWorkflowPresentation({ app, staff });
 
-  const { api, scopedFiles, refresh, saveRegistration, setStaffRole } = createWorkflowClient({
+  const client = createWorkflowClient({
+    staff,
+    request: app.request,
+    memberForPath: (path) =>
+      state.items.find((item) => path.startsWith('/' + item.id + '/'))?.memberProfileId,
+  });
+  const { scopedFiles } = client;
+  async function api(path, options) {
+    try {
+      return await client.api(path, options);
+    } catch (error) {
+      if (error.status === 401) {
+        state.unauthorized = true;
+        mount();
+      }
+      throw error;
+    }
+  }
+  const { refresh, saveRegistration, setStaffRole } = createWorkflowCoordinator({
+    app,
+    api,
     staff,
     state,
     mount,
@@ -161,30 +192,15 @@ export function initializeWorkflow() {
   });
 
   const { scheduleOfferExpiry, offerCards, offerForm } = createWorkflowOffers({
+    app,
     runtime,
     staff,
     state,
-    empty,
-    esc,
-    money,
-    date,
     ensureReady: (...args) => ensureReady(...args),
     show: (...args) => show(...args),
-    action,
   });
 
-  const { memberCards, staffTable, overview } = createWorkflowRequestViews({
-    state,
-    empty,
-    shortId,
-    date,
-    status,
-    money,
-    esc,
-    links,
-    needsCorrection,
-    action,
-  });
+  const { memberCards, staffTable, overview } = createWorkflowRequestViews({ app, state, links });
 
   const {
     savingsEntries,
@@ -196,21 +212,14 @@ export function initializeWorkflow() {
     memberSummary,
     memberSavings,
   } = createWorkflowSavings({
+    app,
     state,
-    needsCorrection,
-    esc,
-    action,
-    shortId,
-    money,
-    date,
     ensureReady: (...args) => ensureReady(...args),
     api,
     show: (...args) => show(...args),
     profilePanel: (...args) => profilePanel(...args),
     runtime,
     profileStatus: (...args) => profileStatus(...args),
-    status,
-    empty,
   });
 
   const {
@@ -223,16 +232,11 @@ export function initializeWorkflow() {
     financeStatus,
     registrationReview,
   } = createWorkflowRegistration({
-    needsCorrection,
-    esc,
-    date,
+    app,
     state,
     show: (...args) => show(...args),
     staff,
-    action,
-    empty,
     workPanel,
-    checks,
   });
 
   const {
@@ -242,17 +246,10 @@ export function initializeWorkflow() {
     generationForm,
     uploadForm,
     downloadPdf,
-  } = createWorkflowDocuments({
-    state,
-    esc,
-    status,
-    money,
-    date,
-    empty,
-    input,
-  });
+  } = createWorkflowDocuments({ app, state });
 
   const { capitalForm, withdrawalForm } = createWorkflowApplicationForms({
+    app,
     ensureReady: (...args) => ensureReady(...args),
     state,
     show: (...args) => show(...args),
@@ -260,46 +257,28 @@ export function initializeWorkflow() {
     checkAccess,
     offerCards,
     runtime,
-    esc,
-    money,
     financeStatus,
     notice: (...args) => notice(...args),
     api,
   });
 
   const { reviewDialog } = createWorkflowReviewDialog({
+    app,
     state,
-    shortId,
-    date,
-    money,
-    status,
-    esc,
-    checks,
     generationForm,
     profileDetails,
     show: (...args) => show(...args),
     workPanel,
-    workStage,
     financeStatus,
     links,
     uploadForm,
   });
 
   const { show, close, notice, ensureReady, setBusy, errorMessage, adopt, mutation } =
-    createWorkflowDialogRuntime({
-      runtime,
-      $,
-      state,
-      refresh,
-      auth,
-      esc,
-      action,
-      mount,
-      api,
-      reviewDialog,
-    });
+    createWorkflowDialogRuntime({ app, runtime, $, state, refresh, mount, api, reviewDialog });
 
   bindWorkflowInteractions({
+    app,
     close,
     refresh,
     capitalForm,
@@ -312,7 +291,6 @@ export function initializeWorkflow() {
     completeKtpDialog,
     mutation,
     show,
-    action,
     setBusy,
     $,
     api,
@@ -324,9 +302,9 @@ export function initializeWorkflow() {
   });
 
   bindWorkflowSubmissions({
+    app,
     state,
     staff,
-    workStage,
     runtime,
     setBusy,
     api,
@@ -340,7 +318,7 @@ export function initializeWorkflow() {
     errorMessage,
   });
 
-  setInterval(() => {
+  app.scope.interval(() => {
     if (
       !staff &&
       document.visibilityState === 'visible' &&
@@ -354,7 +332,7 @@ export function initializeWorkflow() {
       void refresh();
   }, 60000);
 
-  window.addEventListener('focus', () => {
+  app.scope.listen(window, 'focus', () => {
     if (
       state.loaded &&
       !state.busy &&
@@ -365,7 +343,8 @@ export function initializeWorkflow() {
       void refresh();
   });
 
-  registerWorkflow({
+  app.services.workflow = {
+    state,
     getViewContext: () => ({ automaticPreview, action, frame, staff }),
     getWithdrawal: () => state.withdrawal,
     getFinancing: () => state.financing,
@@ -402,5 +381,6 @@ export function initializeWorkflow() {
     memberDocuments: () => frame('member-documents', 'Akad dari pengajuan Anda'),
     staffDocuments: () => frame('staff-documents', 'Draf dari portal anggota'),
     staffOverview: () => frame('staff-overview', 'Pengajuan dari portal anggota'),
-  });
+  };
+  return app.services.workflow;
 }

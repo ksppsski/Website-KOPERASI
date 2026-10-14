@@ -8,3 +8,5 @@ source-lengkap/dist/
 source-lengkap/.sites-runtime/
 source-lengkap/backend/templates/spa-image2.png
 source-lengkap/backend/templates/membership-letter-source.docx
+
+source-lengkap/dist-preview/

@@ -1,22 +1,32 @@
-import { withdrawalService } from '../../services/withdrawal.js';
+import {
+  Details2View,
+  DetailsView,
+  Form2View,
+  Form3View,
+  FormView,
+  ReadyView,
+  Ready2View,
+  SignatureView,
+  ReviewDialog2View,
+  ReviewDialog3View,
+  ReviewDialog4View,
+  ReviewDialogView,
+} from './views/review-dialog.svelte';
+import { shortId, date, money, status, esc, checks, workStage } from './presentation.js';
+import { view, snippetView } from '../../runtime/view.js';
+
 /**
  * Dialog pemeriksaan satu pengajuan beserta tindakan yang tersedia.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
 export function createWorkflowReviewDialog({
+  app,
   state,
-  shortId,
-  date,
-  money,
-  status,
-  esc,
-  checks,
   generationForm,
   profileDetails,
   show,
   workPanel,
-  workStage,
   financeStatus,
   links,
   uploadForm,
@@ -44,18 +54,10 @@ export function createWorkflowReviewDialog({
           ]
         : [['Alasan', item.reason]]),
     ];
-    const details = /* HTML */ `<div class="status-head">${status(item)}</div>
-      <dl class="review-list">
-        ${rows
-          .map(
-            ([a, b]) =>
-              /* HTML */ `<div>
-                <dt>${a}</dt>
-                <dd>${esc(b)}</dd>
-              </div>`,
-          )
-          .join('')}
-      </dl>`;
+    const details = snippetView(DetailsView, {
+      status: status(item),
+      rowsRows: rows.map(([a, b]) => snippetView(Details2View, { a: a, b: esc(b) })),
+    });
     const terminal = [
       'generated',
       'signed',
@@ -70,87 +72,62 @@ export function createWorkflowReviewDialog({
     ].includes(item.status);
     const form = terminal
       ? ''
-      : /* HTML */ `<form id="wf-review-form" data-id="${item.id}" data-version="${item.version}">
-          ${
-            capital
-              ? checks([
-                  ['identity', 'Identitas anggota sesuai.'],
-                  ['amount', 'Nominal pengajuan dan data akad sesuai.'],
-                ])
-              : ''
-          }<label class="form-field"
-            ><span>Catatan petugas</span
-            ><textarea
-              name="note"
-              rows="3"
-              maxlength="1500"
-              placeholder="${
-                capital
-                  ? 'Wajib diisi jika meminta perbaikan.'
-                  : 'Wajib diisi jika menolak permohonan.'
-              }"
-            >
-${esc(item.note)}</textarea>
-          </label>
-          <p id="wf-error" class="form-error" role="alert" hidden></p>
-          <div class="wf-actions">
-            ${
-              capital && !item.renewalOf
-                ? '<button type="submit" class="btn secondary" name="action" value="return" formnovalidate>Minta perbaikan</button>'
-                : ''
-            }${
-              !capital
-                ? '<button type="submit" class="btn secondary" name="action" value="reject" formnovalidate>Tolak</button>'
-                : ''
-            }<button
-              type="submit"
-              class="btn"
-              name="action"
-              value="approve"
-              ${capital && item.finance?.status !== 'approved' ? 'disabled' : ''}
-            >
-              ${capital ? 'Setujui draf' : 'Setujui permohonan'}
-            </button>
-          </div>
-        </form>`;
+      : snippetView(FormView, {
+          id: item.id,
+          version: item.version,
+          capitalContent: capital
+            ? checks([
+                ['identity', 'Identitas anggota sesuai.'],
+                ['amount', 'Nominal pengajuan dan data akad sesuai.'],
+              ])
+            : '',
+          capitalContent2: capital
+            ? 'Wajib diisi jika meminta perbaikan.'
+            : 'Wajib diisi jika menolak permohonan.',
+          note: esc(item.note),
+          capitalContent3: capital && !item.renewalOf ? snippetView(Form2View) : '',
+          capitalContent4: !capital ? snippetView(Form3View) : '',
+          capitalContent5: capital && item.finance?.status !== 'approved' ? { disabled: true } : {},
+          capitalContent6: capital ? 'Setujui draf' : 'Setujui permohonan',
+        });
     const ready =
       item.status === 'ready'
         ? item.finance?.status !== 'approved'
-          ? '<p class="wf-note">Pembuatan PDF menunggu rekonsiliasi Finance.</p>'
+          ? snippetView(ReadyView)
           : item.signatureAvailable
             ? generationForm(item)
-            : '<p class="wf-note">Pengajuan lama belum memiliki data pendaftaran dan tanda tangan. Buat pengajuan baru setelah pendaftaran disetujui.</p>'
+            : snippetView(Ready2View)
         : form;
     const signature =
       capital && item.signatureUrl
-        ? /* HTML */ `<details class="wf-detail">
-            <summary>Data anggota dan tanda tangan</summary>
-            ${profileDetails({ data: item.member, memberNumber: item.memberId })}
-            <div class="wf-signature">
-              <img
-                src="${item.signatureUrl}"
-                alt="Tanda tangan anggota untuk akad ini"
-                width="250"
-                height="85"
-              />
-            </div>
-          </details>`
+        ? snippetView(SignatureView, {
+            profileDetails: profileDetails({ data: item.member, memberNumber: item.memberId }),
+            signatureUrl: item.signatureUrl,
+          })
         : '';
     show(
       capital ? 'Pemeriksaan penyertaan modal' : 'Pemeriksaan pengunduran diri',
-      /* HTML */ `${workPanel(item.id, workStage(item))}${details}${capital ? financeStatus(item) : withdrawalService?.summary(item) || ''}${signature}
-        <div class="wf-actions">${links(item)}</div>
-        ${item.note && terminal ? /* HTML */ `<div class="wf-note">${esc(item.note)}</div>` : ''}${
+      snippetView(ReviewDialogView, {
+        workPanel: workPanel(item.id, workStage(item)),
+        details: details,
+        capitalContent: capital
+          ? financeStatus(item)
+          : app.services.withdrawal?.summary(item) || '',
+        signature: signature,
+        links: links(item),
+        noteContent:
+          item.note && terminal ? snippetView(ReviewDialog2View, { note: esc(item.note) }) : '',
+        kindContent:
           item.kind === 'withdrawal' && ['approved', 'rejected'].includes(item.status)
-            ? /* HTML */ `<p class="field-hint">Keputusan tersimpan · ${date(item.updatedAt)}</p>`
-            : ''
-        }${ready}${item.status === 'generated' && item.contractData ? uploadForm(item) : ''}${
+            ? snippetView(ReviewDialog3View, { date: date(item.updatedAt) })
+            : '',
+        ready: ready,
+        statusContent: item.status === 'generated' && item.contractData ? uploadForm(item) : '',
+        statusContent2:
           item.status === 'signed'
-            ? /* HTML */ `<p class="wf-note">
-                Akad lengkap diunggah ${date(item.signedAt)} dan tersedia di Dokumen Akad anggota.
-              </p>`
-            : ''
-        }`,
+            ? snippetView(ReviewDialog4View, { date: date(item.signedAt) })
+            : '',
+      }),
     );
   }
   return { reviewDialog };

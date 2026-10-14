@@ -1,9 +1,29 @@
+import {
+  ButtonView,
+  CardView,
+  Card2View,
+  PanelBodyView,
+  PanelBody2View,
+  PanelView,
+  ResultsView,
+  Results2View,
+  Results4View,
+  Results5View,
+  Results7View,
+  Results8View,
+  Results9View,
+  Results6View,
+  Results10View,
+  Results3View,
+} from './views/presentation.svelte';
+import { view, fallbackView, snippetView } from '../../../../shared/runtime/view.js';
+
 /**
  * Kartu waktu kerja, ringkasan, dan tabel aktivitas petugas.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 import { statusColor } from '../../../../shared/lib/status-colors.js';
-export function createActivityPresentation({ state, wf, esc, newestFirst }) {
+export function createActivityPresentation({ app, state, wf, esc, newestFirst }) {
   const roleLabel = (r) => (r === 'manager' ? 'Manajer' : r === 'finance' ? 'Finance' : 'Admin');
 
   const statusLabel = (t) =>
@@ -56,57 +76,56 @@ export function createActivityPresentation({ state, wf, esc, newestFirst }) {
   }
 
   const button = (action, label, extra = '') =>
-    /* HTML */ `<button
-      type="button"
-      class="btn secondary small-btn"
-      data-activity-action="${action}"
-      ${extra}
-    >
-      ${label}
-    </button>`;
+    snippetView(ButtonView, { action: action, extra: extra, label: label });
 
   const currentTask = (target, stage) =>
     state.tasks.filter((t) => t.targetId === target && (!stage || t.stage === stage)).at(-1);
 
   function card(t) {
-    if (!t) return '<p class="field-hint">Tahap ini belum tersedia.</p>';
+    if (!t) return snippetView(CardView);
     const started = t.started ?? !!t.startedAt,
       completed = t.completed ?? !!t.completedAt,
       closed = t.closed ?? !!t.closedAt;
     const canStart =
       !started && !completed && !closed && t.role === (wf().getStaff()?.role || 'admin');
-    return /* HTML */ `<div class="work-head">
-        <strong>${esc(t.label)}</strong
-        ><span class="badge ${completed ? 'green' : closed ? 'gray' : 'blue'}"
-          >${completed ? 'Selesai' : closed ? 'Ditutup' : started ? 'Sedang dikerjakan' : 'Belum dimulai'}</span
-        >
-      </div>
-      ${canStart ? button('start', 'Mulai mengerjakan', `data-task-id="${esc(t.id)}"`) : ''}
-      <p class="work-error form-error" role="alert" hidden></p>`;
+    return snippetView(Card2View, {
+      label: esc(t.label),
+      completedContent: completed ? 'green' : closed ? 'gray' : 'blue',
+      completedContent2: completed
+        ? 'Selesai'
+        : closed
+          ? 'Ditutup'
+          : started
+            ? 'Sedang dikerjakan'
+            : 'Belum dimulai',
+      canStartContent: canStart
+        ? button('start', 'Mulai mengerjakan', { 'data-task-id': esc(t.id) })
+        : '',
+    });
   }
 
   function panelBody(target, stage) {
     if (state.error)
-      return /* HTML */ `<p class="form-error">${esc(state.error)}</p>
-        ${button('refresh', 'Coba lagi')}`;
-    if (!state.loaded) return '<p class="muted" role="status">Memuat tahap pekerjaan…</p>';
+      return snippetView(PanelBodyView, {
+        error: esc(state.error),
+        button: button('refresh', 'Coba lagi'),
+      });
+    if (!state.loaded) return snippetView(PanelBody2View);
     return card(currentTask(target, stage));
   }
 
   function panel(target, stage) {
-    return /* HTML */ `<section
-      class="work-timemark"
-      data-work-target="${esc(target)}"
-      data-work-stage="${esc(stage)}"
-    >
-      <div data-work-body>${panelBody(target, stage)}</div>
-    </section>`;
+    return snippetView(PanelView, {
+      target: esc(target),
+      stage: esc(stage),
+      panelBody: panelBody(target, stage),
+    });
   }
 
   function paintPanels() {
     document.querySelectorAll('[data-work-target]').forEach((el) => {
       const body = el.querySelector('[data-work-body]');
-      if (body) body.innerHTML = panelBody(el.dataset.workTarget, el.dataset.workStage);
+      if (body) app.ui.render(body, panelBody(el.dataset.workTarget, el.dataset.workStage));
     });
   }
 
@@ -138,12 +157,11 @@ export function createActivityPresentation({ state, wf, esc, newestFirst }) {
 
   function results() {
     if (state.error)
-      return /* HTML */ `<div class="panel">
-        <p class="form-error" role="alert">${esc(state.error)}</p>
-        ${button('refresh', 'Coba lagi')}
-      </div>`;
-    if (!state.loaded)
-      return '<section class="panel"><p role="status">Memuat catatan kerja…</p></section>';
+      return snippetView(ResultsView, {
+        error: esc(state.error),
+        button: button('refresh', 'Coba lagi'),
+      });
+    if (!state.loaded) return snippetView(Results2View);
     const items = filtered(),
       s = summary(items);
     const stats = [
@@ -152,119 +170,64 @@ export function createActivityPresentation({ state, wf, esc, newestFirst }) {
       ['Tahap selesai', s.completed],
       ['Rata-rata respons', duration(s.response)],
     ];
-    return /* HTML */ `<div class="stats work-stats">
-        ${stats
-          .map(
-            ([label, value]) =>
-              /* HTML */ `<div class="stat">
-                <div class="stat-top">${label}</div>
-                <div class="stat-value">${value}</div>
-              </div>`,
-          )
-          .join('')}
-      </div>
-      <section class="panel">
-        <div class="panel-head">
-          <h2>Ringkasan per peran</h2>
-          <span class="field-hint">Sesuai filter</span>
-        </div>
-        <div class="table-scroll">
-          <table>
-            <thead>
-              <tr>
-                <th>PERAN</th>
-                <th>TAHAP SELESAI</th>
-                <th>RATA-RATA RESPONS</th>
-                <th>RATA-RATA PENGERJAAN</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${['admin', 'finance']
-                .filter((r) => !state.role || r === state.role)
-                .map((r) => {
-                  const x = summary(items.filter((t) => t.role === r));
-                  return /* HTML */ `<tr>
-                    <td><strong>${roleLabel(r)}</strong></td>
-                    <td>${x.completed}</td>
-                    <td>${duration(x.response)}<small>${x.responseN} catatan lengkap</small></td>
-                    <td>
-                      ${duration(x.processing)}<small>${x.processingN} catatan lengkap</small>
-                    </td>
-                  </tr>`;
-                })
-                .join('')}
-            </tbody>
-          </table>
-        </div>
-      </section>
-      <section class="panel">
-        <div class="panel-head">
-          <h2>Riwayat tahap pekerjaan</h2>
-          <span class="badge gray">${items.length} catatan</span>
-        </div>
-        <div class="table-scroll">
-          <table class="work-table">
-            <thead>
-              <tr>
-                <th>TUGAS / PETUGAS</th>
-                <th>MASUK</th>
-                <th>MULAI</th>
-                <th>SELESAI</th>
-                <th>DURASI</th>
-                <th>STATUS</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${
-                items
-                  .map(
-                    (t) =>
-                      /* HTML */ `<tr>
-                        <td>
-                          <strong>${esc(t.label)}</strong><small>${esc(t.memberName)}</small
-                          ><small
-                            >${roleLabel(t.role)}${
-                              t.startedBy || t.completedBy
-                                ? ' · ' +
-                                  esc(t.startedName || t.completedName || 'Petugas') +
-                                  ' (' +
-                                  roleLabel(t.startedRole || t.completedRole || t.role) +
-                                  ')'
-                                : ''
-                            }
-                            ·
-                            ${esc(
-                              t.targetId.startsWith('payout:')
-                                ? t.targetId.slice(7)
-                                : t.targetId.slice(0, 8).toUpperCase(),
-                            )}</small
-                          >${t.legacy ? '<small>Riwayat lama</small>' : ''}
-                        </td>
-                        <td>${time(t.receivedAt)}</td>
-                        <td>
-                          ${t.startedAt ? time(t.startedAt) : t.completedAt ? 'Belum tercatat' : '—'}
-                        </td>
-                        <td>
-                          ${t.completedAt ? time(t.completedAt) : '—'}${t.closedAt ? /* HTML */ `<small>Ditutup ${time(t.closedAt)}</small>` : ''}
-                        </td>
-                        <td>
-                          Respons ${duration(t.responseSeconds)}<small
-                            >Pengerjaan ${duration(t.processingSeconds)}</small
-                          >
-                        </td>
-                        <td>
-                          <span class="badge ${statusColor(statusLabel(t))}">${statusLabel(t)}</span
-                          >${t.completedAt && !t.startedAt ? '<small>Waktu mulai belum tercatat</small>' : ''}
-                        </td>
-                      </tr>`,
-                  )
-                  .join('') ||
-                '<tr><td colspan="6"><div class="empty-state">Belum ada catatan yang sesuai. Waktu masuk tercatat saat anggota mengirim pengajuan.</div></td></tr>'
-              }
-            </tbody>
-          </table>
-        </div>
-      </section>`;
+    return snippetView(Results3View, {
+      statsRows: stats.map(([label, value]) =>
+        snippetView(Results4View, { label: label, fieldValue: value }),
+      ),
+      RowsRows: ['admin', 'finance']
+        .filter((r) => !state.role || r === state.role)
+        .map((r) => {
+          const x = summary(items.filter((t) => t.role === r));
+          return snippetView(Results5View, {
+            roleLabel: roleLabel(r),
+            completed: x.completed,
+            duration: duration(x.response),
+            responseN: x.responseN,
+            durationValue: duration(x.processing),
+            processingN: x.processingN,
+          });
+        }),
+      length: items.length,
+      fallbackView: fallbackView(
+        items.map((t) =>
+          snippetView(Results6View, {
+            label: esc(t.label),
+            memberName: esc(t.memberName),
+            roleLabel: roleLabel(t.role),
+            startedByContent:
+              t.startedBy || t.completedBy
+                ? ' · ' +
+                  esc(t.startedName || t.completedName || 'Petugas') +
+                  ' (' +
+                  roleLabel(t.startedRole || t.completedRole || t.role) +
+                  ')'
+                : '',
+            startsWithContent: esc(
+              t.targetId.startsWith('payout:')
+                ? t.targetId.slice(7)
+                : t.targetId.slice(0, 8).toUpperCase(),
+            ),
+            legacyContent: t.legacy ? snippetView(Results7View) : '',
+            time: time(t.receivedAt),
+            startedAtContent: t.startedAt
+              ? time(t.startedAt)
+              : t.completedAt
+                ? 'Belum tercatat'
+                : '—',
+            completedAtContent: t.completedAt ? time(t.completedAt) : '—',
+            closedAtContent: t.closedAt
+              ? snippetView(Results8View, { time: time(t.closedAt) })
+              : '',
+            duration: duration(t.responseSeconds),
+            durationValue: duration(t.processingSeconds),
+            statusColor: statusColor(statusLabel(t)),
+            statusLabel: statusLabel(t),
+            completedAtContent2: t.completedAt && !t.startedAt ? snippetView(Results9View) : '',
+          }),
+        ),
+        snippetView(Results10View),
+      ),
+    });
   }
   return {
     roleLabel,

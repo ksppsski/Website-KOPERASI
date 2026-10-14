@@ -1,10 +1,13 @@
-import { workflowService } from '../../../../shared/services/workflow.js';
+import { BindMemberSubmissionsView } from './views/submission-events.svelte';
+import { view, snippetView } from '../../../../shared/runtime/view.js';
+
 /**
  * Pengiriman formulir login, pemulihan akun, dan pendaftaran.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
 export function bindMemberSubmissions({
+  app,
   requireRegistrationKtp,
   state,
   requireRegistrationProof,
@@ -18,7 +21,7 @@ export function bindMemberSubmissions({
   fileValid,
   closeDialog,
 }) {
-  document.addEventListener('submit', async (event) => {
+  app.scope.listen(document, 'submit', async (event) => {
     const form = event.target;
     if (!(form instanceof HTMLFormElement)) return;
     event.preventDefault();
@@ -36,7 +39,7 @@ export function bindMemberSubmissions({
     const data = Object.fromEntries(new FormData(form));
     if (form.id === 'login-form') {
       state.signedIn = true;
-      const p = workflowService?.getProfile();
+      const p = app.services.workflow?.getProfile();
       state.profile = p ? { ...p.data } : {};
       state.savedProfile = !!p;
       go('ringkasan');
@@ -44,12 +47,7 @@ export function bindMemberSubmissions({
     if (form.id === 'forgot-form') {
       dialog(
         'Simulasi pemulihan akun',
-        /* HTML */ `<div class="success-icon">${icon('mail')}</div>
-          <p>Di sistem yang sudah aktif, petunjuk pemulihan akan dikirim ke email terdaftar.</p>
-          <p class="dialog-note">Tidak ada email yang dikirim dalam demo ini.</p>
-          <div class="form-actions">
-            <a class="btn full" href="#masuk">Kembali ke halaman masuk</a>
-          </div>`,
+        snippetView(BindMemberSubmissionsView, { icon: icon('mail') }),
       );
     }
     if (form.id === 'registration-form') {
@@ -71,7 +69,7 @@ export function bindMemberSubmissions({
         const error = $('#registration-submit-error');
         error.hidden = true;
         try {
-          await workflowService.saveRegistration(
+          await app.services.workflow.saveRegistration(
             state.registration,
             state.registrationProof,
             state.registrationId,
@@ -108,7 +106,7 @@ export function bindMemberSubmissions({
       toast('Konfirmasi setoran contoh menunggu verifikasi.');
     }
     if (form.id === 'application-form') {
-      if (!(await workflowService?.checkAccess())) return;
+      if (!(await app.services.workflow?.checkAccess())) return;
       const type = form.dataset.kind;
       state.requests.unshift({
         id: 'DEMO-' + String(state.requestCounter++).padStart(3, '0'),

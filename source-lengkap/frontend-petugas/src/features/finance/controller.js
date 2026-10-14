@@ -1,5 +1,9 @@
-import { workflowService } from '../../../../shared/services/workflow.js';
-import { registerFinance } from '../../../../shared/services/finance.js';
+import {
+  displayText,
+  formatMoney,
+  formatDate,
+  witaDate,
+} from '../../../../shared/lib/formatters.js';
 
 import { createFinancePresentation } from './presentation.js';
 import { createReconciliationDialog } from './reconciliation-dialog.js';
@@ -10,45 +14,21 @@ import { bindFinanceEvents } from './events.js';
  * Inisialisasi finance: state, perakitan modul, dan lifecycle halaman.
  * Tampilan, formulir, dan handler berada pada file yang disebut di import.
  */
-export function initializeFinance() {
+export function initializeFinance(app) {
   'use strict';
 
   const $ = (s) => document.querySelector(s),
-    wf = () => workflowService;
+    wf = () => app.services.workflow;
 
-  const esc = (v) =>
-    String(v ?? '').replace(
-      /[&<>"']/g,
-      (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
-    );
+  const esc = displayText;
 
-  const money = (n) => 'Rp' + Number(n || 0).toLocaleString('id-ID');
+  const money = formatMoney;
 
-  const date = (s) =>
-    s
-      ? new Date(s.length === 10 ? s + 'T12:00:00Z' : s).toLocaleDateString('id-ID', {
-          day: 'numeric',
-          month: 'short',
-          year: 'numeric',
-          timeZone: 'Asia/Makassar',
-        })
-      : '—';
+  const date = formatDate;
 
-  const today = () => {
-    const p = Object.fromEntries(
-      new Intl.DateTimeFormat('en-CA', {
-        timeZone: 'Asia/Makassar',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      })
-        .formatToParts(new Date())
-        .map((x) => [x.type, x.value]),
-    );
-    return `${p.year}-${p.month}-${p.day}`;
-  };
+  const today = witaDate;
 
-  const state = {
+  const state = app.state({
     date: today(),
     followToday: true,
     items: [],
@@ -60,9 +40,9 @@ export function initializeFinance() {
     filter: '',
     busy: false,
     sequence: 0,
-  };
+  });
 
-  const announce = () => window.dispatchEvent(new CustomEvent('kspps-finance-loaded'));
+  const announce = () => app.events.dispatchEvent(new CustomEvent('kspps-finance-loaded'));
 
   const role = () => wf()?.getStaff()?.role || 'admin';
 
@@ -118,14 +98,10 @@ export function initializeFinance() {
   }
 
   const { badge, heading, action, table, loading, metrics, queueTable, datePicker } =
-    createFinancePresentation({
-      esc,
-      state,
-      money,
-      date,
-    });
+    createFinancePresentation({ app, esc, state, money, date });
 
   const { show, reconciliationDialog, detail } = createReconciliationDialog({
+    app,
     $,
     action,
     state,
@@ -137,11 +113,10 @@ export function initializeFinance() {
     table,
   });
 
-  const { csvCell, exportCsv } = createFinanceExport({
-    state,
-  });
+  const { csvCell, exportCsv } = createFinanceExport({ app, state });
 
   bindFinanceEvents({
+    app,
     state,
     $,
     invalidate,
@@ -158,7 +133,8 @@ export function initializeFinance() {
     role,
   });
 
-  registerFinance({
+  app.services.finance = {
+    state,
     getViewContext: () => ({
       wf,
       esc,
@@ -176,5 +152,6 @@ export function initializeFinance() {
       queueTable,
     }),
     mount,
-  });
+  };
+  return app.services.finance;
 }

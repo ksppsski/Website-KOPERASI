@@ -191,7 +191,7 @@ await s.settle();
 await set(findLabel('Avalist'), 'person-a');
 await set(findLabel('Alasan penetapan'), 'Pergantian avalist untuk akad berjalan');
 const form = findLabel('Alasan penetapan').form;
-s.window.dispatchEvent(new s.window.CustomEvent('kspps-profile-loaded'));
+s.window.__portal.events.dispatchEvent(new s.window.CustomEvent('kspps-profile-loaded'));
 await s.settle();
 assert.equal(
   findLabel('Alasan penetapan').value,

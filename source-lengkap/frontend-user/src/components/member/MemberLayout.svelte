@@ -1,5 +1,8 @@
 <script>
-  import { workflowService } from '../../../../shared/services/workflow.js';
+  import Region from '../../../../shared/components/Region.svelte';
+  import Content from '../../../../shared/components/Content.svelte';
+  import { getContext } from 'svelte';
+  const app = getContext('kspps-portal');
   import Brand from '../../../../shared/components/Brand.svelte';
   import Icon from '../../../../shared/components/Icon.svelte';
   import Badge from '../../../../shared/components/Badge.svelte';
@@ -21,12 +24,13 @@
       <div class="eyebrow">Keanggotaan</div>
       <nav class="side-nav" aria-label="Menu anggota">
         {#each Object.entries(pages) as [key, [label, ico]]}
-          {@html navLink(
-            key,
-            label,
-            ico,
-            `class="${route === key ? 'active' : ''}" ${route === key ? 'aria-current="page"' : ''}`,
-          ) ?? ''}
+          <a
+            href={'#' + key}
+            class:active={route === key}
+            aria-current={route === key ? 'page' : undefined}
+          >
+            <Icon name={ico} />{label}
+          </a>
         {/each}
       </nav>
       <div class="side-bottom">
@@ -66,16 +70,16 @@
             ><span class="avatar">{(state.profile.name || 'A').slice(0, 1)}</span>
             <div>
               <strong>{state.profile.name || 'Calon anggota'}</strong><small
-                >{workflowService?.getProfile()?.memberNumber ||
+                >{app.services.workflow?.getProfile()?.memberNumber ||
                   (state.savedProfile ? 'Pendaftaran tersimpan' : 'Belum terdaftar')}</small
               >
             </div></a
           >
         </div>
       </header>
-      {@html demoStrip() ?? ''}
+      <Content value={demoStrip() ?? ''} />
       <main class="portal-content" id="page-main" tabindex="-1">
-        <div data-workflow="page-access"></div>
+        <div data-workflow="page-access"><Region name={'workflow:' + 'page-access'} /></div>
         {@render children()}
         <footer class="portal-footer">
           <span>© 2026 KSPPS Syirkah Kebaikan Indonesia</span><span

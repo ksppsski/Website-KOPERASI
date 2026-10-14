@@ -1,10 +1,22 @@
-import { workflowService } from '../../../../shared/services/workflow.js';
+import {
+  SavingsRowsView,
+  SavingsRows2View,
+  RequestPanel3View,
+  RequestPanel2View,
+  RequestPanel4View,
+  RequestPanelView,
+  DocumentCardsView,
+  DocumentCards2View,
+} from './views/history-views.svelte';
+import { view, snippetView } from '../../../../shared/runtime/view.js';
+
 /**
  * Tabel riwayat simpanan, pengajuan, dan arsip dokumen anggota.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
 export function createMemberHistoryViews({
+  app,
   savingsHistory,
   esc,
   rupiah,
@@ -21,65 +33,40 @@ export function createMemberHistoryViews({
         `${x.date} ${x.type} ${x.note}`.toLowerCase().includes(query.toLowerCase()),
     );
     return rows.length
-      ? rows
-          .map(
-            (x) =>
-              /* HTML */ `<tr>
-                <td>${x.date}</td>
-                <td>${esc(x.type)}<small>${esc(x.note)}</small></td>
-                <td class="money">${rupiah(x.amount)}</td>
-                <td>${badge(x.status, x.status === 'Terverifikasi' ? 'green' : 'amber')}</td>
-              </tr>`,
-          )
-          .join('')
-      : '<tr><td colspan="4"><div class="empty-state">Setoran yang dicari belum ditemukan.</div></td></tr>';
+      ? rows.map((x) =>
+          snippetView(SavingsRowsView, {
+            date: x.date,
+            type: esc(x.type),
+            note: esc(x.note),
+            rupiah: rupiah(x.amount),
+            badge: badge(x.status, x.status === 'Terverifikasi' ? 'green' : 'amber'),
+          }),
+        )
+      : snippetView(SavingsRows2View);
   }
 
   function requestPanel(type, always = false) {
     const rs = state.requests.filter((x) => x.type === type);
     if (!rs.length && !always) return '';
-    return /* HTML */ `<section class="panel" style="margin-top:22px">
-      <div class="panel-head">
-        <h2>Pengajuan Anda</h2>
-        ${badge('Simulasi', 'gray')}
-      </div>
-      ${
-        rs.length
-          ? /* HTML */ `<div class="table-scroll">
-              <table>
-                <thead>
-                  <tr>
-                    <th>NO. PENGAJUAN</th>
-                    <th>KEBUTUHAN</th>
-                    <th class="money">NILAI</th>
-                    <th>STATUS</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${rs
-                    .map(
-                      (x) =>
-                        /* HTML */ `<tr>
-                          <td>${x.id}</td>
-                          <td>${esc(x.purpose)}</td>
-                          <td class="money">${rupiah(x.amount)}</td>
-                          <td>${badge('Menunggu verifikasi', 'amber')}</td>
-                        </tr>`,
-                    )
-                    .join('')}
-                </tbody>
-              </table>
-            </div>`
-          : /* HTML */ `<div class="empty-state">
-              ${icon('file')}<strong>Belum ada pengajuan contoh.</strong>Mulai dari tombol Ajukan
-              pembiayaan di atas.
-            </div>`
-      }
-    </section>`;
+    return snippetView(RequestPanelView, {
+      badge: badge('Simulasi', 'gray'),
+      lengthContent: rs.length
+        ? snippetView(RequestPanel2View, {
+            rsRows: rs.map((x) =>
+              snippetView(RequestPanel3View, {
+                id: x.id,
+                purpose: esc(x.purpose),
+                rupiah: rupiah(x.amount),
+                badge: badge('Menunggu verifikasi', 'amber'),
+              }),
+            ),
+          })
+        : snippetView(RequestPanel4View, { icon: icon('file') }),
+    });
   }
 
   function documentCards(query = '', type = '') {
-    const letter = workflowService?.getProfile()?.letter,
+    const letter = app.services.workflow?.getProfile()?.letter,
       docs = [
         ...(letter
           ? [
@@ -110,24 +97,19 @@ export function createMemberHistoryViews({
           (x.title + ' ' + x.number).toLowerCase().includes(query.toLowerCase()),
       );
     return ds.length
-      ? ds
-          .map(
-            (x) =>
-              /* HTML */ `<article class="document-card">
-                <div class="document-icon">${icon('file')}</div>
-                <h2>${esc(x.title)}</h2>
-                <p>${esc(x.number)} · ${shortDate(x.date)}</p>
-                ${badge(x.label, 'green')}<a
-                  class="btn secondary"
-                  href="${esc(x.url)}"
-                  target="_blank"
-                  rel="noopener"
-                  >${icon('eye')}Lihat PDF</a
-                ><a class="small" href="${esc(x.url)}?download=1">Unduh PDF</a>
-              </article>`,
-          )
-          .join('')
-      : '<div class="empty-state">Belum ada dokumen yang sesuai. Surat keanggotaan tersedia setelah rekonsiliasi simpanan; akad setelah PDF lengkap diunggah petugas.</div>';
+      ? ds.map((x) =>
+          snippetView(DocumentCardsView, {
+            icon: icon('file'),
+            title: esc(x.title),
+            number: esc(x.number),
+            shortDate: shortDate(x.date),
+            badge: badge(x.label, 'green'),
+            url: esc(x.url),
+            iconValue: icon('eye'),
+            urlValue: esc(x.url),
+          }),
+        )
+      : snippetView(DocumentCards2View);
   }
   return { savingsRows, requestPanel, documentCards };
 }

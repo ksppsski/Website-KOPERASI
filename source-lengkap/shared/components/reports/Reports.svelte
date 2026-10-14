@@ -1,4 +1,6 @@
 <script>
+  import Region from '../Region.svelte';
+  import Content from '../Content.svelte';
   let { context } = $props();
   let { state, names, manager, cards, upload } = $derived(context);
 </script>
@@ -23,6 +25,6 @@
         ></label
       ><button class="btn secondary small-btn" data-report-action="refresh">Perbarui</button>
     </div>
-    <div id="report-list">{@html cards() ?? ''}</div>
+    <div id="report-list"><Region name="report-list" value={cards() ?? ''} /></div>
   </section>
 {/if}

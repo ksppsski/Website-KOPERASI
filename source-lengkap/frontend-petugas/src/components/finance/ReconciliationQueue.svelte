@@ -1,15 +1,18 @@
 <script>
+  import PageHeading from '../../../../shared/components/PageHeading.svelte';
+  import Region from '../../../../shared/components/Region.svelte';
+  import Content from '../../../../shared/components/Content.svelte';
   let { context } = $props();
   let { state, heading, action, table, loading, queueTable } = $derived(context);
 </script>
 
 {#if context}
-  {@html heading(
-    'Rekonsiliasi',
-    'Cocokkan bukti transfer anggota dengan mutasi rekening.',
-    action('refresh', 'Perbarui'),
-  ) ?? ''}{#if !state.loaded || state.loading || state.error}
-    {@html loading() ?? ''}
+  <PageHeading
+    title={'Rekonsiliasi'}
+    description={'Cocokkan bukti transfer anggota dengan mutasi rekening.'}
+    action={action('refresh', 'Perbarui')}
+  />{#if !state.loaded || state.loading || state.error}
+    <Content value={loading() ?? ''} />
   {:else}
     <section class="panel">
       <div class="toolbar">
@@ -20,7 +23,9 @@
           {/each}</select
         >
       </div>
-      <div id="finance-queue-table">{@html queueTable() ?? ''}</div>
+      <div id="finance-queue-table">
+        <Region name="finance-queue-table" value={queueTable() ?? ''} />
+      </div>
     </section>
     <p class="field-hint">
       Admin hanya dapat melanjutkan persetujuan atau pembuatan akad setelah Finance menyelesaikan

@@ -1,5 +1,4 @@
-import { workflowService } from '../../services/workflow.js';
-import { registerMaturity } from '../../services/maturity.js';
+import { displayText, formatMoney, formatLongDate, witaDate } from '../../lib/formatters.js';
 
 import { createMaturityPresentation } from './presentation.js';
 import { createMaturityDialogs } from './dialogs.js';
@@ -9,45 +8,21 @@ import { bindMaturityEvents } from './events.js';
  * Inisialisasi maturity: state, perakitan modul, dan lifecycle halaman.
  * Tampilan, formulir, dan handler berada pada file yang disebut di import.
  */
-export function initializeMaturity() {
+export function initializeMaturity(app) {
   'use strict';
 
-  const wf = () => workflowService,
+  const wf = () => app.services.workflow,
     $ = (s) => document.querySelector(s);
 
-  const esc = (v) =>
-    String(v ?? '').replace(
-      /[&<>"']/g,
-      (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
-    );
+  const esc = displayText;
 
-  const money = (n) => 'Rp' + Number(n || 0).toLocaleString('id-ID');
+  const money = formatMoney;
 
-  const date = (s) =>
-    s
-      ? new Date(s.length === 10 ? s + 'T12:00:00Z' : s).toLocaleDateString('id-ID', {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric',
-          timeZone: 'Asia/Makassar',
-        })
-      : '—';
+  const date = formatLongDate;
 
-  const today = () => {
-    const p = Object.fromEntries(
-      new Intl.DateTimeFormat('en-CA', {
-        timeZone: 'Asia/Makassar',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      })
-        .formatToParts(new Date())
-        .map((x) => [x.type, x.value]),
-    );
-    return `${p.year}-${p.month}-${p.day}`;
-  };
+  const today = witaDate;
 
-  const state = {
+  const state = app.state({
     sequence: 0,
     busy: false,
     loading: false,
@@ -59,7 +34,7 @@ export function initializeMaturity() {
     to: '',
     filter: '',
     route: '',
-  };
+  });
 
   async function load() {
     if (state.loading) return;
@@ -88,7 +63,7 @@ export function initializeMaturity() {
     } finally {
       if (sequence === state.sequence) {
         state.loading = false;
-        window.dispatchEvent(new CustomEvent('kspps-maturity-loaded'));
+        app.events.dispatchEvent(new CustomEvent('kspps-maturity-loaded'));
       }
     }
   }
@@ -115,6 +90,7 @@ export function initializeMaturity() {
   }
 
   const { btn, heading, table, reminders, summary, stats, loading } = createMaturityPresentation({
+    app,
     esc,
     wf,
     money,
@@ -123,6 +99,7 @@ export function initializeMaturity() {
   });
 
   const { show, decide, returnDialog, error } = createMaturityDialogs({
+    app,
     $,
     btn,
     wf,
@@ -132,26 +109,20 @@ export function initializeMaturity() {
     state,
   });
 
-  bindMaturityEvents({
-    state,
-    $,
-    decide,
-    returnDialog,
-    load,
-    wf,
-    error,
-  });
+  bindMaturityEvents({ app, state, $, decide, returnDialog, load, wf, error });
 
-  setInterval(() => {
+  app.scope.interval(() => {
     if (document.visibilityState === 'visible') idleRefresh();
   }, 60000);
 
-  window.addEventListener('focus', idleRefresh);
+  app.scope.listen(window, 'focus', idleRefresh);
 
-  registerMaturity({
+  app.services.maturity = {
+    state,
     getViewContext: () => ({ esc, money, date, state, btn, heading, table, stats, loading, error }),
     reminders,
     summary,
     mount,
-  });
+  };
+  return app.services.maturity;
 }

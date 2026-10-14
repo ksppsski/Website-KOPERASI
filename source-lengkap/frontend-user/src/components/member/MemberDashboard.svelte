@@ -1,5 +1,8 @@
 <script>
-  import { workflowService } from '../../../../shared/services/workflow.js';
+  import PageHeading from '../../../../shared/components/PageHeading.svelte';
+  import Content from '../../../../shared/components/Content.svelte';
+  import { getContext } from 'svelte';
+  const app = getContext('kspps-portal');
   import Badge from '../../../../shared/components/Badge.svelte';
   import Icon from '../../../../shared/components/Icon.svelte';
   import StatCard from '../../../../shared/components/StatCard.svelte';
@@ -22,21 +25,21 @@
 </script>
 
 {#if context}
-  {@const p = workflowService?.getProfile()}
+  {@const p = app.services.workflow?.getProfile()}
   {@const active = currentContracts().filter((x) => x.status === 'Aktif')}
   {@const total = savingsEntries().reduce((n, [, v]) => n + v, 0)}
-  {@html heading(
-    'Assalamu’alaikum' + (state.profile.name ? ', ' + esc(state.profile.name) : '') + '.',
-    'Berikut ringkasan keanggotaan Anda.',
-    '<span class="date-label">' + shortDate(new Date()) + '</span>',
-  ) ?? ''}
+  <PageHeading
+    title={'Assalamu’alaikum' + (state.profile.name ? ', ' + esc(state.profile.name) : '') + '.'}
+    description={'Berikut ringkasan keanggotaan Anda.'}
+    ><span class="date-label">{shortDate(new Date())}</span></PageHeading
+  >
   <section class="summary-banner">
     <div>
       <div class="eyebrow">Keanggotaan KSPPS</div>
       <h2>Syirkah Kebaikan Indonesia</h2>
       <Badge
         text={p
-          ? workflowService?.needsCorrection(p)
+          ? app.services.workflow?.needsCorrection(p)
             ? 'Perlu perbaikan'
             : {
                 approved: 'Anggota terdaftar',
@@ -60,7 +63,9 @@
       <Icon name={'card'} />
     </div>
   </section>
-  {@html memberAlerts() ?? ''}{@html (workflowService?.memberOffers() || '') ?? ''}
+  <Content value={memberAlerts() ?? ''} /><Content
+    value={(app.services.workflow?.memberOffers() || '') ?? ''}
+  />
   <div class="stats">
     <StatCard
       label={'Total simpanan'}
@@ -88,7 +93,7 @@
         <h2>Aktivitas terbaru</h2>
         <a href="#simpanan">Lihat riwayat</a>
       </div>
-      <ul class="activity-list">{@html recentActivity() ?? ''}</ul>
+      <ul class="activity-list"><Content value={recentActivity() ?? ''} /></ul>
     </section>
     <aside>
       <section class="panel">

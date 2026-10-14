@@ -1,11 +1,3 @@
-import { workflowService } from '../../../../shared/services/workflow.js';
-import { activityService } from '../../../../shared/services/activity.js';
-import { financeService } from '../../../../shared/services/finance.js';
-import { maturityService } from '../../../../shared/services/maturity.js';
-import { withdrawalService } from '../../../../shared/services/withdrawal.js';
-import { reportsService } from '../../../../shared/services/reports.js';
-import { staffAccessService } from '../../../../shared/services/staff-access.js';
-
 import { createStaffPresentation } from './presentation.js';
 import { createStaffNavigation } from './navigation.js';
 import { createStaffQueries } from './queries.js';
@@ -18,13 +10,12 @@ import { bindStaffEvents } from './events.js';
  * Inisialisasi staff: state, perakitan modul, dan lifecycle halaman.
  * Tampilan, formulir, dan handler berada pada file yang disebut di import.
  */
-export function initializeStaffPortal(renderView) {
-  'use strict';
+export function initializeStaffPortal(app) {
+  const renderView = app.render;
 
   const $ = (s, root = document) => root.querySelector(s);
 
-  const app = $('#app'),
-    modal = $('#portal-dialog');
+  const modal = $('#portal-dialog');
 
   function seed() {
     return {
@@ -52,7 +43,7 @@ export function initializeStaffPortal(renderView) {
     clearTimeout(runtime.toastTimer);
     el.textContent = text;
     el.hidden = false;
-    runtime.toastTimer = setTimeout(() => (el.hidden = true), 4500);
+    runtime.toastTimer = app.scope.timeout(() => (el.hidden = true), 4500);
   }
 
   function go(route) {
@@ -70,7 +61,7 @@ export function initializeStaffPortal(renderView) {
       location.replace('/avalist.html#' + route);
       return;
     }
-    if (!runtime.state.signedIn || !workflowService?.getStaff()?.accountRole) {
+    if (!runtime.state.signedIn || !app.services.workflow?.getStaff()?.accountRole) {
       runtime.state.signedIn = false;
       route = 'masuk';
     } else if (!menuPages()[route]) route = homeFor(activeRole());
@@ -119,18 +110,18 @@ export function initializeStaffPortal(renderView) {
     });
     document.title = (pages[route]?.[0] || 'Masuk') + ' · Portal Petugas KSPPS';
     runtime.lastRoute = route;
-    workflowService?.mount();
-    financeService?.mount();
-    activityService?.mount();
-    reportsService?.mount();
-    staffAccessService?.mount();
-    maturityService?.mount();
-    withdrawalService?.mount();
+    app.services.workflow?.mount();
+    app.services.finance?.mount();
+    app.services.activity?.mount();
+    app.services.reports?.mount();
+    app.services.staffAccess?.mount();
+    app.services.maturity?.mount();
+    app.services.withdrawal?.mount();
   }
 
   function refreshTable() {
     const fn = tables[location.hash.slice(1)];
-    if (fn && $('#staff-table')) $('#staff-table').innerHTML = fn();
+    if (fn && $('#staff-table')) app.ui.render($('#staff-table'), fn());
   }
 
   const {
@@ -149,9 +140,7 @@ export function initializeStaffPortal(renderView) {
     table,
     checks,
     statusHead,
-  } = createStaffPresentation({
-    runtime,
-  });
+  } = createStaffPresentation({ app, runtime });
 
   const {
     adminPages,
@@ -164,7 +153,7 @@ export function initializeStaffPortal(renderView) {
     roleName,
     homeFor,
     rolePicker,
-  } = createStaffNavigation({});
+  } = createStaffNavigation({ app });
 
   const {
     member,
@@ -177,14 +166,11 @@ export function initializeStaffPortal(renderView) {
     activityLogs,
     pending,
     canDraft,
-  } = createStaffQueries({
-    runtime,
-    esc,
-    icon,
-  });
+  } = createStaffQueries({ app, runtime, esc, icon });
 
   const { queueRows, candidatesTable, depositsTable, requestsTable, membersTable, tables } =
     createStaffTables({
+      app,
       candidateRows,
       workflowItems,
       table,
@@ -210,6 +196,7 @@ export function initializeStaffPortal(renderView) {
     draftDialog,
     contractDialog,
   } = createStaffDialogs({
+    app,
     runtime,
     $,
     icon,
@@ -227,6 +214,7 @@ export function initializeStaffPortal(renderView) {
   });
 
   const { decide, makeDraft } = createStaffDemoDecisions({
+    app,
     runtime,
     log,
     member,
@@ -235,6 +223,7 @@ export function initializeStaffPortal(renderView) {
   });
 
   bindStaffEvents({
+    app,
     runtime,
     go,
     homeFor,
@@ -256,9 +245,9 @@ export function initializeStaffPortal(renderView) {
     modal,
   });
 
-  window.addEventListener('hashchange', render);
+  app.scope.listen(window, 'hashchange', render);
 
   render();
 
-  void staffAccessService?.load();
+  void app.services.staffAccess?.load();
 }

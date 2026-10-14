@@ -1,9 +1,17 @@
+import {
+  RegistrationKtpInputView,
+  RegistrationKtpStatusView,
+  RegistrationKtpStatus2View,
+} from './views/registration-identity.svelte';
+import { view, snippetView } from '../../../../shared/runtime/view.js';
+
 /**
  * Unggahan KTP: validasi, pratinjau, dan perlindungan hasil unggahan lama.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
 export function createRegistrationIdentity({
+  app,
   state,
   esc,
   runtime,
@@ -13,48 +21,22 @@ export function createRegistrationIdentity({
   render,
 }) {
   function registrationKtpInput() {
-    return /* HTML */ `<div class="file-picker registration-proof">
-      <label class="field-label" for="registration-ktp">Foto KTP *</label>
-      <p class="field-hint" id="registration-ktp-help">
-        Wajib · JPG atau PNG · Maks. 10 MB · Seluruh KTP terlihat jelas.
-      </p>
-      <input
-        type="file"
-        id="registration-ktp"
-        name="registrationKtp"
-        accept=".jpg,.jpeg,.png,image/jpeg,image/png"
-        ${state.registrationKtp ? '' : 'required'}
-        aria-describedby="registration-ktp-help registration-ktp-error"
-      />
-      <div id="registration-ktp-selected" aria-live="polite">${registrationKtpStatus()}</div>
-      <p
-        class="form-error"
-        id="registration-ktp-error"
-        role="alert"
-        ${state.registrationKtpError ? '' : 'hidden'}
-      >
-        ${esc(state.registrationKtpError)}
-      </p>
-    </div>`;
+    return snippetView(RegistrationKtpInputView, {
+      registrationKtpContent: state.registrationKtp ? {} : { required: true },
+      registrationKtpStatus: registrationKtpStatus(),
+      registrationKtpErrorContent: state.registrationKtpError ? {} : { hidden: true },
+      registrationKtpError: esc(state.registrationKtpError),
+    });
   }
 
   function registrationKtpStatus() {
-    if (state.registrationKtpBusy) return '<p class="field-hint">Memeriksa foto KTP…</p>';
+    if (state.registrationKtpBusy) return snippetView(RegistrationKtpStatusView);
     const file = state.registrationKtp;
     if (!file) return '';
-    return /* HTML */ `<div class="registration-proof-file">
-        <div><strong>${esc(file.name)}</strong><span>Foto KTP terlampir</span></div>
-        <button class="link-button" type="button" data-action="remove-registration-ktp">
-          Hapus
-        </button>
-      </div>
-      <img
-        class="registration-ktp-preview"
-        src="${esc(state.registrationKtpUrl)}"
-        alt="Pratinjau foto KTP"
-        width="400"
-        height="252"
-      />`;
+    return snippetView(RegistrationKtpStatus2View, {
+      fieldName: esc(file.name),
+      registrationKtpUrl: esc(state.registrationKtpUrl),
+    });
   }
 
   function resetRegistrationKtp() {
@@ -72,7 +54,7 @@ export function createRegistrationIdentity({
     input.required = !state.registrationKtp;
     input.setCustomValidity(state.registrationKtpError);
     input.setAttribute('aria-invalid', String(Boolean(state.registrationKtpError)));
-    $('#registration-ktp-selected').innerHTML = registrationKtpStatus();
+    app.ui.render($('#registration-ktp-selected'), registrationKtpStatus());
     const error = $('#registration-ktp-error');
     error.textContent = state.registrationKtpError;
     error.hidden = !state.registrationKtpError;

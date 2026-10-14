@@ -1,4 +1,6 @@
 <script>
+  import PageHeading from '../../../../shared/components/PageHeading.svelte';
+  import Content from '../../../../shared/components/Content.svelte';
   import DataTable from '../../../../shared/components/DataTable.svelte';
   import EmptyTableRow from '../../../../shared/components/EmptyTableRow.svelte';
   let { context } = $props();
@@ -8,7 +10,11 @@
 {#if context}
   {@const r = state.report}
   {@const labels = { extend: 'Lanjut', return: 'Pengembalian', pending: 'Belum memilih' }}
-  {@html heading('Akad Jatuh Tempo', 'Ringkasan modal, keputusan anggota, dan pengembalian.') ?? ''}
+  <PageHeading
+    action={btn('refresh', 'Perbarui')}
+    title={'Akad Jatuh Tempo'}
+    description={'Ringkasan modal, keputusan anggota, dan pengembalian.'}
+  />
   <section class="panel">
     <form id="maturity-period-form" class="maturity-period">
       <label class="form-field"
@@ -24,26 +30,32 @@
     </form>
   </section>
   {#if !state.loaded || state.error}
-    {@html loading() ?? ''}
+    <Content value={loading() ?? ''} />
   {:else}
-    {@html stats([
-      [
-        'Total akad berakhir',
-        r.total.amount,
-        `${r.total.count} akad · ${r.total.memberCount} anggota`,
-      ],
-      ['Lanjut', r.extended.amount, `${r.extended.count} akad · ${r.extended.memberCount} anggota`],
-      [
-        'Pengembalian',
-        r.returned.amount,
-        `${r.returned.count} akad · ${r.returned.memberCount} anggota`,
-      ],
-      [
-        'Belum memilih',
-        r.pending.amount,
-        `${r.pending.count} akad · ${r.pending.memberCount} anggota`,
-      ],
-    ]) ?? ''}
+    <Content
+      value={stats([
+        [
+          'Total akad berakhir',
+          r.total.amount,
+          `${r.total.count} akad · ${r.total.memberCount} anggota`,
+        ],
+        [
+          'Lanjut',
+          r.extended.amount,
+          `${r.extended.count} akad · ${r.extended.memberCount} anggota`,
+        ],
+        [
+          'Pengembalian',
+          r.returned.amount,
+          `${r.returned.count} akad · ${r.returned.memberCount} anggota`,
+        ],
+        [
+          'Belum memilih',
+          r.pending.amount,
+          `${r.pending.count} akad · ${r.pending.memberCount} anggota`,
+        ],
+      ]) ?? ''}
+    />
     <section class="panel">
       <DataTable
         headers={['ANGGOTA / AKAD', 'PROJECT', 'BERAKHIR', 'MODAL', 'PILIHAN', 'PENGEMBALIAN']}

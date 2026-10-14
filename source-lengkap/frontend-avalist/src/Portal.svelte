@@ -1,4 +1,10 @@
 <script>
+  import { createAvalistClient } from './features/client.js';
+  import PreviewBanner from '../../shared/components/PreviewBanner.svelte';
+  import { createLifecycle } from '../../shared/runtime/lifecycle.js';
+  import { createRequest } from '../../shared/runtime/request.js';
+  const scope = createLifecycle();
+  const request = createRequest(scope, { portal: 'avalist' });
   import { onMount, tick } from 'svelte';
   import Brand from '../../shared/components/Brand.svelte';
   import Icon from '../../shared/components/Icon.svelte';
@@ -20,18 +26,7 @@
   let generation = 0;
   const signIn = '/signin-with-chatgpt?return_to=' + encodeURIComponent('/avalist.html');
   const signOut = '/signout-with-chatgpt?return_to=/avalist.html';
-  async function get(path) {
-    const r = await fetch('/api/workflow/avalist' + path, {
-      credentials: 'same-origin',
-      headers: { 'X-KSPPS-Portal': 'avalist' },
-    });
-    const result = await r.json();
-    if (!r.ok)
-      throw Object.assign(new Error(result.error || 'Data belum dapat dimuat.'), {
-        status: r.status,
-      });
-    return result;
-  }
+  const { get } = createAvalistClient(request);
   async function load() {
     const gen = ++generation;
     loading = true;
@@ -86,6 +81,7 @@
     window.addEventListener('keydown', escapeMenu);
     return () => {
       generation++;
+      scope.dispose();
       window.removeEventListener('hashchange', navigate);
       window.removeEventListener('focus', load);
       window.removeEventListener('keydown', escapeMenu);
@@ -93,6 +89,7 @@
   });
 </script>
 
+<PreviewBanner />
 <a
   class="skip-link"
   href="#page-main"

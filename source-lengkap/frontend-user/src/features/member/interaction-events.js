@@ -1,10 +1,13 @@
-import { workflowService } from '../../../../shared/services/workflow.js';
+import { BindMemberInteractionsView } from './views/interaction-events.svelte';
+import { view, fallbackView, snippetView } from '../../../../shared/runtime/view.js';
+
 /**
  * Klik, filter, menu, dan interaksi dialog anggota.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
 export function bindMemberInteractions({
+  app,
   state,
   render,
   go,
@@ -30,7 +33,7 @@ export function bindMemberInteractions({
   selectRegistrationProof,
   modal,
 }) {
-  document.addEventListener('click', async (event) => {
+  app.scope.listen(document, 'click', async (event) => {
     const tab = event.target.closest('[data-tab]');
     if (tab) {
       state[tab.dataset.tab === 'modal' ? 'modalTab' : 'financeTab'] = tab.dataset.value;
@@ -42,7 +45,7 @@ export function bindMemberInteractions({
     const action = b.dataset.action;
     if (action === 'enter-portal') {
       state.signedIn = true;
-      const p = workflowService?.getProfile();
+      const p = app.services.workflow?.getProfile();
       state.profile = p ? { ...p.data } : {};
       state.savedProfile = !!p;
       go('ringkasan');
@@ -105,14 +108,14 @@ export function bindMemberInteractions({
     }
     if (action === 'close-dialog') closeDialog();
     if (action === 'deposit') depositDialog();
-    if (action === 'apply-capital') void workflowService?.capitalForm();
-    if (action === 'apply-finance' && (await workflowService?.checkAccess()))
+    if (action === 'apply-capital') void app.services.workflow?.capitalForm();
+    if (action === 'apply-finance' && (await app.services.workflow?.checkAccess()))
       applicationDialog('Pembiayaan');
     if (action === 'capital-detail') capitalDetail(b.dataset.id);
     if (action === 'notifications') {
       dialog(
         'Pemberitahuan',
-        memberAlerts() || '<p>Tidak ada pengingat atau permintaan perbaikan saat ini.</p>',
+        fallbackView(memberAlerts(), snippetView(BindMemberInteractionsView)),
       );
     }
     if (action === 'export-savings') {
@@ -132,12 +135,12 @@ export function bindMemberInteractions({
     }
   });
 
-  document.addEventListener('input', (event) => {
+  app.scope.listen(document, 'input', (event) => {
     const target = event.target;
     if (target.id === 'savings-search')
-      $('#savings-rows').innerHTML = savingsRows(target.value, $('#savings-filter').value);
+      app.ui.render($('#savings-rows'), savingsRows(target.value, $('#savings-filter').value));
     if (target.id === 'document-search')
-      $('#document-list').innerHTML = documentCards(target.value, $('#document-filter').value);
+      app.ui.render($('#document-list'), documentCards(target.value, $('#document-filter').value));
     if (
       target.type !== 'file' &&
       target.form?.id === 'registration-form' &&
@@ -146,7 +149,7 @@ export function bindMemberInteractions({
       updateSavingsForm(target.form);
   });
 
-  document.addEventListener('change', (event) => {
+  app.scope.listen(document, 'change', (event) => {
     const target = event.target;
     if (target.id === 'registration-ktp') {
       void selectRegistrationKtp(target);
@@ -157,9 +160,9 @@ export function bindMemberInteractions({
       return;
     }
     if (target.id === 'savings-filter')
-      $('#savings-rows').innerHTML = savingsRows($('#savings-search').value, target.value);
+      app.ui.render($('#savings-rows'), savingsRows($('#savings-search').value, target.value));
     if (target.id === 'document-filter')
-      $('#document-list').innerHTML = documentCards($('#document-search').value, target.value);
+      app.ui.render($('#document-list'), documentCards($('#document-search').value, target.value));
     if (target.form?.id === 'registration-form') {
       if (state.registrationStep === 2) updateSavingsForm(target.form);
       else if (target.name === 'sameAddress') {
@@ -173,13 +176,13 @@ export function bindMemberInteractions({
     }
   });
 
-  document.addEventListener('keydown', (event) => {
+  app.scope.listen(document, 'keydown', (event) => {
     if (event.key === 'Escape' && $('#sidebar')?.classList.contains('open')) {
       document.querySelector('[data-action="close-sidebar"]').click();
     }
   });
 
-  modal.addEventListener('click', (event) => {
+  app.scope.listen(modal, 'click', (event) => {
     if (event.target === modal) {
       const r = modal.getBoundingClientRect();
       if (
@@ -192,7 +195,7 @@ export function bindMemberInteractions({
     }
   });
 
-  modal.addEventListener('close', () => {
+  app.scope.listen(modal, 'close', () => {
     if (runtime.lastFocus?.isConnected) runtime.lastFocus.focus();
   });
 }

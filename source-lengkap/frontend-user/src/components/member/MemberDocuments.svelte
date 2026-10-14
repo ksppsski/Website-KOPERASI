@@ -1,4 +1,7 @@
 <script>
+  import PageHeading from '../../../../shared/components/PageHeading.svelte';
+  import Region from '../../../../shared/components/Region.svelte';
+  import Content from '../../../../shared/components/Content.svelte';
   import Icon from '../../../../shared/components/Icon.svelte';
 
   let { context } = $props();
@@ -6,7 +9,7 @@
 </script>
 
 {#if context}
-  {@html heading('Dokumen Akad', 'Akses dokumen keanggotaan dan layanan Anda.') ?? ''}
+  <PageHeading title={'Dokumen Akad'} description={'Akses dokumen keanggotaan dan layanan Anda.'} />
   <section>
     <div class="toolbar">
       <label class="search-wrap"
@@ -23,6 +26,8 @@
         ><option>Pembiayaan</option></select
       >
     </div>
-    <div class="document-grid" id="document-list">{@html documentCards() ?? ''}</div>
+    <div class="document-grid" id="document-list">
+      <Region name="document-list" value={documentCards() ?? ''} />
+    </div>
   </section>
 {/if}

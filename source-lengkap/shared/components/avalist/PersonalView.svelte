@@ -1,8 +1,8 @@
 <script>
+  import { formatMoney as money } from '../../lib/formatters.js';
   import Badge from '../Badge.svelte';
   import Payments from './Payments.svelte';
   let { data, route } = $props();
-  const money = (n) => 'Rp' + Number(n || 0).toLocaleString('id-ID');
   let fees = $derived(data.feeSummary);
   let selectedPeriod = $state('');
   let currentMonth = $derived(data.today?.slice(0, 7) || fees?.asOf?.slice(0, 7) || '');

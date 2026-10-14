@@ -1,4 +1,6 @@
 <script>
+  import PageHeading from '../../../../shared/components/PageHeading.svelte';
+  import Content from '../../../../shared/components/Content.svelte';
   import DataTable from '../../../../shared/components/DataTable.svelte';
   import EmptyTableRow from '../../../../shared/components/EmptyTableRow.svelte';
   let { context } = $props();
@@ -7,14 +9,19 @@
 
 {#if context}
   {@const r = state.returns}
-  {@html heading('Pengembalian Modal', 'Jadwal pengembalian berdasarkan pilihan anggota.') ??
-    ''}{#if !state.loaded || state.error}
-    {@html loading() ?? ''}
+  <PageHeading
+    action={btn('refresh', 'Perbarui')}
+    title={'Pengembalian Modal'}
+    description={'Jadwal pengembalian berdasarkan pilihan anggota.'}
+  />{#if !state.loaded || state.error}
+    <Content value={loading() ?? ''} />
   {:else}
-    {@html stats([
-      ['Jatuh tempo / tertunda', r.totalDue, 'Siap diproses Finance'],
-      ['Terjadwal', r.totalScheduled, 'Menunggu tanggal jatuh tempo'],
-    ]) ?? ''}
+    <Content
+      value={stats([
+        ['Jatuh tempo / tertunda', r.totalDue, 'Siap diproses Finance'],
+        ['Terjadwal', r.totalScheduled, 'Menunggu tanggal jatuh tempo'],
+      ]) ?? ''}
+    />
     <section class="panel">
       <div class="toolbar">
         <label class="form-field"

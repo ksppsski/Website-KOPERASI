@@ -1,4 +1,6 @@
 <script>
+  import Region from '../../../../shared/components/Region.svelte';
+  import Content from '../../../../shared/components/Content.svelte';
   import Icon from '../../../../shared/components/Icon.svelte';
   import Brand from '../../../../shared/components/Brand.svelte';
 
@@ -31,7 +33,7 @@
         aria-label="Tutup navigasi"><Icon name={'close'} /></button
       ><a href="index.html"><Brand /></a>
       <div class="staff-label">PORTAL PETUGAS</div>
-      {@html rolePicker() ?? ''}
+      <Content value={rolePicker() ?? ''} />
       <nav class="side-nav" aria-label="Menu petugas">
         {#each Object.entries(menuPages()) as [key, [label, ico]]}
           <a
@@ -67,7 +69,7 @@
           Ruang kerja petugas <Icon name={'chevron'} /><b>{pages[route][0]}</b>
         </div>
         <div class="topbar-end">
-          {@html badge(roleName()) ?? ''}
+          <Content value={badge(roleName()) ?? ''} />
           <div class="member-chip">
             <span class="avatar"
               >{#if activeRole() === 'manager'}
@@ -86,9 +88,9 @@
           </div>
         </div>
       </header>
-      {@html strip() ?? ''}
+      <Content value={strip() ?? ''} />
       <main class="portal-content" id="page-main" tabindex="-1">
-        <div data-workflow="page-access"></div>
+        <div data-workflow="page-access"><Region name={'workflow:' + 'page-access'} /></div>
         {@render children()}
         <footer class="portal-footer">
           <span>© 2026 KSPPS Syirkah Kebaikan Indonesia</span><span

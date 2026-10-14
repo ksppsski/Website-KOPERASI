@@ -1,11 +1,10 @@
-import { activityService } from '../../services/activity.js';
 /**
  * Tindakan pengunduran diri dan penyegaran data sesuai peran.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
-export function bindWithdrawalEvents({ state, $, load, detail, record, financingDetail, wf }) {
-  document.addEventListener('click', async (e) => {
+export function bindWithdrawalEvents({ app, state, $, load, detail, record, financingDetail, wf }) {
+  app.scope.listen(document, 'click', async (e) => {
     const b = e.target.closest('[data-resign-action]');
     if (!b || state.busy) return;
     const a = b.dataset.resignAction;
@@ -23,7 +22,7 @@ export function bindWithdrawalEvents({ state, $, load, detail, record, financing
           body: JSON.stringify({ confirm: true }),
         });
         await wf().refresh();
-        window.dispatchEvent(new CustomEvent('kspps-new-registration'));
+        app.events.dispatchEvent(new CustomEvent('kspps-new-registration'));
       } catch (e) {
         const el = $('#resign-restart-error');
         if (el) {
@@ -37,7 +36,8 @@ export function bindWithdrawalEvents({ state, $, load, detail, record, financing
     }
   });
 
-  document.addEventListener(
+  app.scope.listen(
+    document,
     'submit',
     async (e) => {
       const f = e.target;
@@ -55,7 +55,7 @@ export function bindWithdrawalEvents({ state, $, load, detail, record, financing
       if (state.busy || !f.reportValidity()) return;
       if (
         f.id === 'resign-pay-form' &&
-        !(await activityService.requireStarted(f.dataset.id, 'withdrawal-return'))
+        !(await app.services.activity.requireStarted(f.dataset.id, 'withdrawal-return'))
       )
         return;
       const data = new FormData(f),
@@ -82,7 +82,7 @@ export function bindWithdrawalEvents({ state, $, load, detail, record, financing
       try {
         await wf().api(path, { method: 'POST', body });
         $('#portal-dialog').close();
-        activityService?.invalidate();
+        app.services.activity?.invalidate();
         await wf().refresh();
         state.loaded = false;
         await load();
@@ -100,11 +100,11 @@ export function bindWithdrawalEvents({ state, $, load, detail, record, financing
     true,
   );
 
-  $('#portal-dialog').addEventListener('cancel', (e) => {
+  app.scope.listen($('#portal-dialog'), 'cancel', (e) => {
     if (state.busy) e.preventDefault();
   });
 
-  window.addEventListener('kspps-staff-role-changed', () => {
+  app.scope.listen(app.events, 'kspps-staff-role-changed', () => {
     state.sequence++;
     state.loading = false;
     state.loaded = false;

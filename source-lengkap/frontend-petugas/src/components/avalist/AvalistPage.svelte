@@ -1,5 +1,8 @@
 <script>
-  import { avalistApi as api } from '../../features/avalist/client.js';
+  import { formatMoney as money } from '../../../../shared/lib/formatters.js';
+  import { getContext } from 'svelte';
+  const api = createAvalistApi(getContext('kspps-portal').request);
+  import { createAvalistApi } from '../../features/avalist/client.js';
   import FeeSchedule from './FeeSchedule.svelte';
   import PaymentDialog from './PaymentDialog.svelte';
   import CorrectionForm from './CorrectionForm.svelte';
@@ -32,7 +35,6 @@
       }).format(new Date()),
     );
   let generation = 0;
-  const money = (n) => 'Rp' + Number(n || 0).toLocaleString('id-ID');
   let visibleHistory = $derived(
     (data?.history || []).filter((p) => !personal || p.status === 'paid'),
   );

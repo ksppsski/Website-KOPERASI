@@ -1,9 +1,13 @@
+import { BindActivityEventsView, BindActivityEvents2View } from './views/events.svelte';
+import { view, snippetView } from '../../../../shared/runtime/view.js';
+
 /**
  * Tindakan mulai tugas, filter laporan, dan penyegaran data aktivitas.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
 export function bindActivityEvents({
+  app,
   dateKey,
   state,
   invalidate,
@@ -16,7 +20,7 @@ export function bindActivityEvents({
   results,
   mount,
 }) {
-  document.addEventListener('click', async (event) => {
+  app.scope.listen(document, 'click', async (event) => {
     const b = event.target.closest('[data-activity-action]');
     if (!b) return;
     const action = b.dataset.activityAction;
@@ -69,32 +73,30 @@ export function bindActivityEvents({
     }
   });
 
-  document.addEventListener('change', (event) => {
+  app.scope.listen(document, 'change', (event) => {
     const key = event.target.dataset.workFilter;
     if (!['role', 'status', 'from', 'to'].includes(key)) return;
     state[key] = event.target.value;
     const el = $('#work-results');
     if (['from', 'to'].includes(key)) {
       if (!state.from || !state.to || state.from > state.to) {
-        if (el)
-          el.innerHTML =
-            '<p class="form-error" role="alert">Pilih tanggal awal dan akhir yang sesuai.</p>';
+        if (el) app.ui.render(el, snippetView(BindActivityEventsView));
         return;
       }
       invalidate();
-      if (el) el.innerHTML = '<p role="status">Memuat catatan kerja…</p>';
+      if (el) app.ui.render(el, snippetView(BindActivityEvents2View));
       void load();
       return;
     }
-    if (el) el.innerHTML = results();
+    if (el) app.ui.render(el, results());
   });
 
-  window.addEventListener('kspps-profile-loaded', () => {
+  app.scope.listen(app.events, 'kspps-profile-loaded', () => {
     invalidate();
     mount();
   });
 
-  window.addEventListener('kspps-staff-role-changed', () => {
+  app.scope.listen(app.events, 'kspps-staff-role-changed', () => {
     invalidate();
     state.tasks = [];
     state.queueTasks = [];
@@ -105,7 +107,7 @@ export function bindActivityEvents({
     state.status = '';
   });
 
-  window.addEventListener('kspps-member-changed', () => {
+  app.scope.listen(app.events, 'kspps-member-changed', () => {
     invalidate();
     state.tasks = [];
     state.queueTasks = [];

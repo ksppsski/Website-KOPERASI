@@ -3,7 +3,7 @@
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
-export function createStaffDemoDecisions({ runtime, log, member, rupiah, canDraft }) {
+export function createStaffDemoDecisions({ app, runtime, log, member, rupiah, canDraft }) {
   function decide(kind, id, decision, values) {
     const list =
       kind === 'candidate'

@@ -1,22 +1,38 @@
-import { maturityService } from '../../services/maturity.js';
-import { withdrawalService } from '../../services/withdrawal.js';
-/**
- * Daftar pengajuan anggota serta antrean pemeriksaan petugas.
- * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
- */
-
-export function createWorkflowRequestViews({
-  state,
+import {
+  MemberCards4View,
+  MemberCards3View,
+  MemberCards5View,
+  MemberCards6View,
+  MemberCards7View,
+  MemberCards8View,
+  MemberCards2View,
+  MemberCardsView,
+  StaffTable2View,
+  StaffTable5View,
+  StaffTable6View,
+  StaffTable4View,
+  StaffTable3View,
+  StaffTableView,
+  OverviewView,
+} from './views/request-views.svelte';
+import {
   empty,
   shortId,
   date,
   status,
   money,
   esc,
-  links,
   needsCorrection,
   action,
-}) {
+} from './presentation.js';
+import { view, snippetView } from '../../runtime/view.js';
+
+/**
+ * Daftar pengajuan anggota serta antrean pemeriksaan petugas.
+ * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
+ */
+
+export function createWorkflowRequestViews({ app, state, links }) {
   function memberCards(kind) {
     const items = state.items.filter((x) => x.kind === kind);
     if (!items.length)
@@ -27,69 +43,58 @@ export function createWorkflowRequestViews({
             ? 'Belum ada setoran simpanan wajib lanjutan.'
             : 'Belum ada permohonan pengunduran diri.',
       );
-    return /* HTML */ `<div class="wf-cards">
-      ${items
-        .map(
-          (item) =>
-            /* HTML */ `<article class="wf-card">
-              <div class="wf-card-head">
-                <div><strong>${shortId(item)}</strong><small>${date(item.createdAt)}</small></div>
-                ${status(item)}
-              </div>
-              ${
-                ['capital', 'savings'].includes(kind)
-                  ? /* HTML */ `<div class="wf-amount">${money(item.amount)}</div>
-                      <p class="wf-proof-name">${esc(item.proofName)}</p>
-                      ${
-                        item.projectCode
-                          ? /* HTML */ `<p class="offer-code">
-                              ${esc(item.projectCode)} · ${esc(item.offerTitle)}
-                            </p>`
-                          : ''
-                      }`
-                  : /* HTML */ `<p class="wf-reason">${esc(item.reason)}</p>`
-              }${
-                item.finance?.status === 'correction'
-                  ? /* HTML */ `<div class="wf-note">
-                      <strong>Catatan Finance</strong>
-                      <p>${esc(item.finance.note)}</p>
-                    </div>`
-                  : ''
-              }${
-                item.note
-                  ? /* HTML */ `<div class="wf-note">
-                      <strong
-                        >${
-                          kind === 'withdrawal' && item.status === 'rejected'
-                            ? 'Alasan penolakan'
-                            : 'Catatan Admin'
-                        }</strong
-                      >
-                      <p>${esc(item.note)}</p>
-                    </div>`
-                  : ''
-              }${
-                kind === 'capital'
-                  ? maturityService?.summary(item) || ''
-                  : kind === 'withdrawal'
-                    ? withdrawalService?.summary(item) || ''
-                    : ''
-              }${
-                kind === 'withdrawal' && ['approved', 'rejected'].includes(item.status)
-                  ? /* HTML */ `<p class="field-hint">Keputusan Admin · ${date(item.updatedAt)}</p>`
-                  : ''
-              }
-              <div class="wf-actions">
-                ${links(item)}${needsCorrection(item) ? action('revise', item.id, 'Perbaiki pengajuan') : ''}${
-                  kind === 'withdrawal' && ['pending', 'correction'].includes(item.status)
-                    ? action('cancel', item.id, 'Batalkan permohonan')
-                    : ''
-                }
-              </div>
-            </article>`,
-        )
-        .join('')}
-    </div>`;
+    return snippetView(MemberCardsView, {
+      itemsRows: items.map((item) =>
+        snippetView(MemberCards2View, {
+          shortId: shortId(item),
+          date: date(item.createdAt),
+          status: status(item),
+          includesContent: ['capital', 'savings'].includes(kind)
+            ? snippetView(MemberCards3View, {
+                money: money(item.amount),
+                proofName: esc(item.proofName),
+                projectCodeContent: item.projectCode
+                  ? snippetView(MemberCards4View, {
+                      projectCode: esc(item.projectCode),
+                      offerTitle: esc(item.offerTitle),
+                    })
+                  : '',
+              })
+            : snippetView(MemberCards5View, { reason: esc(item.reason) }),
+          statusContent:
+            item.finance?.status === 'correction'
+              ? snippetView(MemberCards6View, { note: esc(item.finance.note) })
+              : '',
+          noteContent: item.note
+            ? snippetView(MemberCards7View, {
+                kindContent:
+                  kind === 'withdrawal' && item.status === 'rejected'
+                    ? 'Alasan penolakan'
+                    : 'Catatan Admin',
+                note: esc(item.note),
+              })
+            : '',
+          kindContent:
+            kind === 'capital'
+              ? app.services.maturity?.summary(item) || ''
+              : kind === 'withdrawal'
+                ? app.services.withdrawal?.summary(item) || ''
+                : '',
+          kindContent2:
+            kind === 'withdrawal' && ['approved', 'rejected'].includes(item.status)
+              ? snippetView(MemberCards8View, { date: date(item.updatedAt) })
+              : '',
+          links: links(item),
+          needsCorrectionContent: needsCorrection(item)
+            ? action('revise', item.id, 'Perbaiki pengajuan')
+            : '',
+          kindContent3:
+            kind === 'withdrawal' && ['pending', 'correction'].includes(item.status)
+              ? action('cancel', item.id, 'Batalkan permohonan')
+              : '',
+        }),
+      ),
+    });
   }
 
   function staffTable(kind, documents = false) {
@@ -115,52 +120,44 @@ export function createWorkflowRequestViews({
             ['rejected', 'Ditolak'],
             ['cancelled', 'Dibatalkan'],
           ];
-    return /* HTML */ `<div class="toolbar">
-        <label class="wf-filter"
-          >Status
-          <select class="filter-select" data-wf-filter="${filterKey}">
-            <option value="">Semua status</option>
-            ${statuses.map(([value, label]) => /* HTML */ `<option value="${value}" ${value === filter ? 'selected' : ''}>${label}</option>`).join('')}
-          </select></label
-        >
-      </div>
-      ${
-        items.length
-          ? /* HTML */ `<div class="table-scroll">
-              <table>
-                <thead>
-                  <tr>
-                    <th>ANGGOTA / PENGAJUAN</th>
-                    <th>${kind === 'capital' ? 'NOMINAL' : 'DITERIMA'}</th>
-                    <th>STATUS</th>
-                    <th>TINDAKAN</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${items
-                    .map(
-                      (item) =>
-                        /* HTML */ `<tr>
-                          <td>
-                            <strong>${esc(item.memberName)}</strong
-                            ><small>${shortId(item)} · ${item.memberId}</small
-                            >${item.projectCode ? /* HTML */ `<small class="offer-code">${esc(item.projectCode)}</small>` : ''}
-                          </td>
-                          <td>${kind === 'capital' ? money(item.amount) : date(item.createdAt)}</td>
-                          <td>
-                            ${status(item)}${kind === 'capital' ? /* HTML */ `<small>${esc(item.finance?.label || 'Menunggu Finance')}</small>` : ''}
-                          </td>
-                          <td>
-                            ${action('review', item.id, ['generated', 'signed'].includes(item.status) ? 'Lihat akad' : 'Periksa')}
-                          </td>
-                        </tr>`,
-                    )
-                    .join('')}
-                </tbody>
-              </table>
-            </div>`
-          : empty('Belum ada pengajuan yang sesuai.')
-      }`;
+    return snippetView(StaffTableView, {
+      filterKey: filterKey,
+      statusesRows: statuses.map(([value, label]) =>
+        snippetView(StaffTable2View, {
+          fieldValue: value,
+          valueContent: value === filter ? { selected: true } : {},
+          label: label,
+        }),
+      ),
+      lengthContent: items.length
+        ? snippetView(StaffTable3View, {
+            kindContent: kind === 'capital' ? 'NOMINAL' : 'DITERIMA',
+            itemsRows: items.map((item) =>
+              snippetView(StaffTable4View, {
+                memberName: esc(item.memberName),
+                shortId: shortId(item),
+                memberId: item.memberId,
+                projectCodeContent: item.projectCode
+                  ? snippetView(StaffTable5View, { projectCode: esc(item.projectCode) })
+                  : '',
+                kindContent: kind === 'capital' ? money(item.amount) : date(item.createdAt),
+                status: status(item),
+                kindContent2:
+                  kind === 'capital'
+                    ? snippetView(StaffTable6View, {
+                        label: esc(item.finance?.label || 'Menunggu Finance'),
+                      })
+                    : '',
+                action: action(
+                  'review',
+                  item.id,
+                  ['generated', 'signed'].includes(item.status) ? 'Lihat akad' : 'Periksa',
+                ),
+              }),
+            ),
+          })
+        : empty('Belum ada pengajuan yang sesuai.'),
+    });
   }
 
   function overview() {
@@ -170,10 +167,7 @@ export function createWorkflowRequestViews({
     const withdrawal = state.items.filter(
       (x) => x.kind === 'withdrawal' && !['completed', 'rejected', 'cancelled'].includes(x.status),
     ).length;
-    return /* HTML */ `<div class="wf-overview">
-      <a href="#penyertaan"><strong>${capital}</strong><span>Draf penyertaan modal</span></a
-      ><a href="#pengunduran"><strong>${withdrawal}</strong><span>Pengunduran diri</span></a>
-    </div>`;
+    return snippetView(OverviewView, { capital: capital, withdrawal: withdrawal });
   }
   return { memberCards, staffTable, overview };
 }

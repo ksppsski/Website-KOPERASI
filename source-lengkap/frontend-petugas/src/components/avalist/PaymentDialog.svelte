@@ -1,7 +1,7 @@
 <script>
+  import { formatMoney as money } from '../../../../shared/lib/formatters.js';
   import { tick } from 'svelte';
   let { data, busy, error, save } = $props();
-  const money = (n) => 'Rp' + Number(n || 0).toLocaleString('id-ID');
   let payment = $state(null),
     dialog,
     amount = $state(),

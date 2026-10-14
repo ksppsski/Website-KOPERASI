@@ -1,6 +1,7 @@
 <script>
-  import { workflowService } from '../../shared/services/workflow.js';
-  import { withdrawalService } from '../../shared/services/withdrawal.js';
+  import Content from '../../shared/components/Content.svelte';
+  import { getContext } from 'svelte';
+  const app = getContext('kspps-portal');
   import MemberLayout from './components/member/MemberLayout.svelte';
   import MemberLogin from './components/member/MemberLogin.svelte';
   import ForgotPassword from './components/member/ForgotPassword.svelte';
@@ -44,8 +45,8 @@
           <MemberRegistration {context} />
         {:else}
           <MemberLayout {context} {route}>
-            {#if workflowService?.getProfile()?.status === 'closed'}
-              {@html withdrawalService?.closedPage() || '<p>Keanggotaan ditutup.</p>'}
+            {#if app.services.workflow?.getProfile()?.status === 'closed'}
+              <Content value={app.services.withdrawal?.closedPage() || 'Keanggotaan ditutup.'} />
             {:else if memberPages[route]}
               {@const Page = memberPages[route]}
               <Page {context} {route} />

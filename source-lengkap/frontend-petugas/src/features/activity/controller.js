@@ -1,5 +1,4 @@
-import { workflowService } from '../../../../shared/services/workflow.js';
-import { registerActivity } from '../../../../shared/services/activity.js';
+import { displayText } from '../../../../shared/lib/formatters.js';
 
 import { createActivityQueue } from './queue.js';
 import { createActivityPresentation } from './presentation.js';
@@ -10,19 +9,15 @@ import { bindActivityEvents } from './events.js';
  * Inisialisasi activity: state, perakitan modul, dan lifecycle halaman.
  * Tampilan, formulir, dan handler berada pada file yang disebut di import.
  */
-export function initializeActivity() {
+export function initializeActivity(app) {
   'use strict';
 
   const $ = (s) => document.querySelector(s),
-    wf = () => workflowService;
+    wf = () => app.services.workflow;
 
-  const esc = (v) =>
-    String(v ?? '').replace(
-      /[&<>"']/g,
-      (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
-    );
+  const esc = displayText;
 
-  const state = {
+  const state = app.state({
     tasks: [],
     queueTasks: [],
     loaded: false,
@@ -35,10 +30,10 @@ export function initializeActivity() {
     busy: false,
     sequence: 0,
     range: null,
-  };
+  });
 
   function announce() {
-    window.dispatchEvent(new CustomEvent('kspps-activity-loaded'));
+    app.events.dispatchEvent(new CustomEvent('kspps-activity-loaded'));
   }
 
   async function load() {
@@ -112,6 +107,7 @@ export function initializeActivity() {
   }
 
   const { newestFirst, stageRoutes, queue } = createActivityQueue({
+    app,
     wf,
     state,
     esc,
@@ -133,23 +129,12 @@ export function initializeActivity() {
     filtered,
     summary,
     results,
-  } = createActivityPresentation({
-    state,
-    wf,
-    esc,
-    newestFirst,
-  });
+  } = createActivityPresentation({ app, state, wf, esc, newestFirst });
 
-  const { csv } = createActivityExport({
-    state,
-    wf,
-    filtered,
-    roleLabel,
-    time,
-    statusLabel,
-  });
+  const { csv } = createActivityExport({ app, state, wf, filtered, roleLabel, time, statusLabel });
 
   bindActivityEvents({
+    app,
     dateKey,
     state,
     invalidate,
@@ -163,7 +148,8 @@ export function initializeActivity() {
     mount,
   });
 
-  registerActivity({
+  app.services.activity = {
+    state,
     getViewContext: () => ({ wf, state, queue, dateKey, button, panel, summary, results, csv }),
     queue,
     panel,
@@ -171,5 +157,6 @@ export function initializeActivity() {
     load,
     invalidate,
     requireStarted,
-  });
+  };
+  return app.services.activity;
 }

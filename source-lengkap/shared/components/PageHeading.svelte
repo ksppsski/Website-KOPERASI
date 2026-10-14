@@ -1,5 +1,6 @@
 <script>
-  let { title, description, action = '' } = $props();
+  import Content from './Content.svelte';
+  let { title, description, action = null, children } = $props();
 </script>
 
 <div class="page-heading">
@@ -7,5 +8,5 @@
     <h1>{title}</h1>
     <p class="subtext">{description}</p>
   </div>
-  {@html action}
+  {#if children}{@render children()}{:else}<Content value={action} />{/if}
 </div>

@@ -1,6 +1,3 @@
-import { workflowService } from '../../../../shared/services/workflow.js';
-import { reportsService } from '../../../../shared/services/reports.js';
-
 import { createMemberPresentation } from './presentation.js';
 import { createMemberQueries } from './queries.js';
 import { createRegistrationIdentity } from './registration-identity.js';
@@ -16,12 +13,10 @@ import { bindMemberProfileEvents } from './profile-events.js';
  * Inisialisasi member: state, perakitan modul, dan lifecycle halaman.
  * Tampilan, formulir, dan handler berada pada file yang disebut di import.
  */
-export function initializeMemberPortal(renderView) {
-  'use strict';
+export function initializeMemberPortal(app) {
+  const renderView = app.render;
 
   const $ = (s, root = document) => root.querySelector(s);
-
-  const app = $('#app');
 
   const modal = $('#portal-dialog');
 
@@ -75,7 +70,7 @@ export function initializeMemberPortal(renderView) {
     clearTimeout(runtime.toastTimer);
     t.textContent = message;
     t.hidden = false;
-    runtime.toastTimer = setTimeout(() => (t.hidden = true), 4500);
+    runtime.toastTimer = app.scope.timeout(() => (t.hidden = true), 4500);
   }
 
   function go(route) {
@@ -151,6 +146,7 @@ export function initializeMemberPortal(renderView) {
         }[route]) + ' · KSPPS Syirkah Kebaikan Indonesia';
     if (route === 'daftar' && state.registrationStep === 1) updateRegistrationKtpView();
     if (route === 'daftar' && state.registrationStep === 3) setupSignature();
+    else disposeSignature();
     if (route === 'daftar' && state.registrationStep === 2) {
       updateSavingsForm($('#registration-form'));
       updateRegistrationProofView();
@@ -159,8 +155,8 @@ export function initializeMemberPortal(renderView) {
       window.scrollTo(0, 0);
       runtime.lastRoute = route;
     }
-    workflowService?.mount();
-    reportsService?.mount();
+    app.services.workflow?.mount();
+    app.services.reports?.mount();
   }
 
   const {
@@ -179,7 +175,7 @@ export function initializeMemberPortal(renderView) {
     stat,
     activity,
     tabs,
-  } = createMemberPresentation({});
+  } = createMemberPresentation({ app });
 
   const {
     workflowItems,
@@ -191,12 +187,7 @@ export function initializeMemberPortal(renderView) {
     serviceLocked,
     currentContracts,
     recentActivity,
-  } = createMemberQueries({
-    heading,
-    rupiah,
-    activity,
-    esc,
-  });
+  } = createMemberQueries({ app, heading, rupiah, activity, esc });
 
   const {
     registrationKtpInput,
@@ -206,6 +197,7 @@ export function initializeMemberPortal(renderView) {
     selectRegistrationKtp,
     requireRegistrationKtp,
   } = createRegistrationIdentity({
+    app,
     state,
     esc,
     runtime,
@@ -222,23 +214,19 @@ export function initializeMemberPortal(renderView) {
     registrationProofFileError,
     selectRegistrationProof,
     requireRegistrationProof,
-  } = createRegistrationProof({
-    state,
-    esc,
-    icon,
-    $,
-    runtime,
-    render,
-  });
+  } = createRegistrationProof({ app, state, esc, icon, $, runtime, render });
 
-  const { specialFirst, registrationTotal, saveRegistration, updateSavingsForm, setupSignature } =
-    createRegistrationForm({
-      state,
-      $,
-      rupiah,
-    });
+  const {
+    specialFirst,
+    registrationTotal,
+    saveRegistration,
+    updateSavingsForm,
+    setupSignature,
+    disposeSignature,
+  } = createRegistrationForm({ app, state, $, rupiah });
 
   const { savingsRows, requestPanel, documentCards } = createMemberHistoryViews({
+    app,
     savingsHistory,
     esc,
     rupiah,
@@ -259,6 +247,7 @@ export function initializeMemberPortal(renderView) {
     download,
     fileValid,
   } = createMemberDialogs({
+    app,
     currentContracts,
     badge,
     review,
@@ -273,6 +262,7 @@ export function initializeMemberPortal(renderView) {
   });
 
   bindMemberInteractions({
+    app,
     state,
     render,
     go,
@@ -300,6 +290,7 @@ export function initializeMemberPortal(renderView) {
   });
 
   bindMemberSubmissions({
+    app,
     requireRegistrationKtp,
     state,
     requireRegistrationProof,
@@ -314,17 +305,9 @@ export function initializeMemberPortal(renderView) {
     closeDialog,
   });
 
-  bindMemberProfileEvents({
-    state,
-    render,
-    runtime,
-    toast,
-    resetRegistrationKtp,
-    modal,
-    go,
-  });
+  bindMemberProfileEvents({ app, state, render, runtime, toast, resetRegistrationKtp, modal, go });
 
-  window.addEventListener('hashchange', render);
+  app.scope.listen(window, 'hashchange', render);
 
   render();
 }

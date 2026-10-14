@@ -1,9 +1,12 @@
 <script>
+  import PageHeading from '../../../../shared/components/PageHeading.svelte';
+  import Content from '../../../../shared/components/Content.svelte';
+  import { getContext } from 'svelte';
+  const app = getContext('kspps-portal');
   import DataTable from '../../../../shared/components/DataTable.svelte';
   import EmptyTableRow from '../../../../shared/components/EmptyTableRow.svelte';
   import Badge from '../../../../shared/components/Badge.svelte';
   import ReviewAction from '../../../../shared/components/ReviewAction.svelte';
-  import { workflowService } from '../../../../shared/services/workflow.js';
   import Icon from '../../../../shared/components/Icon.svelte';
 
   let { context, route, key = route } = $props();
@@ -30,11 +33,11 @@
 
 {#if context}
   {@const c = pending()}
-  {@html heading(
-    'Ringkasan pekerjaan',
-    'Lihat antrean dan lanjutkan pemeriksaan anggota.',
-    '<span class="date-label">' + dateLabel(new Date()) + '</span>',
-  ) ?? ''}{@html (workflowService?.staffOverview() || '') ?? ''}
+  <PageHeading
+    title={'Ringkasan pekerjaan'}
+    description={'Lihat antrean dan lanjutkan pemeriksaan anggota.'}
+    ><span class="date-label">{dateLabel(new Date())}</span></PageHeading
+  ><Content value={(app.services.workflow?.staffOverview() || '') ?? ''} />
   <div class="stats">
     {#each dashboardMetrics as [key, label, note, ico]}
       <a class="stat" href="#{key}"
@@ -48,9 +51,9 @@
     <section class="panel">
       <div class="panel-head">
         <h2>Antrean pemeriksaan</h2>
-        <span class="field-hint">Terbaru di atas</span>{@html badge(
-          queueRows().length + ' menunggu',
-        ) ?? ''}
+        <span class="field-hint">Terbaru di atas</span><Content
+          value={badge(queueRows().length + ' menunggu') ?? ''}
+        />
       </div>
       <DataTable headers={['ANGGOTA / PENGAJUAN', 'STATUS', 'TINDAKAN']}>
         {#each queueRows() as x}
@@ -74,7 +77,7 @@
     <aside>
       <section class="panel">
         <div class="panel-head"><h2>Aktivitas petugas</h2></div>
-        {@html activityLogs() ?? ''}
+        <Content value={activityLogs() ?? ''} />
       </section>
       <section class="panel">
         <div class="panel-head"><h2>Alur pemeriksaan</h2></div>

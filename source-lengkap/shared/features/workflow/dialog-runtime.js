@@ -1,17 +1,18 @@
-import { activityService } from '../../services/activity.js';
+import { ShowView, EnsureReadyView } from './views/dialog-runtime.svelte';
+import { auth, esc, action } from './presentation.js';
+import { view, snippetView } from '../../runtime/view.js';
+
 /**
  * Lifecycle dialog, status sibuk, penanganan error, dan hasil perubahan.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
 export function createWorkflowDialogRuntime({
+  app,
   runtime,
   $,
   state,
   refresh,
-  auth,
-  esc,
-  action,
   mount,
   api,
   reviewDialog,
@@ -20,15 +21,9 @@ export function createWorkflowDialogRuntime({
     runtime.lastFocus = document.activeElement;
     const modal = $('#portal-dialog');
     if (modal.open) modal.close();
-    $('#dialog-content').innerHTML = /* HTML */ `<div class="dialog-inner">
-      <div class="dialog-head">
-        <h2 id="dialog-title">${title}</h2>
-        <button type="button" class="icon-btn" data-wf-action="close" aria-label="Tutup">×</button>
-      </div>
-      ${content}
-    </div>`;
+    app.ui.render($('#dialog-content'), snippetView(ShowView, { title: title, content: content }));
     modal.showModal();
-    activityService?.mount();
+    app.services.activity?.mount();
   }
 
   function close() {
@@ -41,7 +36,7 @@ export function createWorkflowDialogRuntime({
     const toast = $('#toast');
     toast.textContent = message;
     toast.hidden = false;
-    setTimeout(() => (toast.hidden = true), 5000);
+    app.scope.timeout(() => (toast.hidden = true), 5000);
   }
 
   async function ensureReady() {
@@ -53,8 +48,10 @@ export function createWorkflowDialogRuntime({
     if (state.error) {
       show(
         'Pengajuan belum tersedia',
-        /* HTML */ `<p>${esc(state.error)}</p>
-          ${action('refresh', '', 'Coba lagi')}`,
+        snippetView(EnsureReadyView, {
+          error: esc(state.error),
+          action: action('refresh', '', 'Coba lagi'),
+        }),
       );
       return false;
     }
@@ -87,7 +84,7 @@ export function createWorkflowDialogRuntime({
   function adopt(item) {
     state.items = state.items.filter((x) => x.id !== item.id);
     state.items.unshift(item);
-    window.dispatchEvent(new CustomEvent('kspps-profile-loaded', { detail: state.profile }));
+    app.events.dispatchEvent(new CustomEvent('kspps-profile-loaded', { detail: state.profile }));
     mount();
   }
 

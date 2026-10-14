@@ -1,8 +1,8 @@
 <script>
+  import { formatMoney as money } from '../../../../shared/lib/formatters.js';
   import Badge from '../../../../shared/components/Badge.svelte';
   import Payments from '../../../../shared/components/avalist/Payments.svelte';
   let { data, date = $bindable(), busy, save, openPayment, review, load } = $props();
-  const money = (n) => 'Rp' + Number(n || 0).toLocaleString('id-ID');
   let visibleHistory = $derived(data.history || []);
   let groups = $derived.by(() => {
     const groups = new Map();

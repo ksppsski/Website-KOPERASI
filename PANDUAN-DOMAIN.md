@@ -1,6 +1,6 @@
 # Menghubungkan domain
 
-Catatan sinkronisasi 13 Oktober 2026: domain yang sudah tercatat adalah **syirkahkebaikanindonesia.com** di `docs/CNAME`. Folder `docs/` berisi pratinjau statis v18. Kode aplikasi terbaru v36 berada di `source-lengkap/`; mengubah source tersebut belum mengaktifkan backend di domain. Untuk aplikasi operasional, lanjutkan dengan [panduan pindah hosting](source-lengkap/docs/PINDAH-HOSTING.md).
+Catatan sinkronisasi 14 Oktober 2026: domain yang sudah tercatat adalah **syirkahkebaikanindonesia.com** di `docs/CNAME`. Folder `docs/` dihasilkan dengan `npm run build:pages` dari sumber Svelte yang sama di `source-lengkap/`. Pages menampilkan pratinjau tanpa backend; login, database dan transaksi memerlukan hosting aplikasi. Lihat [panduan pindah hosting](source-lengkap/docs/PINDAH-HOSTING.md).
 
 Pastikan website sudah tampil di alamat GitHub Pages dahulu.
 

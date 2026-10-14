@@ -6,8 +6,10 @@ import { initializeActivity } from '../features/activity/controller.js';
 import { initializeFinance } from '../features/finance/controller.js';
 import '../styles/petugas.css';
 
-const renderView = createPortal(Portal);
-initializeStaffAccess();
-initializeActivity();
-initializeFinance();
-initializeStaffPortal(renderView);
+const app = createPortal(Portal);
+initializeStaffAccess(app);
+initializeActivity(app);
+initializeFinance(app);
+initializeStaffPortal(app);
+
+if (import.meta.hot) import.meta.hot.dispose(() => app.dispose());

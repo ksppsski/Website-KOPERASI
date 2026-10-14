@@ -1,5 +1,4 @@
-import { workflowService } from '../../services/workflow.js';
-import { registerWithdrawal } from '../../services/withdrawal.js';
+import { displayText, formatMoney, formatLongDate } from '../../lib/formatters.js';
 
 import { createWithdrawalPresentation } from './presentation.js';
 import { createWithdrawalDialogs } from './dialogs.js';
@@ -9,29 +8,17 @@ import { bindWithdrawalEvents } from './events.js';
  * Inisialisasi withdrawal: state, perakitan modul, dan lifecycle halaman.
  * Tampilan, formulir, dan handler berada pada file yang disebut di import.
  */
-export function initializeWithdrawal() {
+export function initializeWithdrawal(app) {
   'use strict';
 
-  const wf = () => workflowService,
+  const wf = () => app.services.workflow,
     $ = (s) => document.querySelector(s),
-    esc = (v) =>
-      String(v ?? '').replace(
-        /[&<>"']/g,
-        (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
-      );
+    esc = displayText;
 
-  const money = (n) => 'Rp' + Number(n || 0).toLocaleString('id-ID'),
-    date = (s) =>
-      s
-        ? new Date(s.length === 10 ? s + 'T12:00:00Z' : s).toLocaleDateString('id-ID', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-            timeZone: 'Asia/Makassar',
-          })
-        : '—';
+  const money = formatMoney,
+    date = formatLongDate;
 
-  const state = {
+  const state = app.state({
     items: [],
     route: '',
     loading: false,
@@ -40,7 +27,7 @@ export function initializeWithdrawal() {
     busy: false,
     sequence: 0,
     today: '',
-  };
+  });
 
   const routes = ['#finance-pengunduran', '#manager-pengunduran', '#pengajuan'];
 
@@ -68,7 +55,7 @@ export function initializeWithdrawal() {
     } finally {
       if (seq === state.sequence) {
         state.loading = false;
-        window.dispatchEvent(new CustomEvent('kspps-withdrawal-loaded'));
+        app.events.dispatchEvent(new CustomEvent('kspps-withdrawal-loaded'));
       }
     }
   }
@@ -83,14 +70,10 @@ export function initializeWithdrawal() {
   }
 
   const { button, field, details, summary, closedPage, eligibility, table, memberFinancing } =
-    createWithdrawalPresentation({
-      esc,
-      date,
-      money,
-      wf,
-    });
+    createWithdrawalPresentation({ app, esc, date, money, wf });
 
   const { show, errorBlock, detail, record, financingDetail } = createWithdrawalDialogs({
+    app,
     $,
     button,
     state,
@@ -103,22 +86,16 @@ export function initializeWithdrawal() {
     date,
   });
 
-  bindWithdrawalEvents({
-    state,
-    $,
-    load,
-    detail,
-    record,
-    financingDetail,
-    wf,
-  });
+  bindWithdrawalEvents({ app, state, $, load, detail, record, financingDetail, wf });
 
-  registerWithdrawal({
+  app.services.withdrawal = {
+    state,
     getViewContext: () => ({ wf, state, button, table, record }),
     mount,
     summary,
     eligibility,
     closedPage,
     memberFinancing,
-  });
+  };
+  return app.services.withdrawal;
 }

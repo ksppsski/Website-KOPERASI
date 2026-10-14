@@ -25,68 +25,32 @@ Framework frontend tetap **Svelte 5 + Vite**. Backend tetap Worker JavaScript de
 | Warna status                      | `shared/components/Badge.svelte`                                                                | `shared/lib/status-colors.js`                                                                                 | Tidak mengubah aturan server                                               |
 | Masalah akses akun                | `frontend-petugas/src/components/staff-access/StaffAccess.svelte`                               | `frontend-petugas/src/features/staff-access/controller.js`                                                    | `backend/src/access.js`, `backend/src/http/routes/accounts.js`             |
 
-Favicon tab mengikuti mode perangkat: `public/favicon-theme.js` memilih versi terang/gelap. Aset SVG dihasilkan oleh `scripts/generate-favicons.mjs` dari logo asli dalam `public/assets/`. Jalankan `npm run generate:favicons` setelah mengganti logo; jangan mengedit data gambar di dalam SVG secara manual. Keempat HTML pembuka memakai konfigurasi yang sama.
+Favicon tab mengikuti mode perangkat. `public/assets/kspps-symbol.svg` berisi bentuk vektor logo, `scripts/generate-favicons.mjs` menghasilkan varian terang/gelap secara otomatis saat build.
 
-Semua path pada tabel dihitung dari akar project aplikasi. Di repository GitHub ekspor, akar aplikasi berada di **`source-lengkap/`**.
+## Tanggung jawab file
 
-## Batas tanggung jawab
+- `components/**/*.svelte`: halaman dan komponen utama.
+- `features/<fitur>/views/*.svelte`: markup tabel/formulir/dialog dalam snippet Svelte bernama. Bagian terkait berada dalam satu file agar tidak perlu membuka banyak fragmen kecil.
+- `features/<fitur>/*.js`: persiapan data dan tindakan pengguna. `view()`/`snippetView()` hanya menyusun komponen Svelte beserta props, bukan string HTML.
+- `shared/lib/formatters.js`, `view-helpers.js`, `icons.js`, `status-colors.js`: format rupiah/tanggal, komponen umum, ikon, dan warna status.
+- `shared/runtime/`: masa hidup portal, store, transport, dan region Svelte. `Region` menerima pembaruan data; controller tidak mengganti HTML DOM.
+- `shared/features/workflow/client.js`: HTTP, header pemilik berkas, decoding respons, dan error. Tidak menyimpan state atau merender UI.
+- `shared/features/workflow/coordinator.js`: menyinkronkan respons ke state dan memberi tahu fitur di instance portal yang sama.
+- `shared/create-portal.js`: merakit layanan per portal dan menyediakan `dispose()`. Tidak ada singleton layanan global.
+- `shared/preview/`: adapter pratinjau statis. Mengembalikan data kosong, menolak penyimpanan/unggahan, dan tidak memanggil API.
 
-- **`components/*.svelte`**: markup halaman, isian, dan state lokal komponen. Kartu dan tabel baru ditulis dengan `{#each}`, `{#if}`, props, dan komponen Svelte.
-- **`features/<fitur>/controller.js`**: membuat state dan merakit modul fitur. Cari implementasi tindakan di file yang namanya sesuai tindakan tersebut.
-- **`client.js`**: permintaan HTTP, header portal, dan hasil/error dari server.
-- **`queries.js`**: mengambil dan menyiapkan data untuk ditampilkan.
-- **`presentation.js`, `*-views.js`**: renderer tampilan yang masih dipakai dialog dan tabel dinamis lama. Nilai dari pengguna tetap harus di-escape.
-- **`dialogs.js`, `*-form.js`**: membuka formulir, validasi isian, dan penanganan unggahan.
-- **`events.js`, `*-events.js`**: handler klik, perubahan isian, pengiriman formulir, dan penyegaran data.
-- **`shared/services/*.js`**: antarmuka fitur yang diimpor secara eksplisit. Implementasi didaftarkan controller; state tidak disalin ke layanan lain. Kode aplikasi tidak membaca `window.Kspps...`.
-- **`backend/src/http/router.js`**: autentikasi umum, pemilihan anggota yang berhak diakses, dan distribusi request.
-- **`backend/src/http/routes/`**: endpoint akun, avalist, laporan, Finance, serta penyelesaian/pengembalian.
-- **`backend/src/features/<fitur>/`**: proses dan aturan server. Pemeriksaan role, kepemilikan, versi data, dan transaksi tetap berlaku di sini atau pada modul aturan yang dipanggilnya.
+## Memperbaiki bug
 
-Modul saling memakai antarmuka yang jelas. “Independen” berarti tanggung jawab dan ketergantungannya terpisah serta tidak melingkar; aturan keuangan bersama tetap mempunyai satu sumber agar hasil antarportal konsisten.
+1. Cari fitur pada tabel di atas. Ubah markup di `.svelte`, bukan file hasil build.
+2. Untuk bug interaksi, buka controller/events fitur tersebut. Dependensi antarfitur diakses melalui instance `app`, bukan `window`.
+3. Untuk nominal, izin, atau status tersimpan, periksa handler backend dan tes domain yang terkait.
+4. Daftarkan listener/timer melalui `app.scope`; lepaskan resource per komponen ketika komponen selesai digunakan.
+5. Jalankan tes fitur, kemudian `npm test` dan build. Tes arsitektur menolak `{@html}`, penulisan `innerHTML`, import melingkar, dan layanan global.
 
-## Contoh menelusuri masalah
+## Publikasi
 
-**Fee avalist salah pada satu bulan:** mulai dari `monthlyAvalistFees` di `backend/src/features/avalist/schedule.js`. Periksa data yang diberikan `queries.js`, lalu label/filter bulan pada `PersonalView.svelte`. Hak fee berdasarkan bulan jatuh tempo; pembayaran berdasarkan tanggal transfer.
+Sumber Svelte yang sama menghasilkan aplikasi dengan backend (`dist/`) dan pratinjau aman (`dist-preview/`). Folder `docs/` di repository GitHub adalah hasil build, bukan sumber portal terpisah. Gunakan `npm run build:pages` dari root repository untuk memperbaruinya. File `CNAME` dipertahankan saat ekspor.
 
-**Bukti transfer pendaftaran tidak terbaca:** mulai dari `registration-proof.js`. Jika berkas lolos pemeriksaan browser tetapi ditolak server, lihat `backend/src/http/validation.js` dan `backend/src/features/registration/service.js`.
+## Batas validasi
 
-**Manajer tidak bisa menyetujui perubahan avalist:** mulai dari `ApproveProposal.svelte`, lalu endpoint pada `backend/src/http/routes/avalist.js` dan `changeAssignment` di `backend/src/features/avalist/assignments.js`.
-
-## Menambah fitur
-
-1. Buat komponen `.svelte` dalam portal pemilik fitur. Berikan data dan callback melalui props.
-2. Letakkan pengambilan data dan tindakan browser pada folder fitur yang sama. Gunakan parameter bernama saat modul memerlukan state atau callback dari controller.
-3. Tambahkan rute pada `Portal.svelte`/`FeaturePage.svelte` atau menu pada `features/staff/navigation.js`, sesuai portal.
-4. Bila perlu endpoint, tambahkan handler pada `backend/src/http/routes/` dan implementasi di `backend/src/features/`. Periksa izin di server sebelum membaca/mengubah data.
-5. Bila perlu perubahan skema, buat migrasi baru; migrasi yang sudah dijalankan tetap dipertahankan.
-6. Jalankan uji fitur dan `npm test`, lalu `npm run build`.
-
-Antarportal tidak boleh saling mengimpor implementasi. Komponen atau aturan murni yang benar-benar dipakai bersama ditempatkan di `shared/`. Hindari menyalin perhitungan fee, tanggal, atau validasi hak akses ke tiap halaman.
-
-## Perintah untuk tim IT
-
-```sh
-npm ci
-npm run dev
-npm run check
-npm run check:architecture
-npm run test:portal
-npm run test:avalist
-npm test
-npm run build
-```
-
-`npm run dev` menjalankan tampilan lokal; API dan autentikasi tetap memerlukan lingkungan backend yang sesuai. `npm run check:architecture` memeriksa batas portal, import melingkar, penggunaan global tersembunyi, dan panjang baris sumber. `npm test` mencakup pengujian regresi yang sudah ada, termasuk aturan keuangan dan otorisasi.
-
-Gunakan `npm run format` setelah mengubah kode. Lebar format umum 100 karakter, dengan batas maksimum 180 karakter untuk satu baris source aplikasi. Komentar sebaiknya menjelaskan alasan aturan, bukan mengulang isi baris kode.
-
-## Source dan hasil build
-
-Buka file dalam `frontend-user/`, `frontend-petugas/`, `frontend-avalist/`, `shared/`, dan `backend/src/` ketika memperbaiki fitur. `dist/` dihasilkan oleh build. Pada ekspor GitHub, `docs/assets/` berisi hasil build pratinjau statis, sedangkan kode yang dipelihara berada dalam `source-lengkap/`.
-
-Hasil build dapat dipadatkan dan memuat data font/gambar. Source yang dibaca tim IT tetap diformat dan dipisahkan per fitur. Perubahan hasil build akan tertimpa build berikutnya.
-
-## Batas refactor ini
-
-Sebagian dialog lama masih memakai renderer HTML yang sudah dipisahkan dan diformat; tidak semua dialog telah dimigrasikan menjadi komponen Svelte. Login mandiri dan fitur simulasi tetap mengikuti status sebelumnya. Refactor struktur tidak mengaktifkan fitur operasional baru.
+Tes UI berjalan melalui DOM simulasi, termasuk 40 perbandingan struktur halaman, formulir yang sedang diisi, isolasi peran, dan mode statis tanpa jaringan. Pengujian ini tidak menggantikan pemeriksaan visual browser nyata. Login email/kata sandi mandiri belum diaktifkan oleh refactor ini; hosting aplikasi tetap memakai identitas yang didukung backend.

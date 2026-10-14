@@ -4,6 +4,7 @@
  */
 
 export function bindMemberProfileEvents({
+  app,
   state,
   render,
   runtime,
@@ -12,13 +13,13 @@ export function bindMemberProfileEvents({
   modal,
   go,
 }) {
-  window.addEventListener('kspps-profile-loaded', (event) => {
+  app.scope.listen(app.events, 'kspps-profile-loaded', (event) => {
     state.profile = event.detail ? { ...event.detail.data } : {};
     state.savedProfile = !!event.detail;
     if (state.signedIn && location.hash !== '#daftar') render();
   });
 
-  window.addEventListener('kspps-edit-registration', async (event) => {
+  app.scope.listen(app.events, 'kspps-edit-registration', async (event) => {
     if (runtime.editingRegistration) return;
     runtime.editingRegistration = true;
     const p = event.detail;
@@ -26,7 +27,7 @@ export function bindMemberProfileEvents({
     try {
       const fetchFile = async (url, name) => {
         if (!url) return null;
-        const response = await fetch(url, { credentials: 'same-origin' });
+        const response = await app.request(url, { credentials: 'same-origin' });
         if (!response.ok) throw new Error('Berkas tersimpan belum dapat dimuat. Coba lagi.');
         return new File([await response.blob()], name, {
           type: response.headers.get('content-type') || '',
@@ -69,7 +70,7 @@ export function bindMemberProfileEvents({
     }
   });
 
-  window.addEventListener('kspps-new-registration', () => {
+  app.scope.listen(app.events, 'kspps-new-registration', () => {
     resetRegistrationKtp();
     runtime.registrationProofSequence++;
     state.registrationProof = null;

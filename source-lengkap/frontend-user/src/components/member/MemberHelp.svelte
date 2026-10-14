@@ -1,4 +1,6 @@
 <script>
+  import PageHeading from '../../../../shared/components/PageHeading.svelte';
+  import Content from '../../../../shared/components/Content.svelte';
   import Icon from '../../../../shared/components/Icon.svelte';
 
   let { context } = $props();
@@ -6,7 +8,7 @@
 </script>
 
 {#if context}
-  {@html heading('Bantuan', 'Temukan informasi dan hubungi tim koperasi.') ?? ''}
+  <PageHeading title={'Bantuan'} description={'Temukan informasi dan hubungi tim koperasi.'} />
   <div class="content-grid">
     <section class="panel">
       <div class="panel-head"><h2>Pertanyaan umum</h2></div>

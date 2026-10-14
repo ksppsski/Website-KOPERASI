@@ -1,4 +1,5 @@
 <script>
+  import Content from '../../../../shared/components/Content.svelte';
   let { context } = $props();
   let { action, frame } = $derived(context);
 </script>
@@ -9,9 +10,9 @@
       <h1>Penawaran Modal</h1>
       <p class="subtext">Buka penerimaan sesuai kebutuhan barang Mitra.</p>
     </div>
-    {@html action('new-offer', '', '+ Buat penawaran', true) ?? ''}
+    <Content value={action('new-offer', '', '+ Buat penawaran', true) ?? ''} />
   </div>
-  {@html frame('manager-offers', 'Penawaran untuk anggota') ?? ''}
+  <Content value={frame('manager-offers', 'Penawaran untuk anggota') ?? ''} />
   <p class="field-hint">
     Kuota dicadangkan saat pengajuan dikirim, termasuk selama perbaikan. Penawaran tertutup otomatis
     saat penuh.

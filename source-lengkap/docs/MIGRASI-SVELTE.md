@@ -21,7 +21,7 @@ Ini menggunakan Svelte dengan Vite, bukan SvelteKit. URL `index.html`, `anggota.
 
 Store tampilan diperbarui saat controller menerima perubahan data. `flushSync` memastikan halaman tersedia sebelum controller memasang kanvas tanda tangan, filter, atau unggahan. Dialog berada di luar bagian halaman yang diganti, sehingga refresh tidak menghapus draft, file bukti, atau persetujuan anggota.
 
-Formulir pendaftaran dipisahkan menjadi komponen halaman dan bagian simpanan. Tampilan bersama seperti ikon, brand, badge, input, review data, dan statistik memakai komponen reusable. Data pengguna pada markup Svelte memakai interpolasi biasa yang di-escape otomatis. Fragmen HTML lama untuk dialog/tabel tetap menggunakan `esc()`.
+Formulir pendaftaran dipisahkan menjadi komponen halaman dan bagian simpanan. Tampilan bersama seperti ikon, brand, badge, input, review data, dan statistik memakai komponen reusable. Data pengguna pada markup Svelte memakai interpolasi biasa yang di-escape otomatis. Dialog dan tabel kini memakai snippet Svelte dalam `features/<fitur>/views/*.svelte`, dengan props yang di-escape oleh Svelte.
 
 ## Cara mengembangkan
 
@@ -29,7 +29,7 @@ Contoh: untuk mengganti susunan ringkasan anggota, buka `frontend-user/src/compo
 
 Jangan mengubah `backend/templates/` saat hanya mengubah UI. Jangan mengedit `dist/` karena build berikutnya menimpanya. Jangan memindahkan keputusan keuangan atau otorisasi dari server ke komponen.
 
-Pemecahan dialog HTML menjadi komponen Svelte tambahan dapat dilakukan per fitur di pengembangan selanjutnya, tanpa harus mengubah API atau database. Format sumber dirapikan dengan Prettier; file JavaScript hasil build tetap dipadatkan untuk pengiriman.
+Migrasi berikutnya menghapus renderer string HTML dan layanan singleton. Setiap portal memiliki instance layanan, store, event internal, dan fungsi disposal sendiri. Format sumber dirapikan dengan Prettier; file JavaScript hasil build tetap dipadatkan untuk pengiriman.
 
 ## Bukti kesetaraan
 

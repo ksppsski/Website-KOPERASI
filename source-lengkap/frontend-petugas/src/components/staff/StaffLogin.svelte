@@ -1,5 +1,8 @@
 <script>
-  import { staffAccessService } from '../../../../shared/services/staff-access.js';
+  import { isStaticPreview } from '../../../../shared/runtime/environment.js';
+  import Content from '../../../../shared/components/Content.svelte';
+  import { getContext } from 'svelte';
+  const app = getContext('kspps-portal');
   import Brand from '../../../../shared/components/Brand.svelte';
   import Icon from '../../../../shared/components/Icon.svelte';
 
@@ -8,7 +11,7 @@
 </script>
 
 {#if context}
-  {@html strip() ?? ''}
+  <Content value={strip() ?? ''} />
   <div class="auth-layout staff-auth">
     <aside class="auth-aside">
       <a href="index.html"><Brand white={true} /></a>
@@ -30,12 +33,27 @@
         <span class="badge">Akses Petugas</span>
         <h1>Portal Petugas KSPPS</h1>
         <p class="subtext">Ruang kerja internal koperasi.</p>
-        {@html (staffAccessService?.entry() || '<p>Memeriksa akses akun…</p>') ?? ''}
+        {#if isStaticPreview}
+          <p>
+            Pilih tampilan peran untuk melihat rancangan. Pilihan ini tidak memberikan hak akses
+            akun.
+          </p>
+          <div class="staff-role-entry">
+            {#each [['manager', 'Manajer'], ['admin', 'Admin'], ['finance', 'Finance']] as [role, label]}
+              <button type="button" class="btn secondary full" data-action="enter" data-role={role}
+                >Pratinjau {label}</button
+              >
+            {/each}
+          </div>
+        {:else}
+          <Content value={app.services.staffAccess?.entry() || 'Memeriksa akses akun…'} />
+        {/if}
         <p id="staff-access-error" class="form-error" role="alert" hidden></p>
-        <p class="auth-foot">
-          <a target="_top" href="/signout-with-chatgpt?return_to=/petugas.html">Gunakan akun lain</a
-          >
-        </p>
+        {#if !isStaticPreview}<p class="auth-foot">
+            <a target="_top" href="/signout-with-chatgpt?return_to=/petugas.html"
+              >Gunakan akun lain</a
+            >
+          </p>{/if}
       </div>
     </main>
   </div>

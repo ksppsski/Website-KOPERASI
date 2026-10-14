@@ -1,9 +1,14 @@
+import { BindWorkflowInteractionsView } from './views/interaction-events.svelte';
+import { action } from './presentation.js';
+import { view, snippetView } from '../../runtime/view.js';
+
 /**
  * Klik dan perubahan isian pada fitur workflow.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
 export function bindWorkflowInteractions({
+  app,
   close,
   refresh,
   capitalForm,
@@ -16,7 +21,6 @@ export function bindWorkflowInteractions({
   completeKtpDialog,
   mutation,
   show,
-  action,
   setBusy,
   $,
   api,
@@ -26,7 +30,7 @@ export function bindWorkflowInteractions({
   automaticPreview,
   mount,
 }) {
-  document.addEventListener('click', async (event) => {
+  app.scope.listen(document, 'click', async (event) => {
     const button = event.target.closest('[data-wf-action]');
     if (!button) return;
     const a = button.dataset.wfAction,
@@ -47,7 +51,9 @@ export function bindWorkflowInteractions({
     if (a === 'registration-review') registrationReview(id);
     if (a === 'complete-ktp') completeKtpDialog();
     if (a === 'edit-registration') {
-      window.dispatchEvent(new CustomEvent('kspps-edit-registration', { detail: state.profile }));
+      app.events.dispatchEvent(
+        new CustomEvent('kspps-edit-registration', { detail: state.profile }),
+      );
     }
     if (a === 'start') {
       const item = state.items.find((x) => x.id === id);
@@ -56,13 +62,10 @@ export function bindWorkflowInteractions({
     if (a === 'cancel') {
       show(
         'Batalkan permohonan?',
-        /* HTML */ `<p>
-            Permohonan pengunduran diri ini akan dibatalkan. Keanggotaan Anda tetap aktif.
-          </p>
-          <p class="form-error" id="wf-error" role="alert" hidden></p>
-          <div class="form-actions">
-            ${action('close', '', 'Kembali')}${action('confirm-cancel', id, 'Ya, batalkan', true)}
-          </div>`,
+        snippetView(BindWorkflowInteractionsView, {
+          action: action('close', '', 'Kembali'),
+          actionValue: action('confirm-cancel', id, 'Ya, batalkan', true),
+        }),
       );
     }
     if (a === 'confirm-cancel') {
@@ -81,15 +84,18 @@ export function bindWorkflowInteractions({
     }
   });
 
-  document.addEventListener('input', (event) => {
+  app.scope.listen(document, 'input', (event) => {
     if (event.target.name === 'agreementDate' && event.target.form?.id === 'wf-generate-form')
-      $('#wf-automatic-dates').innerHTML = automaticPreview(
-        event.target.value,
-        state.items.find((x) => x.id === event.target.form.dataset.id),
+      app.ui.render(
+        $('#wf-automatic-dates'),
+        automaticPreview(
+          event.target.value,
+          state.items.find((x) => x.id === event.target.form.dataset.id),
+        ),
       );
   });
 
-  document.addEventListener('change', (event) => {
+  app.scope.listen(document, 'change', (event) => {
     if (event.target.dataset.wfFilter) {
       state.filters[event.target.dataset.wfFilter] = event.target.value;
       mount();

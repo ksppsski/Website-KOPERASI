@@ -1,21 +1,26 @@
-import { workflowService } from '../../services/workflow.js';
-import { registerReports } from '../../services/reports.js';
+import { UploadView } from './views/controller.svelte';
+import ReportCards from '../../components/reports/ReportCards.svelte';
+import { displayText } from '../../lib/formatters.js';
+import { view, snippetView } from '../../runtime/view.js';
+
 /**
  * Laporan koperasi: unggahan manajer dan akses anggota.
  * Tampilan halaman berada di shared/components/reports/.
- * Fragmen HTML di sini dipakai untuk tabel dinamis dan dialog; nilai pengguna
- * harus melalui esc(). Otorisasi dan aturan keuangan tetap diperiksa server.
+ * Markup Svelte berada di views/; otorisasi dan aturan keuangan diperiksa server.
  */
-export function initializeReports() {
+export function initializeReports(app) {
   'use strict';
-  const wf = () => workflowService,
+  const wf = () => app.services.workflow,
     $ = (s) => document.querySelector(s),
-    esc = (v) =>
-      String(v ?? '').replace(
-        /[&<>"']/g,
-        (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
-      );
-  const state = { reports: [], loaded: false, loading: false, error: '', filter: '', busy: false };
+    esc = displayText;
+  const state = app.state({
+    reports: [],
+    loaded: false,
+    loading: false,
+    error: '',
+    filter: '',
+    busy: false,
+  });
   let requestId = '';
   const names = { utilization: 'Penggunaan Dana', financial: 'Laporan Keuangan' };
   const manager = () =>
@@ -23,40 +28,7 @@ export function initializeReports() {
     wf()?.getStaff()?.role === 'manager' &&
     wf()?.getStaff()?.accountRole === 'manager';
   function cards() {
-    if (state.error) return /* HTML */ `<p class="form-error" role="alert">${esc(state.error)}</p>`;
-    if (!state.loaded) return '<p role="status">Memuat laporan…</p>';
-    const items = state.reports.filter((r) => !state.filter || r.category === state.filter);
-    return items.length
-      ? /* HTML */ `<div class="offer-grid">
-          ${items
-            .map(
-              (r) =>
-                /* HTML */ `<article class="offer-card">
-                  <span class="badge gray">${names[r.category]}</span>
-                  <h3>${esc(r.title)}</h3>
-                  <p class="small muted">
-                    Periode
-                    ${esc(r.period)}${r.projectCode ? ' · <span class="offer-code">' + esc(r.projectCode) + '</span>' : ''}
-                  </p>
-                  <p class="field-hint">
-                    Diunggah
-                    ${new Date(r.createdAt).toLocaleDateString('id-ID', { timeZone: 'Asia/Makassar' })}
-                    oleh ${esc(r.uploadedBy)}
-                  </p>
-                  <div class="wf-actions">
-                    <a
-                      class="btn secondary small-btn"
-                      href="${r.url}"
-                      target="_blank"
-                      rel="noopener"
-                      >Lihat PDF</a
-                    ><a class="btn small-btn" href="${r.url}?download=1">Unduh</a>
-                  </div>
-                </article>`,
-            )
-            .join('')}
-        </div>`
-      : '<div class="empty-state">Belum ada laporan yang diterbitkan.</div>';
+    return view(ReportCards, { state: { ...state }, names });
   }
 
   async function load() {
@@ -71,7 +43,7 @@ export function initializeReports() {
     } finally {
       state.loading = false;
       const el = $('#report-list');
-      if (el) el.innerHTML = cards();
+      if (el) app.ui.render(el, cards());
     }
   }
   function mount() {
@@ -82,49 +54,10 @@ export function initializeReports() {
     requestId = crypto.randomUUID();
     const modal = $('#portal-dialog');
     if (modal.open) modal.close();
-    $('#dialog-content').innerHTML = /* HTML */ `<div class="dialog-inner">
-      <div class="dialog-head">
-        <h2 id="dialog-title">Unggah laporan</h2>
-        <button class="icon-btn" data-report-action="close" aria-label="Tutup">×</button>
-      </div>
-      <form id="report-upload">
-        <label class="form-field"
-          ><span>Jenis laporan *</span
-          ><select name="category" id="report-category" required>
-            <option value="financial">Laporan Keuangan</option>
-            <option value="utilization">Penggunaan Dana Penyertaan Modal</option>
-          </select></label
-        ><label class="form-field"
-          ><span>Judul laporan *</span
-          ><input
-            name="title"
-            maxlength="120"
-            required
-            placeholder="Laporan Keuangan September 2026" /></label
-        ><label class="form-field"
-          ><span>Periode *</span><input name="period" type="month" required /></label
-        ><label class="form-field" id="report-project-field" hidden
-          ><span>Kode project *</span
-          ><input name="projectCode" maxlength="60" placeholder="MRBH-2026-09-01" /></label
-        ><label class="form-field"
-          ><span>File laporan PDF *</span
-          ><input name="file" type="file" accept=".pdf,application/pdf" required /><small
-            >PDF · Maksimal 10 MB</small
-          ></label
-        ><label class="check"
-          ><input name="confirm" type="checkbox" required />Laporan sudah diperiksa dan boleh dibaca
-          anggota koperasi.</label
-        >
-        <p id="report-error" class="form-error" role="alert" hidden></p>
-        <div class="form-actions">
-          <button type="button" class="btn secondary" data-report-action="close">Batal</button
-          ><button type="submit" class="btn">Terbitkan laporan</button>
-        </div>
-      </form>
-    </div>`;
+    app.ui.render($('#dialog-content'), snippetView(UploadView));
     modal.showModal();
   }
-  document.addEventListener('click', (e) => {
+  app.scope.listen(document, 'click', (e) => {
     const b = e.target.closest('[data-report-action]');
     if (!b || state.busy) return;
     const a = b.dataset.reportAction;
@@ -135,10 +68,10 @@ export function initializeReports() {
       void load();
     }
   });
-  document.addEventListener('change', (e) => {
+  app.scope.listen(document, 'change', (e) => {
     if (e.target.id === 'report-filter') {
       state.filter = e.target.value;
-      $('#report-list').innerHTML = cards();
+      app.ui.render($('#report-list'), cards());
     }
     if (e.target.id === 'report-category') {
       const need = e.target.value === 'utilization',
@@ -147,7 +80,8 @@ export function initializeReports() {
       label.querySelector('input').required = need;
     }
   });
-  document.addEventListener(
+  app.scope.listen(
+    document,
     'submit',
     async (e) => {
       if (e.target.id !== 'report-upload') return;
@@ -171,7 +105,7 @@ export function initializeReports() {
         state.loaded = true;
         $('#portal-dialog').close();
         const el = $('#report-list');
-        if (el) el.innerHTML = cards();
+        if (el) app.ui.render(el, cards());
       } catch (err) {
         $('#report-error').hidden = false;
         $('#report-error').textContent = err.message;
@@ -182,12 +116,17 @@ export function initializeReports() {
     },
     true,
   );
-  $('#portal-dialog').addEventListener('cancel', (e) => {
+  app.scope.listen($('#portal-dialog'), 'cancel', (e) => {
     if (state.busy) e.preventDefault();
   });
-  window.addEventListener('kspps-staff-role-changed', () => {
+  app.scope.listen(app.events, 'kspps-staff-role-changed', () => {
     state.loaded = false;
     state.error = '';
   });
-  registerReports({ getViewContext: () => ({ state, names, manager, cards, upload }), mount });
+  app.services.reports = {
+    state,
+    getViewContext: () => ({ state, names, manager, cards, upload }),
+    mount,
+  };
+  return app.services.reports;
 }

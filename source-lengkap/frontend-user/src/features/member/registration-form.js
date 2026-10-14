@@ -3,7 +3,7 @@
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
-export function createRegistrationForm({ state, $, rupiah }) {
+export function createRegistrationForm({ app, state, $, rupiah }) {
   function specialFirst() {
     const r = state.registration;
     return r.special === 'Ya'
@@ -48,7 +48,15 @@ export function createRegistrationForm({ state, $, rupiah }) {
     $('#registration-total').textContent = rupiah(registrationTotal());
   }
 
+  let signatureListeners = [];
+  function disposeSignature() {
+    signatureListeners.forEach((release) => release());
+    signatureListeners = [];
+  }
+  app.scope.add(disposeSignature);
+
   function setupSignature() {
+    disposeSignature();
     const canvas = $('#signature');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -70,29 +78,40 @@ export function createRegistrationForm({ state, $, rupiah }) {
         ((e.clientY - rect.top) * canvas.height) / rect.height,
       ];
     }
-    canvas.addEventListener('pointerdown', (e) => {
-      e.preventDefault();
-      down = true;
-      canvas.setPointerCapture(e.pointerId);
-      const [x, y] = point(e);
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-    });
-    canvas.addEventListener('pointermove', (e) => {
-      if (!down) return;
-      e.preventDefault();
-      const [x, y] = point(e);
-      ctx.lineTo(x, y);
-      ctx.stroke();
-      state.signature = true;
-    });
+    signatureListeners.push(
+      app.scope.listen(canvas, 'pointerdown', (e) => {
+        e.preventDefault();
+        down = true;
+        canvas.setPointerCapture(e.pointerId);
+        const [x, y] = point(e);
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+      }),
+    );
+    signatureListeners.push(
+      app.scope.listen(canvas, 'pointermove', (e) => {
+        if (!down) return;
+        e.preventDefault();
+        const [x, y] = point(e);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        state.signature = true;
+      }),
+    );
     function finish() {
       if (!down) return;
       down = false;
       state.registration.signatureImage = canvas.toDataURL('image/png');
     }
-    canvas.addEventListener('pointerup', finish);
-    canvas.addEventListener('pointercancel', finish);
+    signatureListeners.push(app.scope.listen(canvas, 'pointerup', finish));
+    signatureListeners.push(app.scope.listen(canvas, 'pointercancel', finish));
   }
-  return { specialFirst, registrationTotal, saveRegistration, updateSavingsForm, setupSignature };
+  return {
+    specialFirst,
+    registrationTotal,
+    saveRegistration,
+    updateSavingsForm,
+    setupSignature,
+    disposeSignature,
+  };
 }

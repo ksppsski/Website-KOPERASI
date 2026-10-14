@@ -33,6 +33,18 @@ for (const filename of (await Promise.all(roots.map(sourceFiles))).flat()) {
       `${filename}: gunakan import layanan yang eksplisit, bukan window.Kspps.`,
     );
   }
+  if (frontend) {
+    assert(!source.includes('{@html'), `${filename}: gunakan komponen Svelte untuk markup.`);
+    assert(!/\.innerHTML\s*=/.test(source), `${filename}: Svelte harus memiliki DOM-nya sendiri.`);
+    assert(
+      !/export\s+let\s+\w*Service/.test(source),
+      `${filename}: layanan harus dimiliki instance portal.`,
+    );
+    assert(
+      !/window\.dispatchEvent\(new CustomEvent\(['"]kspps-/.test(source),
+      `${filename}: event fitur harus dibatasi ke instance portal.`,
+    );
+  }
   const scripts = filename.endsWith('.svelte')
     ? [...source.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)]
         .map((match) => match[1])

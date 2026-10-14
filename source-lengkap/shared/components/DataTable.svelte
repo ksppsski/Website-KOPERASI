@@ -1,5 +1,6 @@
 <script>
-  let { headers, children } = $props();
+  import Content from './Content.svelte';
+  let { headers, children, rows = [], empty = 'Belum ada data.' } = $props();
 </script>
 
 <div class="table-scroll">
@@ -9,6 +10,11 @@
         {#each headers as header}<th>{header}</th>{/each}
       </tr>
     </thead>
-    <tbody>{@render children()}</tbody>
+    <tbody
+      >{#if children}{@render children()}
+      {:else if rows?.length || rows?.component}<Content value={rows} />
+      {:else}<tr><td colspan={headers.length}><div class="empty-state">{empty}</div></td></tr
+        >{/if}</tbody
+    >
   </table>
 </div>

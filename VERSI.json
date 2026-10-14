@@ -1,15 +1,15 @@
 {
   "name": "KSPPS Syirkah Kebaikan Indonesia",
   "exportedAt": "2026-10-14",
-  "sourceCommit": "7a0afab2d89f09e6d7fd27051f085b1f746b4187",
-  "sourceVersion": "v38",
+  "sourceCommit": "409106c3d9cfd671d005f605421cc494ab431126",
+  "sourceVersion": "v39",
   "sourceFolder": "source-lengkap",
   "publishedFolder": "docs",
-  "staticPreviewVersion": "v18",
-  "staticPreviewExportedAt": "2026-09-22",
+  "staticPreviewVersion": "v39",
+  "staticPreviewExportedAt": "2026-10-14",
   "customDomain": "syirkahkebaikanindonesia.com",
   "backendActiveInStaticVersion": false,
-  "sourceNotes": "Sumber aplikasi Svelte 5 v38: refactor modul v37 dan favicon adaptif pada empat halaman pembuka. docs tetap pratinjau statis v18 dengan favicon yang sama. Database, unggahan, secrets, dan identitas deployment asal tidak disertakan.",
+  "sourceNotes": "Svelte 5 dengan komponen/snippet native, layanan per portal, pemisahan API/state/UI, lifecycle terkelola dan favicon vektor. Pages dibangun dari sumber yang sama. Database, unggahan, secrets dan identitas deployment asal tidak disertakan.",
   "exportAdjustments": [
     "Identitas deployment asal dihapus dari konfigurasi hosting.",
     "Panduan dan status fitur diperbarui untuk susunan repository GitHub.",
@@ -21,5 +21,5 @@
     "source-lengkap/backend/templates/membership-letter-source.docx"
   ],
   "staticPreviewUpdatedAt": "2026-10-14",
-  "staticPreviewNotes": "Pratinjau statis v18 dengan pembaruan favicon adaptif: logo biru pada mode terang dan putih pada mode gelap."
+  "staticPreviewNotes": "Build Svelte v39 dari source-lengkap dengan data kosong, portal avalist, formulir nonaktif dan tanpa permintaan API."
 }

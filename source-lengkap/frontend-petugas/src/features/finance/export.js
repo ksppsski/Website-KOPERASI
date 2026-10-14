@@ -3,7 +3,7 @@
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
-export function createFinanceExport({ state }) {
+export function createFinanceExport({ app, state }) {
   function csvCell(value, text = false) {
     let s = String(value ?? '');
     if (text || /^[\s]*[=+@\-]/.test(s)) s = "'" + s;
@@ -51,7 +51,7 @@ export function createFinanceExport({ state }) {
     document.body.append(a);
     a.click();
     a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    app.scope.timeout(() => URL.revokeObjectURL(url), 1000);
   }
   return { csvCell, exportCsv };
 }

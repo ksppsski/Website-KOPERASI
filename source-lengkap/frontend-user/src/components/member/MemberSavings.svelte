@@ -1,5 +1,9 @@
 <script>
-  import { workflowService } from '../../../../shared/services/workflow.js';
+  import PageHeading from '../../../../shared/components/PageHeading.svelte';
+  import Region from '../../../../shared/components/Region.svelte';
+  import Content from '../../../../shared/components/Content.svelte';
+  import { getContext } from 'svelte';
+  const app = getContext('kspps-portal');
   import Badge from '../../../../shared/components/Badge.svelte';
   import Icon from '../../../../shared/components/Icon.svelte';
 
@@ -21,13 +25,13 @@
 
 {#if context}
   {@const v = savingsState()}
-  {@html heading(
-    'Simpanan Saya',
-    'Pantau simpanan pokok, wajib, dan riwayat setoran.',
-    '<button type="button" class="btn" data-action="deposit">' +
-      icon('plus') +
-      'Setor simpanan wajib</button>',
-  ) ?? ''}{@html (workflowService?.savingsNotice() || '') ?? ''}
+  <PageHeading
+    title={'Simpanan Saya'}
+    description={'Pantau simpanan pokok, wajib, dan riwayat setoran.'}
+    ><button type="button" class="btn" data-action="deposit"
+      ><Icon name="plus" />Setor simpanan wajib</button
+    ></PageHeading
+  ><Content value={(app.services.workflow?.savingsNotice() || '') ?? ''} />
   <div class="balance-breakdown">
     <div class="stat">
       <div class="stat-top">Simpanan pokok</div>
@@ -127,10 +131,10 @@
         <thead
           ><tr><th>TANGGAL</th><th>KETERANGAN</th><th class="money">NOMINAL</th><th>STATUS</th></tr
           ></thead
-        ><tbody id="savings-rows">{@html savingsRows() ?? ''}</tbody>
+        ><tbody id="savings-rows"><Region name="savings-rows" value={savingsRows() ?? ''} /></tbody>
       </table>
     </div>
     <p class="table-note">Setoran menambah saldo setelah rekonsiliasi Finance.</p>
   </section>
-  {@html (workflowService?.savingsDeposits() || '') ?? ''}
+  <Content value={(app.services.workflow?.savingsDeposits() || '') ?? ''} />
 {/if}

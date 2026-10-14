@@ -1,11 +1,6 @@
 <script>
-  import { workflowService } from '../../../shared/services/workflow.js';
-  import { activityService } from '../../../shared/services/activity.js';
-  import { financeService } from '../../../shared/services/finance.js';
-  import { maturityService } from '../../../shared/services/maturity.js';
-  import { withdrawalService } from '../../../shared/services/withdrawal.js';
-  import { reportsService } from '../../../shared/services/reports.js';
-  import { staffAccessService } from '../../../shared/services/staff-access.js';
+  import { getContext } from 'svelte';
+  const app = getContext('kspps-portal');
   import FinanceDashboard from './finance/FinanceDashboard.svelte';
   import ReconciliationQueue from './finance/ReconciliationQueue.svelte';
   import DailyPayout from './finance/DailyPayout.svelte';
@@ -20,20 +15,20 @@
 
   let { route } = $props();
   const pages = {
-    pengunduran: [WorkflowPage, () => workflowService.getViewContext()],
-    penyertaan: [WorkflowPage, () => workflowService.getViewContext()],
-    'finance-ringkasan': [FinanceDashboard, () => financeService.getViewContext()],
-    'finance-rekonsiliasi': [ReconciliationQueue, () => financeService.getViewContext()],
-    'finance-bagi-hasil': [DailyPayout, () => financeService.getViewContext()],
-    'finance-pengembalian': [CapitalReturns, () => maturityService.getViewContext()],
-    'manager-jatuh-tempo': [MaturityReport, () => maturityService.getViewContext()],
-    'manager-pengunduran': [WithdrawalQueue, () => withdrawalService.getViewContext()],
-    'finance-pengunduran': [WithdrawalQueue, () => withdrawalService.getViewContext()],
-    pengajuan: [WithdrawalQueue, () => withdrawalService.getViewContext()],
-    'waktu-kerja': [ManagerActivity, () => activityService.getViewContext()],
-    'manager-laporan': [Reports, () => reportsService.getViewContext()],
-    'manager-akses': [StaffAccess, () => staffAccessService.getViewContext()],
-    'manager-penawaran': [CapitalOffers, () => workflowService.getViewContext()],
+    pengunduran: [WorkflowPage, () => app.services.workflow.getViewContext()],
+    penyertaan: [WorkflowPage, () => app.services.workflow.getViewContext()],
+    'finance-ringkasan': [FinanceDashboard, () => app.services.finance.getViewContext()],
+    'finance-rekonsiliasi': [ReconciliationQueue, () => app.services.finance.getViewContext()],
+    'finance-bagi-hasil': [DailyPayout, () => app.services.finance.getViewContext()],
+    'finance-pengembalian': [CapitalReturns, () => app.services.maturity.getViewContext()],
+    'manager-jatuh-tempo': [MaturityReport, () => app.services.maturity.getViewContext()],
+    'manager-pengunduran': [WithdrawalQueue, () => app.services.withdrawal.getViewContext()],
+    'finance-pengunduran': [WithdrawalQueue, () => app.services.withdrawal.getViewContext()],
+    pengajuan: [WithdrawalQueue, () => app.services.withdrawal.getViewContext()],
+    'waktu-kerja': [ManagerActivity, () => app.services.activity.getViewContext()],
+    'manager-laporan': [Reports, () => app.services.reports.getViewContext()],
+    'manager-akses': [StaffAccess, () => app.services.staffAccess.getViewContext()],
+    'manager-penawaran': [CapitalOffers, () => app.services.workflow.getViewContext()],
   };
 </script>
 

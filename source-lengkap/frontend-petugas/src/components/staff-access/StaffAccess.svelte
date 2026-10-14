@@ -1,4 +1,6 @@
 <script>
+  import Region from '../../../../shared/components/Region.svelte';
+  import Content from '../../../../shared/components/Content.svelte';
   let { context } = $props();
   let { accountRows, accounts } = $derived(context);
 </script>
@@ -11,7 +13,11 @@
     </div>
     <button class="btn secondary" data-access-action="accounts">Perbarui</button>
   </div>
-  <section class="panel"><div id="staff-account-list">{@html accountRows() ?? ''}</div></section>
+  <section class="panel">
+    <div id="staff-account-list">
+      <Region name="staff-account-list" value={accountRows() ?? ''} />
+    </div>
+  </section>
   <p class="field-hint">
     Admin dan Finance bekerja sesuai hak aksesnya. Avalist hanya melihat referensi dan bagi hasil
     miliknya. Manajer mengelola penetapan dan hak akses.

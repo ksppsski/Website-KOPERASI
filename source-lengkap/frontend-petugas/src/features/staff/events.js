@@ -1,10 +1,10 @@
-import { workflowService } from '../../../../shared/services/workflow.js';
 /**
  * Interaksi petugas dan penyegaran halaman saat data fitur berubah.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
 export function bindStaffEvents({
+  app,
   runtime,
   go,
   homeFor,
@@ -25,7 +25,7 @@ export function bindStaffEvents({
   makeDraft,
   modal,
 }) {
-  document.addEventListener('click', async (event) => {
+  app.scope.listen(document, 'click', async (event) => {
     const b = event.target.closest('[data-action]');
     if (!b) return;
     const a = b.dataset.action,
@@ -33,7 +33,7 @@ export function bindStaffEvents({
     if (a === 'enter') {
       b.disabled = true;
       const requested = b.dataset.role || 'admin';
-      if (await workflowService.setStaffRole(requested)) {
+      if (await app.services.workflow.setStaffRole(requested)) {
         runtime.state.signedIn = true;
         go(homeFor(requested));
       }
@@ -63,11 +63,11 @@ export function bindStaffEvents({
     }
   });
 
-  document.addEventListener('change', async (event) => {
+  app.scope.listen(document, 'change', async (event) => {
     if (event.target.id === 'staff-role') {
       const select = event.target;
       select.disabled = true;
-      if (!(await workflowService.setStaffRole(select.value))) {
+      if (!(await app.services.workflow.setStaffRole(select.value))) {
         select.value = activeRole();
         select.disabled = false;
       }
@@ -79,7 +79,7 @@ export function bindStaffEvents({
     }
   });
 
-  document.addEventListener('submit', (event) => {
+  app.scope.listen(document, 'submit', (event) => {
     const f = event.target;
     if (!(f instanceof HTMLFormElement)) return;
     event.preventDefault();
@@ -118,12 +118,12 @@ export function bindStaffEvents({
     }
   });
 
-  document.addEventListener('keydown', (event) => {
+  app.scope.listen(document, 'keydown', (event) => {
     if (event.key === 'Escape' && $('#staff-sidebar')?.classList.contains('open'))
       $('[data-action="close-menu"]').click();
   });
 
-  modal.addEventListener('click', (event) => {
+  app.scope.listen(modal, 'click', (event) => {
     if (event.target === modal) {
       const r = modal.getBoundingClientRect();
       if (
@@ -136,32 +136,32 @@ export function bindStaffEvents({
     }
   });
 
-  modal.addEventListener('close', () => {
+  app.scope.listen(modal, 'close', () => {
     if (runtime.lastFocus?.isConnected) runtime.lastFocus.focus();
   });
 
-  window.addEventListener('kspps-profile-loaded', () => {
+  app.scope.listen(app.events, 'kspps-profile-loaded', () => {
     if (runtime.state.signedIn) render();
   });
 
-  window.addEventListener('kspps-staff-role-changed', () => {
+  app.scope.listen(app.events, 'kspps-staff-role-changed', () => {
     if (runtime.state.signedIn) go(homeFor(activeRole()));
   });
 
-  window.addEventListener('kspps-finance-loaded', () => {
+  app.scope.listen(app.events, 'kspps-finance-loaded', () => {
     if (runtime.state.signedIn && activeRole() === 'finance') render();
   });
 
-  window.addEventListener('kspps-activity-loaded', () => {
+  app.scope.listen(app.events, 'kspps-activity-loaded', () => {
     if (runtime.state.signedIn && ['#waktu-kerja', '#finance-ringkasan'].includes(location.hash))
       render();
   });
 
-  window.addEventListener('kspps-access-loaded', () => {
+  app.scope.listen(app.events, 'kspps-access-loaded', () => {
     if (!runtime.state.signedIn) render();
   });
 
-  window.addEventListener('kspps-maturity-loaded', () => {
+  app.scope.listen(app.events, 'kspps-maturity-loaded', () => {
     if (
       runtime.state.signedIn &&
       ['#finance-pengembalian', '#manager-jatuh-tempo'].includes(location.hash)
@@ -169,5 +169,5 @@ export function bindStaffEvents({
       render();
   });
 
-  window.addEventListener('kspps-withdrawal-loaded', render);
+  app.scope.listen(app.events, 'kspps-withdrawal-loaded', render);
 }

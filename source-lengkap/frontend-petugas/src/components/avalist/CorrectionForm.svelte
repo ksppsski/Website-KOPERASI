@@ -1,6 +1,6 @@
 <script>
+  import { formatMoney as money } from '../../../../shared/lib/formatters.js';
   let { data, busy, save } = $props();
-  const money = (n) => 'Rp' + Number(n || 0).toLocaleString('id-ID');
   let correctionOriginal = $state(''),
     correctionPerson = $state(''),
     correctionAmount = $state(),

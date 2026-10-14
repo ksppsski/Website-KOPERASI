@@ -1,7 +1,7 @@
 <script>
+  import { formatMoney as money } from '../../lib/formatters.js';
   import Badge from '../Badge.svelte';
   let { rows = [], finance = false, personal = false, busy = false, pay, review } = $props();
-  const money = (n) => 'Rp' + Number(n || 0).toLocaleString('id-ID');
   const labels = {
     paid: 'Sudah dibayar',
     prepared: 'Siap dibayar',

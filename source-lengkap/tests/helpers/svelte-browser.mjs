@@ -5,8 +5,9 @@ import { compile } from 'svelte/compiler';
 import { JSDOM } from 'jsdom';
 
 const bundles = new Map();
-export async function browser(entry, { fetch, compare, hash = 'masuk' } = {}) {
-  if (!bundles.has(entry)) {
+export async function browser(entry, { fetch, compare, hash = 'masuk', preview = false } = {}) {
+  const bundleKey = entry + ':' + preview;
+  if (!bundles.has(bundleKey)) {
     const result = await build({
       entryPoints: [
         (entry === 'avalist'
@@ -24,7 +25,11 @@ export async function browser(entry, { fetch, compare, hash = 'masuk' } = {}) {
       format: 'iife',
       platform: 'browser',
       conditions: ['browser'],
-      define: { 'process.env.NODE_ENV': '"production"' },
+      define: {
+        'process.env.NODE_ENV': '"production"',
+        'import.meta.hot': 'undefined',
+        __KSPPS_STATIC_PREVIEW__: JSON.stringify(preview),
+      },
       plugins: [
         {
           name: 'svelte-browser-test',
@@ -49,11 +54,26 @@ export async function browser(entry, { fetch, compare, hash = 'masuk' } = {}) {
               }),
             );
             build.onLoad({ filter: /shared\/create-portal\.js$/ }, ({ path }) => ({
-              contents:
-                "import { workflowService as test_workflowService } from './services/workflow.js';\nObject.defineProperty(window, 'KsppsWorkflow', { get: () => test_workflowService });\nimport { activityService as test_activityService } from './services/activity.js';\nObject.defineProperty(window, 'KsppsActivity', { get: () => test_activityService });\nimport { financeService as test_financeService } from './services/finance.js';\nObject.defineProperty(window, 'KsppsFinance', { get: () => test_financeService });\nimport { maturityService as test_maturityService } from './services/maturity.js';\nObject.defineProperty(window, 'KsppsMaturity', { get: () => test_maturityService });\nimport { withdrawalService as test_withdrawalService } from './services/withdrawal.js';\nObject.defineProperty(window, 'KsppsWithdrawal', { get: () => test_withdrawalService });\nimport { reportsService as test_reportsService } from './services/reports.js';\nObject.defineProperty(window, 'KsppsReports', { get: () => test_reportsService });\nimport { staffAccessService as test_staffAccessService } from './services/staff-access.js';\nObject.defineProperty(window, 'KsppsStaffAccess', { get: () => test_staffAccessService });\n" +
-                readFileSync(path, 'utf8').replace(
-                  'return (model) => flushSync(() => view.set(model));',
-                  `return (model) => { const expected = model.html?.(); flushSync(() => view.set(model)); window.__view = model; window.__compare?.(model, expected, document.querySelector('#app')); };`,
+              contents: readFileSync(path, 'utf8')
+                .replace(
+                  '  return app;',
+                  `
+                  window.__portal = app;
+                  for (const [name, key] of Object.entries({
+                    Workflow: 'workflow', Activity: 'activity', Finance: 'finance',
+                    Maturity: 'maturity', Withdrawal: 'withdrawal', Reports: 'reports', StaffAccess: 'staffAccess',
+                  })) Object.defineProperty(window, 'Kspps' + name, { get: () => app.services[key] });
+                  return app;
+                `,
+                )
+                .replace(
+                  'flushSync(() => view.set(model));',
+                  `{
+                  const expected = model.html?.();
+                  flushSync(() => view.set(model));
+                  window.__view = model;
+                  window.__compare?.(model, expected, document.querySelector('#app'));
+                }`,
                 ),
               loader: 'js',
             }));
@@ -75,7 +95,7 @@ export async function browser(entry, { fetch, compare, hash = 'masuk' } = {}) {
       );
       assert(!input.startsWith('backend/'), 'Server code entered the browser bundle: ' + input);
     }
-    bundles.set(entry, result.outputFiles[0].text);
+    bundles.set(bundleKey, result.outputFiles[0].text);
   }
   const dom = new JSDOM('<!doctype html><html><body><div id="root"></div></body></html>', {
     url: 'https://kspps.example/' + entry + '.html#' + hash,
@@ -123,7 +143,7 @@ export async function browser(entry, { fetch, compare, hash = 'masuk' } = {}) {
   window.__compare = compare;
   window.__navigations = [];
   window.__navigate = (path) => window.__navigations.push(path);
-  window.eval(bundles.get(entry));
+  window.eval(bundles.get(bundleKey));
   const settle = async () => {
     await new Promise((resolve) => setTimeout(resolve, 15));
     if (errors.length) throw errors[0];

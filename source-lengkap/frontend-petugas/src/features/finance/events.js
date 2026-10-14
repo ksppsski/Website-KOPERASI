@@ -1,10 +1,13 @@
-import { activityService } from '../../../../shared/services/activity.js';
+import { BindFinanceEventsView } from './views/events.svelte';
+import { view, snippetView } from '../../../../shared/runtime/view.js';
+
 /**
  * Interaksi rekonsiliasi, persiapan pembayaran, dan invalidasi data Finance.
  * Semua ketergantungan fitur diterima secara eksplisit melalui parameter.
  */
 
 export function bindFinanceEvents({
+  app,
   state,
   $,
   invalidate,
@@ -20,7 +23,7 @@ export function bindFinanceEvents({
   syncToday,
   role,
 }) {
-  document.addEventListener('click', (event) => {
+  app.scope.listen(document, 'click', (event) => {
     const b = event.target.closest('[data-finance-action]');
     if (!b) return;
     const a = b.dataset.financeAction;
@@ -41,26 +44,15 @@ export function bindFinanceEvents({
     if (a === 'payout-complete' && state.payout?.task) {
       show(
         'Selesaikan persiapan bagi hasil',
-        /* HTML */ `<p>Konfirmasi daftar untuk ${date(state.date)} sudah diperiksa.</p>
-          <form id="finance-payout-complete">
-            <label class="check"
-              ><input name="confirm" type="checkbox" required />Nominal dan rekening tujuan sudah
-              sesuai.</label
-            >
-            <p class="field-hint">
-              Ini mencatat pekerjaan persiapan selesai. Status transfer bank tidak berubah.
-            </p>
-            <p id="finance-error" class="form-error" role="alert" hidden></p>
-            <button type="submit" class="btn">Simpan waktu selesai</button>
-          </form>`,
+        snippetView(BindFinanceEventsView, { date: date(state.date) }),
       );
     }
   });
 
-  document.addEventListener('change', (event) => {
+  app.scope.listen(document, 'change', (event) => {
     if (event.target.id === 'finance-filter') {
       state.filter = event.target.value;
-      $('#finance-queue-table').innerHTML = queueTable();
+      app.ui.render($('#finance-queue-table'), queueTable());
     }
     if (event.target.id === 'finance-date' && event.target.checkValidity() && event.target.value) {
       state.date = event.target.value;
@@ -74,7 +66,8 @@ export function bindFinanceEvents({
     }
   });
 
-  document.addEventListener(
+  app.scope.listen(
+    document,
     'submit',
     async (event) => {
       const form = event.target;
@@ -88,8 +81,8 @@ export function bindFinanceEvents({
         return;
       }
       if (
-        activityService &&
-        !(await activityService.requireStarted(form.dataset.id, 'reconciliation'))
+        app.services.activity &&
+        !(await app.services.activity.requireStarted(form.dataset.id, 'reconciliation'))
       )
         return;
       const f = new FormData(form),
@@ -126,7 +119,8 @@ export function bindFinanceEvents({
     true,
   );
 
-  document.addEventListener(
+  app.scope.listen(
+    document,
     'submit',
     async (event) => {
       const form = event.target;
@@ -148,7 +142,7 @@ export function bindFinanceEvents({
         });
         state.busy = false;
         $('#portal-dialog').close();
-        activityService?.invalidate();
+        app.services.activity?.invalidate();
         invalidate();
         void load();
       } catch (error) {
@@ -162,21 +156,21 @@ export function bindFinanceEvents({
     true,
   );
 
-  $('#portal-dialog').addEventListener('cancel', (event) => {
+  app.scope.listen($('#portal-dialog'), 'cancel', (event) => {
     if (state.busy) event.preventDefault();
   });
 
-  window.addEventListener('kspps-profile-loaded', () => {
+  app.scope.listen(app.events, 'kspps-profile-loaded', () => {
     if (!$('#portal-dialog').open && !state.busy) invalidate();
   });
 
-  window.addEventListener('kspps-staff-role-changed', () => {
+  app.scope.listen(app.events, 'kspps-staff-role-changed', () => {
     state.sequence++;
     state.loading = false;
     invalidate();
   });
 
-  window.addEventListener('kspps-member-changed', () => {
+  app.scope.listen(app.events, 'kspps-member-changed', () => {
     state.sequence++;
     state.loading = false;
     state.items = [];
@@ -184,7 +178,7 @@ export function bindFinanceEvents({
     invalidate();
   });
 
-  setInterval(() => {
+  app.scope.interval(() => {
     if (syncToday() && role() === 'finance' && location.hash.startsWith('#finance-')) void load();
   }, 60000);
 }

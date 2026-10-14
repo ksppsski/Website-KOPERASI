@@ -3,14 +3,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node tests/static-preview.mjs",
+    "test": "npm --prefix source-lengkap run test:preview",
     "setup": "npm --prefix source-lengkap ci",
     "dev": "npm --prefix source-lengkap run dev",
     "check": "npm --prefix source-lengkap run check",
     "build": "npm --prefix source-lengkap run build",
-    "test:preview": "node tests/static-preview.mjs",
+    "test:preview": "npm --prefix source-lengkap run test:preview",
     "test:app": "npm --prefix source-lengkap test",
-    "test:all": "npm run test:preview && npm run test:app",
-    "build:frontend": "npm --prefix source-lengkap run build:frontend"
+    "test:all": "npm run test:app",
+    "build:frontend": "npm --prefix source-lengkap run build:frontend",
+    "build:pages": "npm --prefix source-lengkap run build:preview && node scripts/export-pages.mjs",
+    "check:pages": "npm --prefix source-lengkap run build:preview && node scripts/export-pages.mjs --check"
   }
 }
