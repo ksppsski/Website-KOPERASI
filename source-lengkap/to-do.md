@@ -1,16 +1,17 @@
 # To-do pengembangan website KSPPS
 
-Diperbarui: 3 Oktober 2026.
+Diperbarui: 14 Oktober 2026 — baseline aplikasi v39. Konteks lanjutan: [panduan Codex](../panduan-codex/README.md).
 
-Project dibagi menjadi **frontend user**, **frontend petugas**, dan **backend**. Daftar ini mengikuti fitur terakhir yang sudah disepakati. `[x]` berarti sudah tersedia pada implementasi/pratinjau; `[ ]` berarti masih perlu dikerjakan atau diverifikasi. Status tersedia tidak berarti seluruh kebutuhan operasional produksi sudah selesai.
+Project dibagi menjadi **frontend user**, **frontend petugas**, **frontend avalist**, dan **backend**. Daftar ini mengikuti fitur terakhir yang sudah disepakati. `[x]` berarti sudah tersedia pada implementasi/pratinjau; `[ ]` berarti masih perlu dikerjakan atau diverifikasi. Status tersedia tidak berarti seluruh kebutuhan operasional produksi sudah selesai.
 
 | Bagian           | Folder              | Tanggung jawab                                            |
 | ---------------- | ------------------- | --------------------------------------------------------- |
 | Frontend user    | `frontend-user/`    | Landing page, pendaftaran dan portal anggota              |
 | Frontend petugas | `frontend-petugas/` | Portal admin, finance dan manajer                         |
+| Frontend avalist | `frontend-avalist/` | Portal pribadi avalist |
 | Backend          | `backend/`          | API, otorisasi, aturan keuangan, database, berkas dan PDF |
 
-`shared/` memuat komponen, CSS dan controller browser yang memang dipakai kedua frontend. `public/` memuat aset bersama. Keduanya adalah pendukung, bukan aplikasi atau backend tambahan. Semua bagian masih dibangun dari satu repository dan dipublikasikan pada satu origin.
+`shared/` memuat komponen, CSS dan controller browser yang dipakai lintas frontend. `public/` memuat aset bersama. Keduanya adalah pendukung, bukan aplikasi atau backend tambahan. Semua bagian masih dibangun dari satu repository dan dipublikasikan pada satu origin.
 
 ## 1. Frontend user
 
@@ -155,7 +156,7 @@ Project dibagi menjadi **frontend user**, **frontend petugas**, dan **backend**.
 
 ## Verifikasi pemisahan kode
 
-- [x] URL `index.html`, `anggota.html` dan `petugas.html` tetap dipertahankan.
+- [x] URL `index.html`, `anggota.html`, `petugas.html` dan `avalist.html` tetap dipertahankan.
 - [x] Pemeriksaan Svelte lulus tanpa error/warning.
 - [x] Perbandingan 40 tampilan portal dan interaksi landing page lulus.
 - [x] Bundle masing-masing frontend tidak mengimpor folder frontend lain atau kode backend.
@@ -166,7 +167,7 @@ Project dibagi menjadi **frontend user**, **frontend petugas**, dan **backend**.
 
 ## Cara menggunakan project ini
 
-Jalankan perintah dari folder utama repository:
+Jalankan perintah dari folder `source-lengkap/`:
 
 ```sh
 npm ci
@@ -175,13 +176,15 @@ npm test
 npm run build
 ```
 
-`npm run dev` membuka frontend lokal. Data portal tetap memerlukan API dan autentikasi yang sesuai. `npm run build:frontend` menyusun kedua frontend. `npm run build:backend` membungkus hasil frontend yang sudah dibangun bersama API dan template; untuk paket lengkap gunakan `npm run build`.
+`npm run dev` membuka frontend lokal. Data portal tetap memerlukan API dan autentikasi yang sesuai. `npm run build:frontend` menyusun ketiga frontend dan landing. `npm run build:backend` membungkus hasil frontend yang sudah dibangun bersama API dan template; untuk paket lengkap gunakan `npm run build`.
 
-Tetap unggah satu repository lengkap yang berisi ketiga bagian, `shared/`, `public/`, konfigurasi dan berkas pendukung. Pemisahan folder ini belum membuat tiga aplikasi yang dapat dipasang sendiri-sendiri. Perubahan ke repository GitHub/domain milik Anda masih memerlukan pengaturan publikasi di tempat tersebut.
+Sumber tetap satu repository dengan frontend, backend, `shared/`, `public/`, konfigurasi dan berkas pendukung. Build aplikasi memerlukan lingkungan backend yang sesuai. Dari root repository GitHub, jalankan `npm run build:pages` untuk menghasilkan `docs/` dari source yang sama; `npm run check:pages` memeriksa kesesuaiannya. Pages adalah pratinjau tanpa backend. Build backend lengkap membutuhkan aset privat; lihat [panduan template](backend/templates/README.md).
 
 ## Avalist internal
 
-- [x] Sediakan akses Avalist melalui Akses Petugas dan tautkan rekeningnya ke akun internal.
+- [x] Manajer mendaftarkan avalist melalui email di Pengelolaan Avalist; avalist tidak harus menjadi Admin/Finance.
+- [x] Sediakan portal pribadi `/avalist.html` dengan ikatan identitas terautentikasi; kelengkapan rekening wajib sebelum pembayaran.
+- [x] Sediakan total fee kumulatif, hak bulanan, pembayaran bulan terpilih dan pembayaran atas periode hak tanpa penghitungan ganda.
 - [x] Manajer menetapkan/mengganti avalist serta persentase; Admin hanya mengirim usulan.
 - [x] Simpan avalist bawaan untuk pengajuan baru dan riwayat penetapan per akad berjalan dengan tanggal mulai periode.
 - [x] Pergantian orang dapat mempertahankan persentase; perubahan persentase dapat mempertahankan orang.
@@ -200,4 +203,12 @@ Tetap unggah satu repository lengkap yang berisi ketiga bagian, `shared/`, `publ
 - [x] Pisahkan halaman pengelolaan avalist menjadi komponen dengan state lokal masing-masing.
 - [x] Pisahkan endpoint dan proses backend menurut fitur, tanpa mengubah skema atau data.
 - [x] Tambahkan peta kode untuk tim IT serta pemeriksaan batas modul, import melingkar, dan panjang baris.
-- [ ] Migrasikan sisa dialog HTML lama menjadi komponen Svelte ketika fitur terkait dikembangkan.
+- [x] Migrasikan seluruh dialog/panel dinamis dari string HTML menjadi komponen/snippet Svelte.
+- [x] Isolasi layanan/state per instance portal dan hapus registry singleton.
+- [x] Pisahkan transport HTTP, koordinasi state dan tampilan.
+- [x] Kelola cleanup listener/timer/request serta hindari perubahan state setelah dispose.
+- [x] Satukan formatter, ikon, badge dan utilitas presentasi.
+- [x] Hasilkan favicon vektor terang/gelap otomatis saat build.
+- [x] Bangun Pages dari source yang sama, dengan formulir nonaktif dan tanpa jaringan.
+- [x] Dokumentasikan konteks, keputusan, aturan bisnis, batas operasional dan prompt pembuka Codex.
+- [ ] Lakukan pemeriksaan visual browser nyata dan uji penerimaan operasional pada hosting tujuan.

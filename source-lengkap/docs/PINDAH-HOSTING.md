@@ -1,6 +1,6 @@
 # Menjalankan aplikasi pada hosting sendiri
 
-Sumber v36 berasal dari aplikasi pratinjau yang memakai Svelte 5, Vite dan Cloudflare Worker APIs. Sinkronisasi GitHub tidak mengekspor database, unggahan atau konfigurasi rahasia dari hosting asal.
+Sumber aplikasi v39 berasal dari aplikasi pratinjau yang memakai Svelte 5, Vite dan Cloudflare Worker APIs. Sinkronisasi GitHub tidak mengekspor database, unggahan atau konfigurasi rahasia dari hosting asal.
 
 ## Build dan resource
 

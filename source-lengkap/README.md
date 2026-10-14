@@ -2,6 +2,8 @@
 
 Website KSPPS Syirkah Kebaikan Indonesia menggunakan Svelte 5 + Vite untuk frontend dan Worker untuk backend. **Daftar pekerjaan dan status fitur ada di [to-do.md](to-do.md).**
 
+Konteks serah terima Codex ada di [../panduan-codex/](../panduan-codex/README.md) dan instruksi repository di [../AGENTS.md](../AGENTS.md).
+
 ## Panduan tim IT
 
 Buka **[Peta kode dan panduan pemeliharaan](docs/PETA-KODE.md)** untuk mencari file berdasarkan fitur atau gejala bug. Source tetap memakai Svelte 5; controller telah dipisahkan menjadi pembacaan data, formulir, tampilan, dan handler. Hubungan antarfitur memakai import eksplisit, dengan pemeriksaan otomatis untuk mencegah import melingkar.
@@ -35,7 +37,7 @@ Portal Avalist tersedia melalui `/avalist.html`. Pendaftaran email tetap dilakuk
 | Penawaran project                    | `frontend-petugas/src/components/workflow/CapitalOffers.svelte`                              |
 | Controller petugas                   | `frontend-petugas/src/features/`                                                             |
 | Laporan / pengunduran diri bersama   | `shared/components/` dan `shared/features/`                                                  |
-| Komponen dan warna kedua portal      | `shared/components/` dan `shared/styles/`                                                    |
+| Komponen dan warna lintas portal      | `shared/components/` dan `shared/styles/`                                                    |
 | Aturan di server                     | `backend/src/`                                                                               |
 | Skema dan migrasi database           | `backend/db/` dan `backend/migrations/`                                                      |
 | Template dokumen asli                | `backend/templates/`                                                                         |
@@ -45,7 +47,7 @@ Jangan mengedit `dist/`: folder itu dihasilkan otomatis dan kode di dalamnya dip
 
 ## Menjalankan project
 
-Gunakan Node.js 22.12 atau lebih baru. Dari folder utama project:
+Gunakan Node.js 22.12 atau lebih baru; CI memakai Node.js 24. Jalankan dari folder `source-lengkap/`:
 
 ```sh
 npm ci
@@ -59,7 +61,9 @@ npm test
 npm run build
 ```
 
-`npm test` memeriksa Svelte, batas arsitektur, tampilan, interaksi dan aturan backend. `npm run build` menghasilkan empat HTML, aset frontend serta `dist/server/index.js`. URL `index.html`, `anggota.html`, `petugas.html`, `avalist.html`, rute `#...` dan API `/api/workflow` tetap digunakan.
+Build backend lengkap membutuhkan aset tanda tangan privat melalui `KSPPS_MEMBERSHIP_SIGNATURE_FILE`; ikuti [panduan template](backend/templates/README.md). Tes memakai gambar sintetis dan tidak membutuhkan tanda tangan privat.
+
+`npm test` dari `source-lengkap/` memeriksa Svelte, batas arsitektur, tampilan, interaksi dan aturan backend. `npm run build` menghasilkan empat HTML, aset frontend serta `dist/server/index.js`. URL `index.html`, `anggota.html`, `petugas.html`, `avalist.html`, rute `#...` dan API `/api/workflow` tetap digunakan.
 
 Perintah terpisah tersedia untuk proses build: `npm run build:frontend`, lalu `npm run build:backend`. Backend packager memerlukan hasil frontend di `dist/`. Ketiga frontend dan backend masih dipublikasikan sebagai satu Site dengan origin yang sama.
 

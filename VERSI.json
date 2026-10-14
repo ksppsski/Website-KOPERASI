@@ -14,12 +14,15 @@
     "Identitas deployment asal dihapus dari konfigurasi hosting.",
     "Panduan dan status fitur diperbarui untuk susunan repository GitHub.",
     "Metadata pembuat pada template PDF surat keanggotaan dibersihkan; tampilan tetap identik.",
-    "Aset tanda tangan dan DOCX yang menyematkannya tidak dipublikasikan. Build backend memerlukan file PNG privat; tes memakai gambar sintetis."
+    "Aset tanda tangan dan DOCX yang menyematkannya tidak dipublikasikan. Build backend memerlukan file PNG privat; tes memakai gambar sintetis.",
+    "Dokumentasi serah terima Codex dan AGENTS.md ditambahkan; catatan status lama diperbarui tanpa perubahan kode aplikasi v39."
   ],
   "privateAssetsExcluded": [
     "source-lengkap/backend/templates/spa-image2.png",
     "source-lengkap/backend/templates/membership-letter-source.docx"
   ],
   "staticPreviewUpdatedAt": "2026-10-14",
-  "staticPreviewNotes": "Build Svelte v39 dari source-lengkap dengan data kosong, portal avalist, formulir nonaktif dan tanpa permintaan API."
+  "staticPreviewNotes": "Build Svelte v39 dari source-lengkap dengan data kosong, portal avalist, formulir nonaktif dan tanpa permintaan API.",
+  "documentationUpdatedAt": "2026-10-14",
+  "handoffFolder": "panduan-codex"
 }

@@ -11,6 +11,10 @@ Sumber aplikasi sudah disinkronkan dengan **revisi v39** pada 14 Oktober 2026. K
 
 Domain yang tercatat di `docs/CNAME`: **syirkahkebaikanindonesia.com**. Pembaruan kode di `source-lengkap/` belum memindahkan backend atau data ke domain tersebut. Folder `docs/` kini dihasilkan dari sumber Svelte terbaru. Mode pratinjau menampilkan data kosong dan menonaktifkan pendaftaran, unggahan, login serta transaksi.
 
+## Melanjutkan proyek di Codex
+
+Konteks proyek, aturan bisnis, riwayat keputusan dan pekerjaan tersisa tersedia dalam **[panduan-codex/](panduan-codex/README.md)**. Baca **[AGENTS.md](AGENTS.md)** sebagai petunjuk kerja repository dan gunakan **[prompt pembuka](panduan-codex/PROMPT-MULAI.md)** untuk memulai sesi baru. Dokumentasi ini melengkapi baseline aplikasi v39; tidak memindahkan data produksi, akses hosting atau riwayat chat secara otomatis.
+
 ## Panduan tim IT
 
 Mulai dari **[Peta kode dan panduan pemeliharaan](source-lengkap/docs/PETA-KODE.md)**. Kode aplikasi dipisahkan per fitur, hubungan antarmodul memakai import eksplisit, dan pemeriksaan otomatis mencegah import melingkar serta baris source yang terlalu panjang. Framework tetap Svelte 5 + Vite.
