@@ -1,6 +1,6 @@
 # Website KSPPS — Svelte
 
-**Sumber revisi v37**, disalin pada 14 Oktober 2026 dari commit `0e835c1377ee254080d1e7e7e3d050f0f97b8ae6`. Folder ini adalah sumber aplikasi terbaru untuk dilanjutkan di Codex. Panduan pindah hosting ada di [docs/PINDAH-HOSTING.md](docs/PINDAH-HOSTING.md).
+**Sumber revisi v38**, disalin pada 14 Oktober 2026 dari commit `7a0afab2d89f09e6d7fd27051f085b1f746b4187`. Folder ini adalah sumber aplikasi terbaru untuk dilanjutkan di Codex. Panduan pindah hosting ada di [docs/PINDAH-HOSTING.md](docs/PINDAH-HOSTING.md).
 
 Website KSPPS Syirkah Kebaikan Indonesia menggunakan Svelte 5 + Vite untuk frontend dan Worker untuk backend. **Daftar pekerjaan dan status fitur ada di [to-do.md](to-do.md).**
 

@@ -25,6 +25,8 @@ Framework frontend tetap **Svelte 5 + Vite**. Backend tetap Worker JavaScript de
 | Warna status                      | `shared/components/Badge.svelte`                                                                | `shared/lib/status-colors.js`                                                                                 | Tidak mengubah aturan server                                               |
 | Masalah akses akun                | `frontend-petugas/src/components/staff-access/StaffAccess.svelte`                               | `frontend-petugas/src/features/staff-access/controller.js`                                                    | `backend/src/access.js`, `backend/src/http/routes/accounts.js`             |
 
+Favicon tab mengikuti mode perangkat: `public/favicon-theme.js` memilih versi terang/gelap. Aset SVG dihasilkan oleh `scripts/generate-favicons.mjs` dari logo asli dalam `public/assets/`. Jalankan `npm run generate:favicons` setelah mengganti logo; jangan mengedit data gambar di dalam SVG secara manual. Keempat HTML pembuka memakai konfigurasi yang sama.
+
 Semua path pada tabel dihitung dari akar project aplikasi. Di repository GitHub ekspor, akar aplikasi berada di **`source-lengkap/`**.
 
 ## Batas tanggung jawab

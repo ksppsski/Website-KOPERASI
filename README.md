@@ -1,10 +1,10 @@
 # Website KSPPS Syirkah Kebaikan Indonesia
 
-Sumber aplikasi sudah disinkronkan dengan **revisi v37** pada 14 Oktober 2026. Kode terbaru berada di **[`source-lengkap/`](source-lengkap/)**. Gunakan folder tersebut sebagai direktori kerja saat melanjutkan pengembangan di Codex.
+Sumber aplikasi sudah disinkronkan dengan **revisi v38** pada 14 Oktober 2026. Kode terbaru berada di **[`source-lengkap/`](source-lengkap/)**. Gunakan folder tersebut sebagai direktori kerja saat melanjutkan pengembangan di Codex.
 
 | Bagian | Lokasi | Status |
 | --- | --- | --- |
-| Aplikasi terbaru | `source-lengkap/` | Svelte 5 + Vite, Worker, skema/migrasi, template dokumen dan pengujian v37 |
+| Aplikasi terbaru | `source-lengkap/` | Svelte 5 + Vite, Worker, skema/migrasi, template dokumen dan pengujian v38 |
 | Website GitHub Pages | `docs/` | Pratinjau statis v18, tanpa login, database atau transaksi aktif |
 | Identitas versi | `VERSI.json` | Versi sumber aplikasi dan versi pratinjau dicatat terpisah |
 | Panduan domain | `PANDUAN-DOMAIN.md` | Domain dan alur penerbitan |
@@ -16,6 +16,8 @@ Domain yang tercatat di `docs/CNAME`: **syirkahkebaikanindonesia.com**. Pembarua
 Mulai dari **[Peta kode dan panduan pemeliharaan](source-lengkap/docs/PETA-KODE.md)**. Kode aplikasi dipisahkan per fitur, hubungan antarmodul memakai import eksplisit, dan pemeriksaan otomatis mencegah import melingkar serta baris source yang terlalu panjang. Framework tetap Svelte 5 + Vite.
 
 ## Revisi yang sudah masuk
+
+- Favicon adaptif v38: logo KSPPS biru muda/biru tua pada mode terang, logo putih pada mode gelap. Berlaku di aplikasi dan pratinjau statis `docs/`.
 
 - Refactor v37: controller kecil, komponen Svelte terpisah, endpoint/aturan server per fitur, dan panduan penelusuran bug.
 - Status normal berwarna hijau/biru; pengingat top up dan peringatan memakai merah.

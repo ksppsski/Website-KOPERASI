@@ -23,7 +23,8 @@
     "build:frontend": "vite build",
     "build:backend": "node backend/scripts/build.mjs",
     "test:avalist": "node tests/avalist-lifecycle.mjs && node tests/avalist-ui.mjs && node tests/avalist-portal.mjs",
-    "check:architecture": "node scripts/check-architecture.mjs"
+    "check:architecture": "node scripts/check-architecture.mjs",
+    "generate:favicons": "node scripts/generate-favicons.mjs"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^6.2.4",
