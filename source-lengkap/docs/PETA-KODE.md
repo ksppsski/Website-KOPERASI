@@ -23,9 +23,20 @@ Framework frontend tetap **Svelte 5 + Vite**. Backend tetap Worker JavaScript de
 | Pengunduran diri                  | `shared/components/workflow/WorkflowPage.svelte`, `frontend-petugas/src/components/withdrawal/` | `shared/features/withdrawal/`                                                                                 | `backend/src/withdrawal.js`                                                |
 | Waktu kerja / KPI                 | `frontend-petugas/src/components/activity/ManagerActivity.svelte`                               | `frontend-petugas/src/features/activity/`                                                                     | `backend/src/activity.js`, `backend/src/manager.js`                        |
 | Warna status                      | `shared/components/Badge.svelte`                                                                | `shared/lib/status-colors.js`                                                                                 | Tidak mengubah aturan server                                               |
+| Mode terang/gelap                 | `shared/components/ThemeToggle.svelte`, `PreviewBanner.svelte`                                   | `shared/lib/theme.js`, `public/theme-preference.js`                                                            | Tidak memakai API atau mengubah data aplikasi                              |
 | Masalah akses akun                | `frontend-petugas/src/components/staff-access/StaffAccess.svelte`                               | `frontend-petugas/src/features/staff-access/controller.js`                                                    | `backend/src/access.js`, `backend/src/http/routes/accounts.js`             |
 
 Favicon tab mengikuti mode perangkat. `public/assets/kspps-symbol.svg` berisi bentuk vektor logo, `scripts/generate-favicons.mjs` menghasilkan varian terang/gelap secara otomatis saat build.
+
+## Tema terang dan gelap
+
+Pembaruan 23 Oktober 2026 memakai `ThemeToggle.svelte` sekali pada `PortalFrame.svelte` untuk Anggota/Petugas, serta pada `Landing.svelte` dan `frontend-avalist/src/Portal.svelte`. Komponen berada di luar konten rute agar pergantian tema tidak membuat ulang formulir.
+
+`shared/lib/theme.js` memiliki controller per instance. Nilai `light` atau `dark` disimpan dengan key `kspps-theme`, diterapkan ke `<html data-theme>` dan `color-scheme`, lalu disinkronkan melalui event penyimpanan browser. Tanpa pilihan manual, tema mengikuti perangkat. Listener media dan penyimpanan dibersihkan saat komponen dilepas. Jika penyimpanan ditolak atau penuh, perubahan tema tetap bekerja pada laman tersebut.
+
+Keempat HTML memuat `public/theme-preference.js` secara sinkron sebelum CSS agar tema awal sudah sesuai pilihan. Vite menyalin script publik ke `/theme-preference.js` pada build aplikasi dan memakai `./theme-preference.js` pada build Pages dengan base relatif. Pertahankan bootstrap dan controller tetap selaras; `tests/theme-preference.mjs` menguji kesamaan keduanya.
+
+Token dasar serta permukaan portal berada di `shared/styles/portal.css`. Tampilan fitur memakai stylesheet bersama dan stylesheet tiap frontend. Jalankan `npm run test:theme` dari `source-lengkap/` untuk memeriksa perilaku tema, lalu build frontend/Pages dan periksa tampilan browser bila warna atau posisi tombol berubah.
 
 ## Tanggung jawab file
 

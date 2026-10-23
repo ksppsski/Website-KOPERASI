@@ -1,10 +1,12 @@
 <script>
   import PreviewBanner from './PreviewBanner.svelte';
   import Region from './Region.svelte';
+  import ThemeToggle from './ThemeToggle.svelte';
   let { children } = $props();
 </script>
 
 <PreviewBanner />
+<ThemeToggle />
 <a class="skip-link" href="#page-main">Lewati ke konten</a>
 {@render children()}
 <dialog id="portal-dialog" aria-labelledby="dialog-title">

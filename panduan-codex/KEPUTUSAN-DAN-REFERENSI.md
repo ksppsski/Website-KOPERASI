@@ -2,6 +2,8 @@
 
 Disusun dari percakapan yang tersedia dan dicocokkan dengan source v39 pada 14 Oktober 2026. Urutan di bawah merekam perubahan keputusan; bukan transkrip verbatim setiap pesan.
 
+Pembaruan **23 Oktober 2026**: permintaan berdasarkan rekaman layar dibatasi pada pergantian mode terang dan gelap di seluruh laman. Gunakan perilaku bersama di `shared/lib/theme.js` dan `ThemeToggle.svelte`; fitur ini tidak mengubah aturan bisnis atau akses.
+
 ## Keputusan terbaru yang menggantikan ide sebelumnya
 
 | Topik | Keputusan yang berlaku |
@@ -12,6 +14,7 @@ Disusun dari percakapan yang tersedia dan dicocokkan dengan source v39 pada 14 O
 | Istilah layanan | Gunakan anggota koperasi dan penyertaan modal pada fitur website saat ini; istilah investor pada nama template sumber tidak berarti UI harus memakai investor. |
 | Animasi landing | Kartu pada awalnya menutupi portal; klik membuatnya bergeser ke kiri sambil miring; lingkaran latar berputar. Pertahankan posisi/interaksi source terakhir. |
 | Warna status | Hijau/toska dan biru untuk status normal/aktif/proses; merah untuk peringatan termasuk top up. Gunakan pemetaan yang sudah terpusat. |
+| Tema halaman | Tombol kanan atas bertuliskan aksesibel `Aktifkan mode gelap` atau `Aktifkan mode terang`. Ikuti perangkat sebelum pengguna memilih; simpan pilihan browser dan terapkan pada seluruh portal serta landing tanpa mereset formulir. |
 | Penawaran penuh | Tetap tampil 72 jam sejak terpenuhi di portal anggota; semua riwayat tetap di Manajer. |
 | KPI/waktu kerja | Panel pemantauan hanya di Manajer, bukan lagi pada dashboard Admin/Finance. |
 | Avalist | Internal kantor; dapat bukan petugas; pendaftaran dengan email; portal sendiri. |

@@ -11,7 +11,7 @@
   border: 1px solid var(--line);
   border-radius: 11px;
   min-width: 0;
-  background: #fff;
+  background: var(--paper);
 }
 .wf-card-head {
   display: flex;
@@ -51,7 +51,7 @@
 }
 .wf-note {
   padding: 14px 16px;
-  background: #eef6fa;
+  background: var(--workflow-note);
   border-left: 3px solid var(--cyan);
   border-radius: 5px;
   margin: 17px 0;
@@ -174,7 +174,7 @@
   padding: 14px 16px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fff;
+  background: var(--paper);
 }
 .wf-signature span {
   display: block;
@@ -234,7 +234,7 @@
   padding: 16px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fff;
+  background: var(--paper);
   min-width: 0;
 }
 .wf-ktp > span {
@@ -304,35 +304,35 @@
 
 /* Peringatan tetap disertai teks; warna bukan satu-satunya pembeda. */
 .status-alert-red {
-  background: #fff1f2;
-  border: 1px solid #fca5a5;
-  border-left: 4px solid #dc2626;
-  color: #991b1b;
+  background: var(--alert-red-bg);
+  border: 1px solid var(--alert-red-line);
+  border-left: 4px solid var(--alert-red-accent);
+  color: var(--alert-red-text);
 }
 .status-alert-red h2,
 .status-alert-red strong {
-  color: #991b1b;
+  color: var(--alert-red-text);
 }
 .status-alert-red .wf-card {
-  border-color: #fecaca;
+  border-color: var(--alert-card-line);
 }
 .status-alert-red .btn:not(.secondary) {
-  background: #b91c1c;
-  border-color: #b91c1c;
-  color: #fff;
+  background: var(--danger-button);
+  border-color: var(--danger-button);
+  color: var(--on-brand);
 }
 .status-alert-red .btn:not(.secondary):hover {
-  background: #991b1b;
-  border-color: #991b1b;
+  background: var(--danger-button-hover);
+  border-color: var(--danger-button-hover);
 }
 .status-alert-blue {
-  background: #edf8fc;
-  border: 1px solid #9bd1e5;
+  background: var(--alert-blue-bg);
+  border: 1px solid var(--alert-blue-line);
   border-left: 4px solid var(--status-blue-bg);
-  color: #075775;
+  color: var(--alert-blue-text);
 }
 .status-alert-blue strong {
-  color: #075775;
+  color: var(--alert-blue-text);
 }
 
 /* Offers use the existing portal colors, spacing and typography. */
@@ -342,22 +342,22 @@
   gap: 18px;
 }
 .offer-card {
-  border: 1px solid #dce5ec;
+  border: 1px solid var(--offer-line);
   border-radius: 16px;
   padding: 22px;
-  background: #fff;
+  background: var(--paper);
   min-width: 0;
 }
 .offer-card h3 {
   font-size: 19px;
   margin: 18px 0 22px;
-  color: #183e7c;
+  color: var(--navy);
   overflow-wrap: anywhere;
 }
 .offer-code {
   font-size: 12px;
   font-weight: 700;
-  color: #267f99;
+  color: var(--offer-code);
   letter-spacing: 0.035em;
   overflow-wrap: anywhere;
 }
@@ -368,11 +368,11 @@
 }
 .offer-remaining > span {
   font-size: 13px;
-  color: #6f8296;
+  color: var(--offer-muted);
 }
 .offer-remaining > strong {
   font-size: 27px;
-  color: #183e7c;
+  color: var(--navy);
   overflow-wrap: anywhere;
 }
 .offer-card .progress {
@@ -392,13 +392,13 @@
 .offer-form-heading {
   display: grid;
   gap: 7px;
-  background: #f3f8fb;
+  background: var(--offer-form-bg);
   border-radius: 12px;
   padding: 16px;
   margin: 18px 0;
 }
 .offer-form-heading small {
-  color: #60788a;
+  color: var(--offer-form-muted);
 }
 .work-period-actions {
   display: flex;
@@ -412,7 +412,7 @@
   overflow-wrap: anywhere;
   font-family: monospace;
   font-size: 13px;
-  color: #4b6478;
+  color: var(--access-code);
 }
 .staff-role-picker select {
   max-width: 100%;
@@ -427,7 +427,7 @@
 
 /* Maturity choices retain the existing portal palette and spacing. */
 .maturity-options {
-  border: 1px solid #dbe6ee;
+  border: 1px solid var(--maturity-line);
   border-radius: 12px;
   padding: 18px;
   margin: 18px 0;
@@ -474,4 +474,10 @@
   .maturity-period .btn {
     width: 100%;
   }
+}
+
+/* Uploaded signatures use dark ink on a light document surface. */
+:root[data-theme='dark'] .wf-signature img {
+  background: var(--signature-bg);
+  border-radius: 4px;
 }

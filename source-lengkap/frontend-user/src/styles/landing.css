@@ -1014,7 +1014,7 @@ html > body {
   height: calc(13 * var(--ski-unit));
   right: calc(23 * var(--ski-unit));
   top: calc(60 * var(--ski-unit));
-  box-shadow: 0 0 0 calc(8 * var(--ski-unit)) light-dark(#e1f3f8, #17404d);
+  box-shadow: 0 0 0 calc(8 * var(--ski-unit)) var(--ski-art-ring);
 }
 #ski-web .ski-art[data-ski-motion].is-open .ski-orbit {
   transform: rotate(360deg);
@@ -1033,7 +1033,7 @@ html > body {
   border-radius: calc(16 * var(--ski-unit));
   font: inherit;
   cursor: pointer;
-  box-shadow: 0 calc(22 * var(--ski-unit)) calc(35 * var(--ski-unit)) #002d5a22;
+  box-shadow: 0 calc(22 * var(--ski-unit)) calc(35 * var(--ski-unit)) var(--ski-hero-shadow);
   transform: translate3d(calc(129 * var(--ski-unit)), calc(49 * var(--ski-unit)), 0) rotate(0deg);
   transition: transform var(--ski-motion-time) var(--ski-motion-ease);
   -webkit-tap-highlight-color: transparent;
@@ -1074,7 +1074,7 @@ html > body {
   padding: calc(21 * var(--ski-unit)) calc(21 * var(--ski-unit)) calc(13 * var(--ski-unit));
   border-width: calc(1 * var(--ski-unit));
   border-radius: calc(15 * var(--ski-unit));
-  box-shadow: 0 calc(18 * var(--ski-unit)) calc(38 * var(--ski-unit)) #00315d13;
+  box-shadow: 0 calc(18 * var(--ski-unit)) calc(38 * var(--ski-unit)) var(--ski-soft-shadow);
   opacity: 0;
   visibility: hidden;
   transform-origin: 0 0;
@@ -1199,12 +1199,38 @@ html > body {
 
 #ski-web {
   --ski-navy: #004080;
+  --ski-art-ring: light-dark(#e1f3f8, #17404d);
+  --ski-hero-shadow: light-dark(#002d5a22, #000b1b66);
+  --ski-soft-shadow: light-dark(#00315d13, #000b1b4d);
+  --ski-topline-text: light-dark(#e3f6ff, #e3f6ff);
+  --ski-topline-accent: light-dark(#8ce3ef, #8ce3ef);
+  --ski-on-brand: light-dark(#fff, #fff);
+  --ski-button-hover: light-dark(#07558f, #206aab);
+  --ski-cyan-text: light-dark(#002e4e, #002e4e);
+  --ski-cyan-hover: light-dark(#37c7df, #6bd8e9);
+  --ski-art-line: light-dark(#d8e9ef, #315060);
+  --ski-brand-deep: light-dark(#002b59, #002b59);
+  --ski-orbit-line: light-dark(#02b3d230, #02b3d230);
+  --ski-membership-accent: light-dark(#8ee4f0, #8ee4f0);
+  --ski-access-shadow: light-dark(#00315d16, #000b1b59);
+  --ski-join-accent: light-dark(#9ae5f0, #9ae5f0);
+  --ski-join-link: light-dark(#8be0ed, #8be0ed);
+  --ski-join-line: light-dark(#4981b3, #4981b3);
+  --ski-join-muted: light-dark(#bbd2e6, #bbd2e6);
+  --ski-overlay: light-dark(#001e3a66, #030b16b3);
+  --ski-dialog-shadow: light-dark(#00234344, #000b1b99);
+  --ski-info-bg: light-dark(#edf7fb, #173240);
+  --ski-info-line: light-dark(#d9ebf1, #2c4b5b);
+  --ski-banner-deep: light-dark(#07365f, #07365f);
+  --ski-banner-line: light-dark(#ffffff26, #ffffff26);
+  --ski-banner-soft: light-dark(#ffffff14, #ffffff14);
+
   --ski-cyan: #02b3d2;
-  --ski-ink: light-dark(#102e4a, #e7f2fb);
-  --ski-muted: light-dark(#617488, #aabcca);
-  --ski-paper: light-dark(#ffffff, #111f2d);
+  --ski-ink: light-dark(#102e4a, #e3edf9);
+  --ski-muted: light-dark(#617488, #adbed1);
+  --ski-paper: light-dark(#ffffff, #122238);
   --ski-soft: light-dark(#f4f8fb, #162735);
-  --ski-line: light-dark(#dee8ef, #304353);
+  --ski-line: light-dark(#dee8ef, #304760);
   --ski-mist: light-dark(#e9f6fa, #173d4b);
   --ski-link: light-dark(#004080, #7bd7eb);
   background: var(--ski-paper);
@@ -1256,7 +1282,7 @@ html > body {
 }
 #ski-web .ski-topline {
   background: var(--ski-navy);
-  color: #e3f6ff;
+  color: var(--ski-topline-text);
   padding: 7px 5.5%;
   display: flex;
   justify-content: space-between;
@@ -1266,7 +1292,7 @@ html > body {
   letter-spacing: 0.025em;
 }
 #ski-web .ski-topline span:last-child {
-  color: #8ce3ef;
+  color: var(--ski-topline-accent);
 }
 #ski-web .ski-header {
   min-height: 96px;
@@ -1300,13 +1326,13 @@ html > body {
   border: 0;
   border-radius: 7px;
   background: var(--ski-navy);
-  color: #fff;
+  color: var(--ski-on-brand);
   font-weight: 600;
   font-size: 12px;
   min-height: 44px;
 }
 #ski-web .ski-button:hover {
-  background: #07558f;
+  background: var(--ski-button-hover);
 }
 #ski-web .ski-button.ski-outline {
   border: 1px solid var(--ski-line);
@@ -1315,10 +1341,10 @@ html > body {
 }
 #ski-web .ski-button.ski-cyan {
   background: var(--ski-cyan);
-  color: #002e4e;
+  color: var(--ski-cyan-text);
 }
 #ski-web .ski-button.ski-cyan:hover {
-  background: #37c7df;
+  background: var(--ski-cyan-hover);
 }
 #ski-web .ski-menu-button {
   display: none;
@@ -1419,7 +1445,7 @@ html > body {
 }
 #ski-web .ski-orbit {
   position: absolute;
-  border: 1px solid light-dark(#d8e9ef, #315060);
+  border: 1px solid var(--ski-art-line);
   border-radius: 50%;
   width: 330px;
   height: 330px;
@@ -1428,7 +1454,7 @@ html > body {
   content: '';
   position: absolute;
   inset: 28px;
-  border: 1px solid light-dark(#d8e9ef, #315060);
+  border: 1px solid var(--ski-art-line);
   border-radius: 50%;
 }
 #ski-web .ski-dot {
@@ -1439,26 +1465,26 @@ html > body {
   position: absolute;
   right: 23px;
   top: 60px;
-  box-shadow: 0 0 0 8px light-dark(#e1f3f8, #17404d);
+  box-shadow: 0 0 0 8px var(--ski-art-ring);
 }
 #ski-web .ski-membership {
   width: 290px;
   height: 178px;
   padding: 23px;
-  background: linear-gradient(125deg, #004080, #002b59);
-  color: #fff;
+  background: linear-gradient(125deg, var(--ski-navy), var(--ski-brand-deep));
+  color: var(--ski-on-brand);
   border-radius: 14px;
   position: absolute;
   top: 39px;
   left: 4%;
   transform: rotate(-7deg);
-  box-shadow: 0 22px 35px #002d5a22;
+  box-shadow: 0 22px 35px var(--ski-hero-shadow);
   overflow: hidden;
 }
 #ski-web .ski-membership:after {
   content: '';
   position: absolute;
-  border: 23px solid #02b3d230;
+  border: 23px solid var(--ski-orbit-line);
   width: 170px;
   height: 170px;
   border-radius: 60px;
@@ -1467,7 +1493,7 @@ html > body {
   top: 22px;
 }
 #ski-web .ski-membership span {
-  color: #8ee4f0;
+  color: var(--ski-membership-accent);
   font-size: 11px;
 }
 #ski-web .ski-access {
@@ -1476,7 +1502,7 @@ html > body {
   bottom: 5px;
   width: 267px;
   background: var(--ski-paper);
-  box-shadow: 0 18px 44px #00315d16;
+  box-shadow: 0 18px 44px var(--ski-access-shadow);
   padding: 19px 20px 12px;
   border-radius: 12px;
   border: 1px solid var(--ski-line);
@@ -1685,12 +1711,12 @@ html > body {
 }
 #ski-web .ski-join {
   background: var(--ski-navy);
-  color: #fff;
+  color: var(--ski-on-brand);
   padding-top: 37px;
   padding-bottom: 35px;
 }
 #ski-web .ski-join .ski-eyebrow {
-  color: #9ae5f0;
+  color: var(--ski-join-accent);
 }
 #ski-web .ski-join h2 {
   max-width: 350px;
@@ -1714,9 +1740,9 @@ html > body {
   align-items: flex-start;
 }
 #ski-web .ski-step-number {
-  color: #8be0ed;
+  color: var(--ski-join-link);
   font-size: 11px;
-  border-top: 1px solid #4981b3;
+  border-top: 1px solid var(--ski-join-line);
   padding-top: 5px;
   min-width: 25px;
 }
@@ -1726,7 +1752,7 @@ html > body {
   margin-bottom: 5px;
 }
 #ski-web .ski-step p {
-  color: #bbd2e6;
+  color: var(--ski-join-muted);
   font-size: 11px;
   line-height: 1.7;
 }
@@ -1810,7 +1836,7 @@ html > body {
   position: absolute;
   inset: 0;
   z-index: 20;
-  background: #001e3a66;
+  background: var(--ski-overlay);
   padding: 110px 24px 24px;
   display: flex;
   align-items: flex-start;
@@ -1823,7 +1849,7 @@ html > body {
   max-width: 100%;
   padding: 27px;
   border-radius: 15px;
-  box-shadow: 0 24px 70px #00234344;
+  box-shadow: 0 24px 70px var(--ski-dialog-shadow);
 }
 #ski-web .ski-dialog-top {
   display: flex;
@@ -2132,11 +2158,11 @@ html > body {
   height: 360px;
 }
 #ski-web .ski-orbit {
-  background: light-dark(#edf7fb, #173240);
+  background: var(--ski-info-bg);
   border-color: transparent;
 }
 #ski-web .ski-orbit:after {
-  border-color: light-dark(#d9ebf1, #2c4b5b);
+  border-color: var(--ski-info-line);
   inset: -12px;
 }
 #ski-web .ski-membership {
@@ -2155,7 +2181,7 @@ html > body {
   bottom: 3px;
   padding: 21px 21px 13px;
   border-radius: 15px;
-  box-shadow: 0 18px 38px #00315d13;
+  box-shadow: 0 18px 38px var(--ski-soft-shadow);
 }
 #ski-web .ski-access-row {
   font-size: 12px;
@@ -2247,7 +2273,7 @@ html > body {
   margin: 0 5.5%;
   padding: 32px;
   border-radius: 18px;
-  background: linear-gradient(110deg, #004080, #07365f);
+  background: linear-gradient(110deg, var(--ski-navy), var(--ski-banner-deep));
 }
 #ski-web .ski-join h2 {
   font-size: 27px;
@@ -2260,7 +2286,7 @@ html > body {
   gap: 23px;
   margin-top: 28px;
   padding-top: 25px;
-  border-top: 1px solid #ffffff26;
+  border-top: 1px solid var(--ski-banner-line);
 }
 #ski-web .ski-step {
   gap: 10px;
@@ -2274,7 +2300,7 @@ html > body {
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: #ffffff14;
+  background: var(--ski-banner-soft);
   font-size: 11px;
 }
 #ski-web .ski-step h3 {
@@ -2533,4 +2559,26 @@ html > body {
 body {
   margin: 0;
   padding: 1rem;
+}
+
+/* Shared theme control uses the same KSPPS palette on the public page. */
+:root {
+  --line: light-dark(#e3eaf0, #304760);
+  --paper: light-dark(#fff, #122238);
+  --navy: light-dark(#183e7c, #a9ccff);
+  --mist: light-dark(#eaf5f9, #1b3b4b);
+  --cyan: light-dark(#51b0ce, #68c4dd);
+  --background: light-dark(#fff, #0b1728);
+}
+#ski-web .ski-header {
+  padding-right: calc(5.5% + 60px);
+}
+#ski-web .ski-topline {
+  padding-right: calc(5.5% + 60px);
+}
+@media (max-width: 680px) {
+  #ski-web .ski-header,
+  #ski-web .ski-topline {
+    padding-right: calc(6% + 52px);
+  }
 }

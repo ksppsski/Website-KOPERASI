@@ -14,15 +14,20 @@
 
 <style>
   .static-preview-banner {
-    padding: 14px 24px;
-    background: #eaf3fb;
-    color: #183e7c;
-    border-bottom: 1px solid #bad5ea;
+    padding: 14px 84px 14px 24px;
+    background: var(--mist, #eaf3fb);
+    color: var(--navy, #183e7c);
+    border-bottom: 1px solid var(--line, #bad5ea);
     font:
       14px/1.5 system-ui,
       sans-serif;
   }
   strong {
     display: block;
+  }
+  @media (max-width: 600px) {
+    .static-preview-banner {
+      padding-right: 72px;
+    }
   }
 </style>

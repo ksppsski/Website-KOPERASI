@@ -2,6 +2,8 @@
 
 Sumber aplikasi sudah disinkronkan dengan **revisi v39** pada 14 Oktober 2026. Kode terbaru berada di **[`source-lengkap/`](source-lengkap/)**. Gunakan folder tersebut sebagai direktori kerja saat melanjutkan pengembangan di Codex.
 
+Pembaruan **23 Oktober 2026** menambahkan mode terang dan gelap pada landing serta seluruh portal, termasuk layar masuk. Tombol di kanan atas menyimpan pilihan pada browser; sebelum dipilih, tampilan mengikuti tema perangkat. Perubahan tersedia pada source dan build pratinjau, dengan deployment aplikasi sebagai langkah terpisah.
+
 | Bagian | Lokasi | Status |
 | --- | --- | --- |
 | Aplikasi terbaru | `source-lengkap/` | Svelte 5 + Vite, Worker, skema/migrasi, template dokumen dan pengujian v39 |
@@ -21,6 +23,7 @@ Mulai dari **[Peta kode dan panduan pemeliharaan](source-lengkap/docs/PETA-KODE.
 
 ## Revisi yang sudah masuk
 
+- Mode terang/gelap memakai komponen dan pengelola preferensi bersama. Pilihan bertahan saat berpindah laman, disinkronkan antar-tab, dan tidak menghapus isian formulir. Jika penyimpanan browser ditolak, tombol tetap bekerja pada laman yang sedang terbuka.
 - Tampilan memakai komponen/snippet Svelte; state dan layanan terpisah untuk setiap portal. Listener, timer dan permintaan API dibersihkan saat portal ditutup.
 - API transport, koordinasi state dan tampilan memiliki tanggung jawab terpisah.
 - Favicon vektor ringkas, dihasilkan otomatis saat build: logo KSPPS biru muda/biru tua pada mode terang, logo putih pada mode gelap. Berlaku di aplikasi dan pratinjau statis `docs/`.
@@ -53,6 +56,8 @@ Build backend lengkap (`npm run build`) memerlukan file tanda tangan privat yang
 `npm run dev` menjalankan frontend lokal. API, identitas pengguna, database D1 dan penyimpanan R2 memerlukan lingkungan backend yang sesuai. Build menghasilkan empat HTML pembuka dan bundle Worker di `dist/server/index.js`; hasil build tidak perlu diunggah sebagai source.
 
 Dari root repository juga tersedia `npm run setup`, `npm run check`, `npm run build`, `npm run dev`, dan `npm run test:app`. `npm test` di root hanya memeriksa pratinjau statis. Gunakan `npm run test:all` untuk memeriksa pratinjau dan aplikasi terbaru sekaligus.
+
+Pengujian khusus tema tersedia melalui `npm run test:theme` dari `source-lengkap/` dan ikut dalam suite aplikasi. Tes mencakup preferensi perangkat, penyimpanan, sinkronisasi tab, pembersihan listener, tampilan awal sebelum CSS, serta isian formulir saat tema diganti.
 
 ## Penerbitan dan data
 
