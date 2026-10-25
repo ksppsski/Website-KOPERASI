@@ -28,6 +28,10 @@ Framework frontend tetap **Svelte 5 + Vite**. Backend tetap Worker JavaScript de
 
 Favicon tab mengikuti mode perangkat. `public/assets/kspps-symbol.svg` berisi bentuk vektor logo, `scripts/generate-favicons.mjs` menghasilkan varian terang/gelap secara otomatis saat build.
 
+## Tata letak pendaftaran
+
+Tata letak pendaftaran memakai modifier `auth-layout--wide` dari prop `wide` pada `MemberAuthLayout.svelte`. Aturan di `portal.css` membuat panel kiri sticky, setinggi layar minimal, dan tidak meregang mengikuti formulir. Tinggi layar paling banyak 600 px memakai scroll dokumen untuk menjaga semua isi terjangkau; lebar paling banyak 760 px tetap satu kolom. Login Anggota, Petugas dan Avalist tidak memakai modifier ini.
+
 ## Tema terang dan gelap
 
 `shared/lib/theme-motion.js` mengurus efek visual terpisah dari preferensi: circular reveal berpusat pada tombol selama 650 ms, fallback warna 420 ms dan penerapan langsung untuk pengurangan gerak. `ThemeToggle.svelte` menunggu `tick()` sebelum snapshot baru, mempertahankan fokus dan menahan klik berulang selama animasi. Pseudo-element dan gerakan ikon berada di `shared/styles/theme-motion.css`. Dispose melewati transisi dan membersihkan animation/timer.

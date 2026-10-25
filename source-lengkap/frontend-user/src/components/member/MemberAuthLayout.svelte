@@ -6,7 +6,7 @@
 </script>
 
 {#if context}
-  <div class="auth-layout">
+  <div class="auth-layout" class:auth-layout--wide={wide}>
     <aside class="auth-aside">
       <a href="index.html"><Brand white={true} /></a>
       <div>
