@@ -1,5 +1,9 @@
 # Keputusan, preferensi dan referensi proyek
 
+## Gerakan tema dan logo, 26 Oktober 2026
+
+Permintaan lanjutan berdasarkan tangkapan layar: perpindahan tema dimulai dari pusat ikon lalu menyebar halus ke seluruh halaman; logo pada tema gelap harus putih seperti landing. Gunakan aset putih transparan yang sudah tersedia, pertahankan tema terang, dan hormati pengurangan gerak. Jangan menambahkan kotak putih pada logo portal.
+
 ## Penulisan antarmuka, 25 Oktober 2026
 
 Pengguna meminta semua status yang memberi kesan website masih dikembangkan dihapus. UI tidak lagi memakai penanda pratinjau, prototipe, konsep, demo atau simulasi. Pesan fungsi tetap jujur: formulir statis tidak mengirim data; catatan pada laman belum dikirim; draf belum disahkan. Perubahan ini tidak mengaktifkan backend, mengganti autentikasi atau menjadikan ringkasan lokal sebagai akad.

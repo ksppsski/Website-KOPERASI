@@ -6,6 +6,8 @@ Pembaruan **23 Oktober 2026** menambahkan mode terang dan gelap pada landing ser
 
 Pembaruan **25 Oktober 2026** menghapus banner, badge, strip dan footer berlabel pengembangan dari seluruh laman. Label masuk, bantuan, pendaftaran dan dialog memakai bahasa layanan. Pada hasil statis, formulir tetap tidak mengumpulkan data atau menghubungi API; pesan fungsi yang tidak tersedia menjelaskan batas alamat tersebut. Catatan lokal dan draf yang belum disahkan tetap dibedakan dari data yang sudah diterima koperasi.
 
+Penyempurnaan **26 Oktober 2026**: pergantian tema menyebar dari pusat tombol selama 650 ms dengan gerakan ikon. Peramban tanpa View Transitions memakai perpindahan warna 420 ms; preferensi pengurangan gerak menerapkan tema langsung. Logo portal memakai aset putih transparan pada tema gelap, termasuk layar masuk, tanpa latar kotak putih.
+
 | Bagian | Lokasi | Status |
 | --- | --- | --- |
 | Aplikasi terbaru | `source-lengkap/` | Svelte 5 + Vite, Worker, skema/migrasi, template dokumen dan pengujian v39 |

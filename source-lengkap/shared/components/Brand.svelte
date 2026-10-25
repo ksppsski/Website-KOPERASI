@@ -2,10 +2,26 @@
   let { white = false } = $props();
 </script>
 
-<img
+<span
   class="brand-logo"
-  src="assets/kspps-logo-{white ? 'white' : 'color'}-web.png"
-  alt="KSPPS Syirkah Kebaikan Indonesia"
-  width="720"
-  height={white ? 256 : 255}
-/>
+  class:brand-logo--white={white}
+  role="img"
+  aria-label="KSPPS Syirkah Kebaikan Indonesia"
+>
+  <img
+    class="brand-logo-image brand-logo-image--color"
+    src="assets/kspps-logo-color-web.png"
+    alt=""
+    aria-hidden="true"
+    width="720"
+    height="255"
+  />
+  <img
+    class="brand-logo-image brand-logo-image--white"
+    src="assets/kspps-logo-white-web.png"
+    alt=""
+    aria-hidden="true"
+    width="720"
+    height="256"
+  />
+</span>

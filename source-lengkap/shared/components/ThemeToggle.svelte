@@ -1,20 +1,49 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import Icon from './Icon.svelte';
   import { createThemeController } from '../lib/theme.js';
+  import { createThemeMotion } from '../lib/theme-motion.js';
+  import '../styles/theme-motion.css';
 
   let theme = $state('light');
   let controller;
+  let motion;
+  let mounted = false;
+  let switching = $state(false);
   const label = $derived(theme === 'dark' ? 'Aktifkan mode terang' : 'Aktifkan mode gelap');
 
   onMount(() => {
+    mounted = true;
     controller = createThemeController({
       browser: window,
       root: document.documentElement,
       onChange: (value) => (theme = value),
     });
-    return () => controller.dispose();
+    motion = createThemeMotion({
+      browser: window,
+      root: document.documentElement,
+      afterChange: tick,
+    });
+    return () => {
+      mounted = false;
+      motion.dispose();
+      controller.dispose();
+    };
   });
+
+  async function switchTheme(event) {
+    if (!controller || switching) return;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    switching = true;
+    try {
+      await motion.run(() => controller.toggle(), {
+        x: bounds.left + bounds.width / 2,
+        y: bounds.top + bounds.height / 2,
+      });
+    } finally {
+      if (mounted) switching = false;
+    }
+  }
 </script>
 
 <div class="theme-control">
@@ -23,9 +52,15 @@
     type="button"
     aria-label={label}
     title={label}
-    onclick={() => controller?.toggle()}
+    aria-disabled={switching}
+    aria-busy={switching}
+    onclick={switchTheme}
   >
-    <Icon name={theme === 'dark' ? 'sun' : 'moon'} />
+    {#key theme}
+      <span class="theme-icon" aria-hidden="true"
+        ><Icon name={theme === 'dark' ? 'sun' : 'moon'} /></span
+      >
+    {/key}
   </button>
 </div>
 
@@ -51,6 +86,17 @@
   }
   .theme-toggle:hover {
     background: var(--mist, #eaf5f9);
+  }
+  .theme-toggle[aria-disabled='true'] {
+    opacity: 1;
+    cursor: progress;
+  }
+  .theme-icon {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    view-transition-name: kspps-theme-icon;
   }
   .theme-toggle:focus-visible {
     outline: 3px solid var(--cyan, #51b0ce);
