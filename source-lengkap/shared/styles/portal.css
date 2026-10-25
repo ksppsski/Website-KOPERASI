@@ -457,6 +457,20 @@ textarea:focus-visible {
   font-size: 12px;
   margin-top: 50px;
 }
+.auth-layout--wide .auth-aside {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  min-height: 100dvh;
+  gap: 32px;
+}
+@media (max-height: 600px) {
+  .auth-layout--wide .auth-aside {
+    position: relative;
+    align-self: stretch;
+    justify-content: flex-start;
+  }
+}
 .auth-main {
   display: flex;
   flex-direction: column;
