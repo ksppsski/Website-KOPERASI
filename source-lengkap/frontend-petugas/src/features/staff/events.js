@@ -109,7 +109,7 @@ export function bindStaffEvents({
       if (makeDraft(f.dataset.id, data.finalCheck)) {
         closeDialog();
         go('akad');
-        toast('Draf akad contoh dibuat.');
+        toast('Ringkasan draf dibuat.');
       } else {
         const el = $('#decision-error');
         el.textContent = 'Periksa persetujuan pengajuan dan verifikasi dana.';

@@ -1,79 +1,134 @@
 {
-  "member-empty:masuk": ["5940b71868d4d5ea8e3a02d6039e508ca807a2f6fdbd0a6eec9ff9b8c4bc116a"],
-  "member-empty:ringkasan": ["6b21326ca5053b69ff63ebf9e01f7f6c258fa22805a2194215d388494b49623d"],
-  "member-empty:simpanan": ["2aa0faa27f09e6b98766c8a57ebf910ab30af53bc8f8cfad8f097f551eff0765"],
-  "member-empty:modal": ["d9e2ad1d4c6dcf3d61e78fcdb66c0e3d1af6ae2a7a318c1e613d467d8a5c9a06"],
-  "member-empty:pembiayaan": ["d8b67954df750d23a430ca1512ccadf14ff11cebc6e16320ea7cb8503cc97f6e"],
-  "member-empty:dokumen": ["85aceb21536e22f1b1e25a49a3b8b1602d874f13ad427b5ebc75c54c45b5f6d9"],
-  "member-empty:profil": ["7e2ffdc951421444a2e830601c065eb74a3eefa13548bffd5af104cebb0cd61f"],
-  "member-empty:bantuan": ["fa765dd71af400a7b595d5088083b7122921171fb47c5625a36d301ea5825707"],
-  "member-empty:pengunduran": ["13dc8f81e7dab3efac09190b222eb1d6da7ef56521e1d011a102fee709ee1dfb"],
-  "member-empty:laporan": ["ec6930c5f738b4ced6a7ff9885de84ae68c68bf772c4fe849ac703213046bcbc"],
-  "member-active:laporan": ["21304d404b61b9ca49600474bf17284359513badbce9b95cc355a589e0e921cf"],
-  "member-active:ringkasan": ["068a2f388a6fb8a372d86a20c6ea24d985bb6b3fa4eb4afebf13d48bf21658b0"],
-  "member-active:simpanan": ["7e1ccb01f0b6ea7ee711241d919877f14b7003cb63aa186b68e8d77cfc3a52c9"],
-  "member-active:modal": [
-    "d7acfaa95bae06b7bdd33c3e2b270ad7dc47a226a8b5719f49cc437fc7419cb8",
-    "4456e07e2880cf4e59ca620650f389ccb64eea168b4546ab413bf5c314ab9fdd"
+  "member-empty:masuk": [
+    "d3d0b9f2e2509409cddd0f1367afa2cf5323ebecb67afe47288876196141015e"
   ],
-  "member-active:pembiayaan": ["3e587032c275b9bb6bb30850f07eca3e3bc47384042a5cb4d8437a850fd9a3d5"],
-  "member-active:dokumen": ["5734db5286371005b5da5a57060a7404ca7d6da52041e85a603a5136c099fadf"],
-  "member-active:profil": ["ace0732aaee550a792e4037638f615ed4b008d9fd02002c116e777d45aa45544"],
-  "member-active:bantuan": ["db856a7f4fa70588d90a22852597eb350a7d896d5514d8acf47daaadde0426d1"],
-  "member-active:pengunduran": ["af72f1e5211823103946873354c964eeb0f764350862cd16e674f6148e54ddf9"],
+  "member-empty:ringkasan": [
+    "2e597e1296f091ce1d8cb0475a9ccafb647776bc6b2c9e05c031c732825f562e"
+  ],
+  "member-empty:simpanan": [
+    "567fc5faf9cd65d64494ecc6cb8f2590c53e0d72bd9b1da02a360a0e3c34a762"
+  ],
+  "member-empty:modal": [
+    "85349c103ab5cac13070c692899bbf0700dc6f0ebaa760de697bea9c6bee5021"
+  ],
+  "member-empty:pembiayaan": [
+    "70e76fd5331f8b9d99e87bf68a0c132dfe3f207dee52583200c7a2ed085fb54d"
+  ],
+  "member-empty:dokumen": [
+    "351a866fc3f9f3067099694c1214941fc25369867928b4461114d534faf02d4c"
+  ],
+  "member-empty:profil": [
+    "4bf371ad428870c04eba204652fc94f788ea120699723bedb72861edd783c27b"
+  ],
+  "member-empty:bantuan": [
+    "b4f8894ec95420e0afba3e6e3dd54584bab75f693df1bcfe7f9f2f9b315e5010"
+  ],
+  "member-empty:pengunduran": [
+    "8b4b8b592ed9cb8459a1d87bcfdb2a0145a7cfd5ad44a164ccdd4ea8af291977"
+  ],
+  "member-empty:laporan": [
+    "e5047237f565be4d59089ba4392c545664ba1f870b1afa7e8f799f3b22db149c"
+  ],
+  "member-active:laporan": [
+    "1f59047935cd2bff4a84a7f25b6e3645c1af84e7c9f4cb639b9b058afbd45384"
+  ],
+  "member-active:ringkasan": [
+    "a208320471d51ef9514ed4fa0e8d04ab1733200f4a819e96a91590d61fb8362c"
+  ],
+  "member-active:simpanan": [
+    "274d92396c16e7c16bd358c327294117c76e9a91ecc303fdee4bf3b14f653e41"
+  ],
+  "member-active:modal": [
+    "c65153ba508175a52b18a426c8f8e7e33cbf4e832c0e944f6ad420d6ac3f9621"
+  ],
+  "member-active:pembiayaan": [
+    "fd01eee235426fa95af63a8285a8fcde6b197aba161dd66dc86ff33b68d3168e"
+  ],
+  "member-active:dokumen": [
+    "89f03a8a6dd83717a1c82907e01fd6a71164ff2359e9d35defc1c0613f31030f"
+  ],
+  "member-active:profil": [
+    "0dfaecf578199b7564e4c94c0dadf78509b2ce0b62cc7f643d4203adb8d653c3"
+  ],
+  "member-active:bantuan": [
+    "71af8a629a73d59935e589faacebbe21dce5337a7dd5f3a601c25dc4e236310b"
+  ],
+  "member-active:pengunduran": [
+    "808c850762e2e098b4e5514cfc964dc0be77b2abb882ccd3c34214ea40b31177"
+  ],
   "registration:daftar": [
-    "e0e101bb051f558147c5a933ae202dd9ae68193e181b4cb837ca4be239036bc2",
-    "529867ed7b7197178dedd5a4ddaca6132a53ffd473e96456e3ed35e0fb624fc7",
-    "cc42d99389b9327466c8d3e5bb0a67fed517e9ee5f36e8506ef081a7a1c3e635",
-    "18ed7fa05183ee96b7ded3e206ae8a981516c836e486777091385b10d66e7ef8"
+    "7d05cccaa92a6deaf78b9286aac4a2a5a8af8e9183af93bb23d6fc54e0705ec4",
+    "6fe0c96aa5fe27f1128e620fdf2e26ce7317d16eec391110653bc328cb45e640",
+    "ad373f008e1ce541a793c0e05871743ba26219c2ac8e1cd5692c463bedf1ed96",
+    "a3ec4ff726dfb32f2eb25b7ade87e934b18c33127d3b0dd0f55b74effb2cc7ba"
   ],
   "registration:masuk": [
-    "b2907c303e77daac1a827264376a304d1382654de7b431916df06aa3d334464e",
-    "5b11b27e5608a8fa3110563f61f253194c1609983fe0e9b44e13c582f74342ff"
+    "8d5efe149c060403fdbcee6d8cc351e7e2ad9811be4a10d8530b6b324e93db80",
+    "33005fb9a78654cd988af0f1b36e673dbed6d0908f6f8555bd78e050dbf77ecc"
   ],
-  "admin:ringkasan": ["e22165cb7742750358484ff8dee8c5322a815a8bf72938e0bfbd39e371f72883"],
-  "admin:pendaftaran": ["6f8b688f8498c37c48e3312ace75bc0dc3212b5f77335de157f8ce58f045ce67"],
-  "admin:setoran": ["e1a1e197ee8f69691dfb2230f93bc9847000c1b9b8f261166311ad63099fc00e"],
-  "admin:penyertaan": ["feaba1f383ec2d51c362ba160a28ff24b40898d261cf8f1464d4a5d05e5d6621"],
-  "admin:pengunduran": ["593b8ef8784f05786a1e385859b209b9109b63427f9decafd2b3e0a58e34bcd7"],
+  "admin:ringkasan": [
+    "049b6d1e39c8835f63be5fc622e5da2efb79908558a568810f45c0f69a91cf48"
+  ],
+  "admin:pendaftaran": [
+    "0d7b1b62d94da10c2c700bbac7b20642822f121903fe52d6d921d0aef7cdc7a0"
+  ],
+  "admin:setoran": [
+    "af620b01396fc8f6236431f7249a8d4c73d43b1d89fe5d8e71ee0c5a637da4b6"
+  ],
+  "admin:penyertaan": [
+    "8f210241fc97f2cc5d0b3aeee541b7638d86cd596d40b53a628b553b85c6c5d3"
+  ],
+  "admin:pengunduran": [
+    "788e368439547e204b14402d28b10050144659e34ade9fdd5906e4d428199911"
+  ],
   "admin:pengajuan": [
-    "b346e140f373e7627364168427b2143752f7d3944aa664f8cce86cc7d296ab2c",
-    "1f3fcc59a735bd3395cf1d568c71449cb492c60423435c3c977b1e05a3627341"
+    "8e0e64bfced16a622c6328dc39c5ce7fc1b44e3d23e0abed777e043554ee0cc1",
+    "07ae582f6b9782f861f6ed11f97a6e60f93eb881ca6af15267fe9b098aecedd8"
   ],
-  "admin:anggota": ["e0662573621157d55bc5f929fcc20108a11298f5ab4f02c824af917330d51878"],
-  "admin:akad": ["7a458bbb033595acbb5c9f27a4411117462fcd47f33dfc0d7a6f9a5a40f6800e"],
+  "admin:anggota": [
+    "d0bf5f19b0cf8ea0c786bde0860d47e02a2383eebeadc843554bfc277e983901"
+  ],
+  "admin:akad": [
+    "e97b19eed87411fca32e6f7549bc25cdaddcf18d1bc5fb5349665df1a354a86f"
+  ],
   "finance:finance-ringkasan": [
-    "de6966ceff24eb9021b35e05e6e01c49d3b374a445ade74fe13a7c506444bb8f",
-    "c0eb768acde93d5ee6a2b6f40593f863bf48307c430f40ab47a7cd35bae5c43a",
-    "1944038b1de132d034c5cc4b1978647b44d35144efa003152a02bf092b355864"
+    "5e2cd77685e41a3bad8f75fff755747e32c69b223094dc17c8f63fc6c5c6abb2",
+    "448e10606283b1bb6be88c3080ebfc79391f5ebb1cef659dfc0e771f038f34b9",
+    "4726ceeb0af827b32a1e74b884cdd2e5addb776caaa1c4d5028fee8662831e29"
   ],
   "finance:finance-rekonsiliasi": [
-    "7e622d251a6d15aa87d4db8bca5e9aca9a2480ce4f37c95eca4d0e52a20b9f06"
+    "9747244accf778b5b1db0f0593970639dc5957fc919d8836378e81ec74af9c1e"
   ],
   "finance:finance-bagi-hasil": [
-    "41fd5e5beef0f7b44f8a704dea3feea1e5723d61770515fd2d30c995d88b5c9a"
+    "4266eb1641ccd8456a210436f9a0c52a1e90ae3342017aacf4bbd73534325ae8"
   ],
   "finance:finance-pengembalian": [
-    "106e0083f4d0611005f42eb2bf12371c31d028b9f2281e65e170749c2541619b",
-    "c8de62977bbcd6783df2495f4241ef37ecc50d419459fc15f3b65b006cd9a175"
+    "2b26c0f60a224f8a55ea7cee7dbb58f2d61292bafc0adcdad7c322a2273241c8",
+    "c3725a6acec253baa0ff652bcd6c60fbcdfe341248919a35ab7a2ad6d6b3622b"
   ],
   "finance:finance-pengunduran": [
-    "75f872e78c2b0d691b4f951458471c24ae6b3b378883c89ec7e5095914154d61",
-    "b911b08c963f45dbfc2f04608cfd29a07ae3f72d0d5cc916e6deac82bde94f88"
+    "0b220141040490b14973b62e197227e1c96dc77426e04189a191818b6600e8ae",
+    "1f36a75903dd853e98cd1628f2527f6bcd71af3ba2e798d5c632e30a6fc16385"
   ],
   "manager:waktu-kerja": [
-    "786c6512125abcad435c20e886d4b09bc77645b40ccb020c2631ea67806b3697",
-    "b22b6dfb224055de7c79c0327fa4da2eb6073d258ff0dec2adf63f316c08bdaf"
+    "793de0098ed8855b16b4aaf97b2cabf1d1f26cac62d72c9c35670fbc74952ff3",
+    "305947733948382d41cad21252ae2a5eb2675fb4340bfa74ca406398bc259983"
   ],
-  "manager:manager-penawaran": ["3f8a3247a275df2784b76f47bc29531fab48aa19aa829ad1db27e0422fc9c183"],
-  "manager:manager-laporan": ["afbf2353cdc04c278d4a7acc94e07c6a7853876af32d38d25d4d70aa2dcd140d"],
-  "manager:manager-akses": ["6b4dbbc65748f239eb6983a25ed93e7136c5ebec336bdc32c880129ed7d16161"],
+  "manager:manager-penawaran": [
+    "6288b3b443935ed7018a5560833568bbed0ecf86145398e2efbf5e6524a85800"
+  ],
+  "manager:manager-laporan": [
+    "4efe4dbb98b33249a1efefb1fedd24d40c22634a13e6cb1e847945dd58e7614e"
+  ],
+  "manager:manager-akses": [
+    "93e023b198f1acd07305c6dd272ec0d45f26c55445a95df61d6633b003450543"
+  ],
   "manager:manager-jatuh-tempo": [
-    "8e4dafe61e9f2c10947015d8ed3b1f0e086943aafe284f3a73c4d7cd63833552",
-    "d771cb6369c2dd7b47e993b7fcb71a450b4ec7c14442d9ac750f15a57c576188"
+    "36b07f95ab0ca8250debc23fefde8ca788885c6f42e4d33af0920931b8f5b30a",
+    "291ce06a07a532632b90537357a21e76378c02f78081777fad17af8b6b59a8da"
   ],
   "manager:manager-pengunduran": [
-    "e66c82f4ff911233bddb3d86be4ec289f82d43ab484c6b116f516590b3881ace",
-    "a2c7e48493b00a6b480f67a9f54e69612ce67441ad584f087559efd01c07e480"
+    "027f6f56472bf2ba94bb958005bc3e023e269493c543d3ac8af493d3fe4930d6",
+    "5a1b64636731e3d08241c9965e135eb96a94ff73dbc382b5e8c9e9afdefbaead"
   ]
 }

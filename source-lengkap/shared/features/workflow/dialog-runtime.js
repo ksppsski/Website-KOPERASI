@@ -42,7 +42,7 @@ export function createWorkflowDialogRuntime({
   async function ensureReady() {
     if (!state.loaded && !state.unauthorized) await refresh();
     if (state.unauthorized) {
-      show('Akses pengajuan demo', auth());
+      show('Akses pengajuan', auth());
       return false;
     }
     if (state.error) {

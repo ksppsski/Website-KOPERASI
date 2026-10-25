@@ -2,7 +2,6 @@ import {
   IconView,
   BadgeView,
   NavLinkView,
-  DemoStripView,
   Field2View,
   FieldView,
   SelectField2View,
@@ -57,8 +56,6 @@ export function createMemberPresentation({ app }) {
       icoContent: ico ? icon(ico) : '',
       label: label,
     });
-
-  const demoStrip = () => snippetView(DemoStripView, { icon: icon('info') });
 
   function field(label, name, value = '', options = {}) {
     const {
@@ -148,7 +145,6 @@ export function createMemberPresentation({ app }) {
     logo,
     badge,
     navLink,
-    demoStrip,
     field,
     selectField,
     review,

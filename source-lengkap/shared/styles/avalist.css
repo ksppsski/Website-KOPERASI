@@ -25,18 +25,18 @@
   gap: 8px;
   font-size: 0.94rem;
   font-weight: 600;
-  color: var(--navy, #173c4a);
+  color: var(--navy, var(--avalist-label));
 }
 .av-form input:not([type='checkbox']),
 .av-form select,
 .av-form textarea,
 .av-date input {
   width: 100%;
-  border: 1px solid #bccbd1;
+  border: 1px solid var(--avalist-input-line);
   border-radius: 8px;
   padding: 12px;
-  background: white;
-  color: #183640;
+  background: var(--paper);
+  color: var(--avalist-input-text);
   font: inherit;
   min-width: 0;
 }
@@ -50,7 +50,7 @@
   display: block;
   font-size: 0.875rem;
   font-weight: 400;
-  color: #56717d;
+  color: var(--avalist-muted);
   line-height: 1.5;
   margin-top: 4px;
 }
@@ -66,10 +66,10 @@
   flex-shrink: 0;
   width: 17px;
   height: 17px;
-  accent-color: #007f86;
+  accent-color: var(--status-green-bg);
 }
 .av-form fieldset {
-  border: 1px solid #d5dfe3;
+  border: 1px solid var(--avalist-fieldset-line);
   border-radius: 8px;
   padding: 16px;
   display: grid;
@@ -81,8 +81,8 @@
 .av-current {
   margin: 0;
   padding: 12px 16px;
-  background: #edf6f7;
-  border-left: 3px solid #007f86;
+  background: var(--avalist-current-bg);
+  border-left: 3px solid var(--status-green-bg);
   border-radius: 4px;
   font-size: 0.94rem;
 }
@@ -98,18 +98,18 @@
 }
 .av-tabs button {
   padding: 11px 16px;
-  background: white;
-  border: 1px solid #c6d7df;
+  background: var(--paper);
+  border: 1px solid var(--avalist-tab-line);
   border-radius: 7px;
   font-size: 0.94rem;
   font-weight: 600;
-  color: #305868;
+  color: var(--avalist-tab-text);
   cursor: pointer;
 }
 .av-tabs button.active {
-  background: #007f86;
-  color: white;
-  border-color: #007f86;
+  background: var(--status-green-bg);
+  color: var(--on-brand);
+  border-color: var(--status-green-bg);
 }
 .av-table-wrap {
   overflow-x: auto;
@@ -122,14 +122,14 @@
 .av-table th {
   font-size: 0.8rem;
   white-space: nowrap;
-  background: #f0f5f7;
+  background: var(--avalist-table-bg);
   text-align: left;
-  color: #466572;
+  color: var(--avalist-table-text);
 }
 .av-table td,
 .av-table th {
   padding: 15px 18px;
-  border-bottom: 1px solid #e3eaed;
+  border-bottom: 1px solid var(--avalist-table-line);
   vertical-align: top;
 }
 .av-table .badge {
@@ -174,25 +174,25 @@
   font-weight: 600;
 }
 .av-month-controls select {
-  border: 1px solid #bccbd1;
+  border: 1px solid var(--avalist-input-line);
   border-radius: 8px;
   padding: 10px 12px;
-  background: white;
+  background: var(--paper);
   font: inherit;
   color: var(--navy);
   min-width: 105px;
 }
 .av-month-controls select:focus-visible {
-  outline: 2px solid #007fac;
+  outline: 2px solid var(--status-blue-bg);
   outline-offset: 2px;
 }
 .av-month-metrics .av-month-total {
-  background: #edf7fb;
-  border-top: 4px solid #007fac;
+  background: var(--avalist-total-bg);
+  border-top: 4px solid var(--status-blue-bg);
 }
 .av-month-metrics .av-month-paid {
-  background: #edf9f6;
-  border-top: 4px solid #007f86;
+  background: var(--avalist-paid-bg);
+  border-top: 4px solid var(--status-green-bg);
 }
 .av-month-note {
   margin: 0;
@@ -203,9 +203,9 @@
   gap: 12px 28px;
   align-items: center;
   padding: 26px;
-  border-color: #b5dce5;
-  border-left: 5px solid #007fac;
-  background: #edf7fb;
+  border-color: var(--avalist-total-line);
+  border-left: 5px solid var(--status-blue-bg);
+  background: var(--avalist-total-bg);
 }
 .av-fee-total h2 {
   margin: 0;
@@ -215,10 +215,10 @@
 .av-fee-total p {
   margin: 6px 0 0;
   font-size: 0.9rem;
-  color: #466572;
+  color: var(--avalist-table-text);
 }
 .av-fee-total strong {
-  color: #007f86;
+  color: var(--avalist-fee-text);
   font-size: clamp(1.7rem, 3vw, 2.3rem);
   overflow-wrap: anywhere;
 }
@@ -230,12 +230,12 @@
 }
 .av-metrics span {
   font-size: 0.9rem;
-  color: #56717d;
+  color: var(--avalist-muted);
 }
 .av-metrics strong {
   display: block;
   font-size: 1.55rem;
-  color: #174957;
+  color: var(--avalist-value);
   margin: 12px 0 0;
   overflow-wrap: anywhere;
 }
@@ -245,11 +245,11 @@
   align-items: center;
   justify-content: space-between;
   padding: 18px 0;
-  border-bottom: 1px solid #e3eaed;
+  border-bottom: 1px solid var(--avalist-table-line);
 }
 .av-proposal {
   padding: 22px 0;
-  border-bottom: 1px solid #dbe5e9;
+  border-bottom: 1px solid var(--avalist-proposal-line);
 }
 .av-proposal p {
   margin: 8px 0;
@@ -275,11 +275,12 @@
   width: min(600px, calc(100vw - 28px));
   max-height: 90vh;
   overflow: auto;
-  box-shadow: 0 20px 80px #173d4c44;
-  color: #173c4a;
+  box-shadow: 0 20px 80px var(--avalist-dialog-shadow);
+  color: var(--avalist-label);
+  background: var(--paper);
 }
 .av-dialog::backdrop {
-  background: #102e4170;
+  background: var(--avalist-backdrop);
 }
 .av-dialog-head {
   display: flex;
@@ -297,7 +298,7 @@
 .av-payment-amount {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #007f86;
+  color: var(--avalist-fee-text);
 }
 .av-page button:disabled,
 .av-dialog button:disabled {
@@ -307,7 +308,7 @@
 .av-form input:focus-visible,
 .av-form select:focus-visible,
 .av-form textarea:focus-visible {
-  outline: 2px solid #007fac;
+  outline: 2px solid var(--status-blue-bg);
   outline-offset: 2px;
 }
 @media (max-width: 700px) {
@@ -344,7 +345,7 @@
   padding: 10px 0;
 }
 .av-cumulative summary:focus-visible {
-  outline: 2px solid #007fac;
+  outline: 2px solid var(--status-blue-bg);
   outline-offset: 2px;
 }
 .av-cumulative-content {

@@ -50,7 +50,7 @@
   <img
     class="registration-ktp-preview"
     src={registrationKtpUrl}
-    alt="Pratinjau foto KTP"
+    alt="Foto KTP yang dipilih"
     width="400"
     height="252"
   />

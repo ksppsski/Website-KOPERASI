@@ -155,7 +155,7 @@ export async function buildContractPdf(row, details, signatureBytes) {
   );
   pdf.setAuthor('KSPPS Syirkah Kebaikan Indonesia');
   pdf.setLanguage('id-ID');
-  pdf.setSubject('Pratinjau konsep berdasarkan template ' + TEMPLATE_VERSION);
+  pdf.setSubject('Akad penyertaan modal berdasarkan template ' + TEMPLATE_VERSION);
   const values = contractValues(row, details),
     pages = pdf.getPages();
   if (pages.length !== layout.pageCount) throw Error('Unexpected original template page count');

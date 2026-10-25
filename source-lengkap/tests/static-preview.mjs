@@ -6,8 +6,17 @@ const offline = async () => {
   networkCalls++;
   throw new Error('Static previews must not contact a backend');
 };
+function assertServicePresentation(app) {
+  const labels = [...app.document.querySelectorAll('[title], [aria-label], [alt], [placeholder]')]
+    .flatMap((element) => ['title', 'aria-label', 'alt', 'placeholder'].map((key) => element.getAttribute(key) || ''));
+  assert.doesNotMatch(
+    [app.document.body.textContent, ...labels].join(' '),
+    /pratinjau|prototipe|simulasi|\bdemo\b|portal konsep|rancangan portal|data contoh/i,
+  );
+  assert.equal(app.document.querySelector('.static-preview-banner, .prototype-strip'), null);
+}
 const member = await browser('anggota', { preview: true, fetch: offline });
-assert.match(member.document.body.textContent, /Pratinjau statis/);
+assertServicePresentation(member);
 await member.route('daftar');
 for (const step of [1, 2, 3, 4]) {
   assert.equal(member.window.__view.context.state.registrationStep, step);
@@ -22,7 +31,7 @@ assert(
 );
 await assert.rejects(
   member.window.KsppsWorkflow.api('/profile', { method: 'POST', body: '{}' }),
-  /Pratinjau statis/,
+  /Penyimpanan, unggahan, dan layanan akun tidak tersedia pada alamat ini/,
 );
 await member.route('masuk');
 await member.click('[data-action="enter-portal"]');
@@ -35,13 +44,16 @@ for (const route of [
   'laporan',
   'profil',
   'pengunduran',
-])
+]) {
   await member.route(route);
+  assertServicePresentation(member);
+}
 const staff = await browser('petugas', { preview: true, fetch: offline });
 assert.match(
   staff.document.body.textContent.replace(/\s+/g, ' '),
-  /Pilihan ini tidak memberikan hak akses akun/,
+  /Pilih portal yang ingin dibuka/,
 );
+assertServicePresentation(staff);
 await staff.click('[data-action="enter"][data-role="manager"]');
 const pages = {
   manager: [
@@ -78,12 +90,14 @@ for (const [role, routes] of Object.entries(pages)) {
   for (const route of routes) {
     await staff.route(route);
     assert(staff.document.querySelector('h1'), route + ' must render');
+    assertServicePresentation(staff);
   }
 }
 const avalist = await browser('avalist', { preview: true, fetch: offline });
-for (const route of ['avalist-ringkasan', 'avalist-anggota', 'avalist-rincian', 'avalist-riwayat'])
+for (const route of ['avalist-ringkasan', 'avalist-anggota', 'avalist-rincian', 'avalist-riwayat']) {
   await avalist.route(route);
-assert.match(avalist.document.body.textContent, /Pratinjau statis/);
+  assertServicePresentation(avalist);
+}
 assert.equal(networkCalls, 0, 'All three previews are independent of authenticated APIs');
 member.close();
 staff.close();

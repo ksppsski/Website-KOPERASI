@@ -1,14 +1,12 @@
 <script>
   import Region from '../../../../shared/components/Region.svelte';
-  import Content from '../../../../shared/components/Content.svelte';
   import { getContext } from 'svelte';
   const app = getContext('kspps-portal');
   import Brand from '../../../../shared/components/Brand.svelte';
   import Icon from '../../../../shared/components/Icon.svelte';
-  import Badge from '../../../../shared/components/Badge.svelte';
 
   let { context, route, key = route, children } = $props();
-  let { icon, navLink, demoStrip, state, pages } = $derived(context);
+  let { state, pages } = $derived(context);
 </script>
 
 {#if context}
@@ -42,7 +40,7 @@
         <div class="sidebar-foot">
           <a href="index.html"><Icon name={'home'} />Website KSPPS</a><button
             type="button"
-            data-action="logout"><Icon name={'logout'} />Keluar dari demo</button
+            data-action="logout"><Icon name={'logout'} />Keluar</button
           >
         </div>
       </div>
@@ -61,7 +59,7 @@
           Portal Anggota <Icon name={'chevron'} /><b>{pages[route][0]}</b>
         </div>
         <div class="topbar-end">
-          <Badge text={'Pratinjau'} /><button
+          <button
             type="button"
             class="icon-btn"
             data-action="notifications"
@@ -77,14 +75,11 @@
           >
         </div>
       </header>
-      <Content value={demoStrip() ?? ''} />
       <main class="portal-content" id="page-main" tabindex="-1">
         <div data-workflow="page-access"><Region name={'workflow:' + 'page-access'} /></div>
         {@render children()}
         <footer class="portal-footer">
-          <span>© 2026 KSPPS Syirkah Kebaikan Indonesia</span><span
-            >Portal konsep · Gunakan data contoh untuk pengujian.</span
-          >
+          <span>© 2026 KSPPS Syirkah Kebaikan Indonesia</span>
         </footer>
       </main>
     </div>

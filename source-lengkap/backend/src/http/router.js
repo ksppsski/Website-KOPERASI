@@ -81,7 +81,7 @@ export async function appFetch(request, env) {
   if (!owner)
     return json(
       {
-        error: 'Masuk dengan ChatGPT untuk menyimpan dan mencoba alur pengajuan demo.',
+        error: 'Masuk dengan ChatGPT untuk menyimpan pengajuan dan melihat hasil pemeriksaan.',
         signInRequired: true,
       },
       401,

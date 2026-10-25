@@ -308,7 +308,7 @@
               ['Simpanan transaksi', rupiah(r.transactionSaving)],
               ['Setoran awal simpanan khusus', rupiah(specialFirst())],
               ['Administrasi anggota', rupiah(r.admin)],
-              ['Total setoran awal (contoh)', rupiah(registrationTotal())],
+              ['Total setoran awal', rupiah(registrationTotal())],
               ['Bukti transfer simpanan', state.registrationProof?.name || 'Belum dilampirkan'],
               ['Foto KTP', state.registrationKtp?.name || 'Belum dilampirkan'],
             ]}
@@ -321,8 +321,7 @@
               ''}
           />
           <p class="field-hint">
-            Data, foto KTP, bukti simpanan, dan tanda tangan disimpan di ruang demo Anda untuk
-            diperiksa melalui portal petugas.
+            Data, foto KTP, bukti simpanan, dan tanda tangan dikirim untuk diperiksa oleh petugas.
           </p>
         {/if}
         <p class="form-error" id="registration-submit-error" hidden role="alert"></p>
@@ -347,7 +346,7 @@
               ? { disabled: true }
               : {}}
             >{#if s === 4}
-              {isStaticPreview ? 'Pendaftaran belum aktif' : 'Kirim pendaftaran'}
+              Kirim pendaftaran
             {:else}
               {isStaticPreview ? 'Lihat langkah berikutnya' : 'Lanjutkan'}
             {/if}

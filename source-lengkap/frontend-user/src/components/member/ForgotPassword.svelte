@@ -17,7 +17,9 @@
         class="btn full">Lanjutkan <Icon name={'arrow'} /></button
       >
     </form>
-    <p class="demo-hint">Ini simulasi pemulihan akun. Email tidak dikirim.</p>
+    <p class="field-hint">
+      Pemulihan kata sandi tidak tersedia melalui formulir ini. Gunakan akun ChatGPT.
+    </p>
     <p class="auth-foot"><a href="#masuk">Kembali ke halaman masuk</a></p>
   </MemberAuthLayout>
 {/if}

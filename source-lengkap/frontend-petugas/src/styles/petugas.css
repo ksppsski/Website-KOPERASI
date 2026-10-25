@@ -41,7 +41,7 @@
 }
 .staff-shell a.stat:hover {
   border-color: var(--cyan);
-  background: #fbfdff;
+  background: var(--staff-proof-bg);
 }
 .staff-shell .stat-top {
   font-size: 13px;
@@ -99,10 +99,10 @@
   align-items: flex-start;
   gap: 12px;
   padding: 17px 20px;
-  border: 1px solid #d7e9f0;
+  border: 1px solid var(--staff-note-line);
   border-radius: 12px;
   background: var(--mist);
-  color: #466779;
+  color: var(--staff-note-text);
   font-size: 14px;
   margin-bottom: 23px;
 }
@@ -175,8 +175,8 @@
   font-size: 14px;
 }
 .staff-proof {
-  background: #f5f9fc;
-  border: 1px dashed #b7cfdf;
+  background: var(--staff-note-bg);
+  border: 1px dashed var(--staff-proof-line);
   border-radius: 10px;
   padding: 18px;
   margin: 19px 0;
@@ -269,7 +269,7 @@
   background: var(--canvas);
 }
 .staff-login-box .avatar {
-  background: #fff;
+  background: var(--paper);
   width: 46px;
   height: 46px;
 }
@@ -279,9 +279,6 @@
 }
 .staff-login-box small {
   color: var(--muted);
-  font-size: 13px;
-}
-.staff-auth .demo-hint {
   font-size: 13px;
 }
 .staff-auth .auth-foot {
@@ -343,10 +340,6 @@
   }
   .staff-shell .page-heading h1 {
     font-size: 25px;
-  }
-  .staff-shell .prototype-strip {
-    flex-wrap: wrap;
-    gap: 3px 7px;
   }
   .mobile-staff-close {
     display: flex;
@@ -450,7 +443,7 @@
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 10px;
-  background: #fff;
+  background: var(--paper);
   color: var(--ink);
   font: inherit;
 }
@@ -555,8 +548,8 @@ button:disabled {
 
 /* Work timestamps use the existing portal palette and card spacing. */
 .work-timemark {
-  border: 1px solid #cce4ec;
-  background: #f4fafc;
+  border: 1px solid var(--work-line);
+  background: var(--work-bg);
   border-radius: 14px;
   padding: 18px;
   margin: 0 0 22px;
@@ -566,7 +559,7 @@ button:disabled {
   font-size: 10px;
   letter-spacing: 0.12em;
   font-weight: 700;
-  color: #346882;
+  color: var(--work-caption);
   margin-bottom: 12px;
 }
 .work-head {
@@ -584,14 +577,14 @@ button:disabled {
 }
 .work-times dt {
   font-size: 11px;
-  color: #617488;
+  color: var(--work-muted);
   margin-bottom: 5px;
 }
 .work-times dd {
   margin: 0;
   font-size: 13px;
   font-weight: 600;
-  color: #193c6f;
+  color: var(--work-value);
   line-height: 1.6;
 }
 .work-filters {
@@ -629,11 +622,11 @@ button:disabled {
 .work-method summary {
   cursor: pointer;
   font-weight: 600;
-  color: #193c6f;
+  color: var(--work-value);
 }
 .work-method p {
   line-height: 1.8;
-  color: #617488;
+  color: var(--work-muted);
   font-size: 13px;
 }
 .work-payout-action {

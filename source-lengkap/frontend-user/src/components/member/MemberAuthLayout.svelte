@@ -1,14 +1,11 @@
 <script>
-  import Content from '../../../../shared/components/Content.svelte';
   import Brand from '../../../../shared/components/Brand.svelte';
   import Icon from '../../../../shared/components/Icon.svelte';
 
   let { context, children, wide = false } = $props();
-  let { demoStrip } = $derived(context);
 </script>
 
 {#if context}
-  <Content value={demoStrip() ?? ''} />
   <div class="auth-layout">
     <aside class="auth-aside">
       <a href="index.html"><Brand white={true} /></a>

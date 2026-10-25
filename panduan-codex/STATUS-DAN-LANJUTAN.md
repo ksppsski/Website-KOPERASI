@@ -2,6 +2,18 @@
 
 Snapshot serah terima: **14 Oktober 2026**, aplikasi **v39**. Periksa kode/commit terbaru sebelum memakai dokumen ini pada sesi berikutnya.
 
+## Pembaruan 25 Oktober 2026
+
+Penanda pengembangan pada UI dihapus: banner statis, badge pratinjau, strip konsep, footer pengujian, serta istilah demo/simulasi pada bantuan, layar masuk dan dialog. Tombol peran pada hasil statis bernama `Buka portal Manajer/Admin/Finance`. Tidak ada perubahan izin akun atau aturan finansial.
+
+Pesan formulir nonaktif menyebut fungsi yang tidak tersedia pada alamat tersebut; guard tetap menolak penyimpanan, unggahan dan API pada hasil statis. Pengajuan yang hanya dicatat pada laman berstatus `Belum dikirim`. Ringkasan draf lokal tetap menyebut `Draf belum disahkan` dan tidak dinyatakan sebagai akad. Metadata PDF baru memakai deskripsi akad netral. Publikasi ke hosting aplikasi tetap terpisah dari perubahan source.
+
+## Pembaruan 23 Oktober 2026
+
+Mode terang dan gelap tersedia pada landing, portal Anggota, Petugas dan Avalist, termasuk layar masuk. Tombol di kanan atas menyimpan pilihan browser dan menyinkronkannya antar-tab. Sebelum pengguna memilih, tema mengikuti perangkat. Isian formulir dan halaman yang sedang dibuka tetap dipertahankan.
+
+`npm run test:app` dari root telah lulus, termasuk `test:theme` untuk preferensi perangkat, penyimpanan ditolak/penuh, sinkronisasi tab, pembersihan listener, bootstrap tema awal dan isian formulir. Source dan hasil build Pages diperbarui; catatan ini tidak menyatakan deployment Site atau perubahan backend. Nomor v39 di bawah tetap merujuk baseline serah terima.
+
 ## Status implementasi
 
 | Area | Kondisi saat serah terima |

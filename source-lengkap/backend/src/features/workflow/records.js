@@ -105,7 +105,7 @@ export function dto(row) {
             : row.finance?.status === 'correction'
               ? 'Perlu perbaikan'
               : row.status === 'generated' && !row.contract_data
-                ? 'Dokumen contoh lama'
+                ? 'Draf terdahulu'
                 : STATUS[row.status],
     note: row.note,
     contractNumber: row.contract_number,

@@ -1,7 +1,7 @@
 import { witaDate } from '../lib/formatters.js';
 
 export const previewMessage =
-  'Pratinjau statis. Layanan akun, unggahan, dan transaksi belum aktif; tidak ada data yang dikirim.';
+  'Penyimpanan, unggahan, dan layanan akun tidak tersedia pada alamat ini. Tidak ada data yang dikirim.';
 
 /** Empty, in-memory read models. This adapter never makes a network request. */
 export function createPreviewTransport(portal = 'member') {
@@ -50,7 +50,7 @@ export function createPreviewTransport(portal = 'member') {
       case '/staff/access':
         return reply({
           staff: staff(),
-          identity: { name: 'Pratinjau petugas', email: '' },
+          identity: { name: 'Petugas KSPPS', email: '' },
           configured: true,
         });
       case '/staff/accounts':
@@ -94,14 +94,14 @@ export function createPreviewTransport(portal = 'member') {
       case '/staff/financing':
         return reply({ items: [], today });
       case '/avalist/access':
-        return reply({ allowed: true, identity: { name: 'Pratinjau avalist', email: '' } });
+        return reply({ allowed: true, identity: { name: 'Avalist', email: '' } });
       case '/avalist':
         return reply(
           url.searchParams.get('view') === 'personal'
             ? {
                 personal: true,
                 today,
-                person: { name: 'Pratinjau avalist', email: '', active: true },
+                person: { name: 'Avalist', email: '', active: true },
                 feeSummary: {
                   asOf: today,
                   total: 0,
