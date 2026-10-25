@@ -183,6 +183,17 @@ vm.runInNewContext(bootstrap, {
 });
 assert.equal(basic.root.attributes['data-theme'], 'light');
 
+async function finishMotion(h) {
+  for (
+    let i = 0;
+    i < 100 && h.document.querySelector('.theme-toggle').getAttribute('aria-busy') === 'true';
+    i++
+  ) {
+    await h.settle();
+  }
+  assert.equal(h.document.querySelector('.theme-toggle').getAttribute('aria-busy'), 'false');
+}
+
 // All four entry points have the control; changing it preserves a filled form.
 for (const entry of ['index', 'anggota', 'petugas', 'avalist']) {
   const h = await browser(entry);
@@ -190,14 +201,23 @@ for (const entry of ['index', 'anggota', 'petugas', 'avalist']) {
   await h.click('.theme-toggle');
   assert.equal(h.document.documentElement.getAttribute('data-theme'), 'dark', entry);
   assert.equal(h.window.localStorage.getItem(THEME_STORAGE_KEY), 'dark', entry);
-  assert.equal(h.document.querySelector('.theme-toggle').getAttribute('aria-label'), 'Aktifkan mode terang');
+  assert.equal(
+    h.document.querySelector('.theme-toggle').getAttribute('aria-label'),
+    'Aktifkan mode terang',
+  );
+  await finishMotion(h);
   await h.click('.theme-toggle');
   assert.equal(h.document.documentElement.getAttribute('data-theme'), 'light', entry);
+  await finishMotion(h);
   if (entry === 'anggota') {
     const input = h.document.querySelector('#login-form input[name=email]');
     input.value = 'contoh@kspps.test';
     const hash = h.window.location.hash;
+    const toggle = h.document.querySelector('.theme-toggle');
+    toggle.focus();
     await h.click('.theme-toggle');
+    await finishMotion(h);
+    assert.equal(h.document.activeElement, toggle, 'theme motion preserves keyboard focus');
     assert.equal(h.document.querySelector('#login-form input[name=email]'), input);
     assert.equal(input.value, 'contoh@kspps.test');
     assert.equal(h.window.location.hash, hash);
@@ -209,4 +229,6 @@ for (const entry of ['index', 'anggota', 'petugas', 'avalist']) {
 }
 
 for (const instance of [control, nextControl, deniedControl, fullControl]) instance.dispose();
-console.log('PASS: shared theme, system fallback, persistence, tab sync, cleanup, first paint and form preservation.');
+console.log(
+  'PASS: shared theme, system fallback, persistence, tab sync, cleanup, first paint and form preservation.',
+);

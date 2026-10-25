@@ -26,7 +26,7 @@
     "check:architecture": "node scripts/check-architecture.mjs",
     "generate:favicons": "node scripts/generate-favicons.mjs",
     "test:runtime": "node tests/runtime-boundaries.mjs",
-    "test:theme": "node tests/theme-preference.mjs",
+    "test:theme": "node tests/theme-motion.mjs && node tests/theme-preference.mjs",
     "build:preview": "npm run generate:favicons && vite build --mode static-preview --outDir dist-preview",
     "test:preview": "node tests/static-preview.mjs"
   },

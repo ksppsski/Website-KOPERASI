@@ -367,8 +367,35 @@ textarea:focus-visible {
   height: 15px;
 }
 .brand-logo {
+  display: inline-block;
+  position: relative;
   width: 218px;
   height: auto;
+  line-height: 0;
+  vertical-align: middle;
+}
+.brand-logo-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.brand-logo-image--white {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+}
+.brand-logo--white .brand-logo-image--color {
+  opacity: 0;
+}
+.brand-logo--white .brand-logo-image--white {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .theme-transitioning .brand-logo-image {
+    transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
 }
 .auth-layout {
   min-height: calc(100dvh - 38px);
@@ -2198,21 +2225,28 @@ select option {
   background: var(--paper);
   color: var(--navy);
 }
-/* Preserve the full-color logo against dark navigation surfaces. */
-:root[data-theme='dark'] .brand-logo[src*='color'] {
-  background: var(--on-brand);
-  border-radius: 6px;
-  padding: 6px;
+/* Use the original transparent white asset on dark surfaces. */
+:root[data-theme='dark'] .brand-logo-image--color {
+  opacity: 0;
+}
+:root[data-theme='dark'] .brand-logo-image--white {
+  opacity: 1;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .brand-logo[src*='color'] {
-    background: var(--on-brand);
-    border-radius: 6px;
-    padding: 6px;
+  :root:not([data-theme='light']) .brand-logo-image--color {
+    opacity: 0;
+  }
+  :root:not([data-theme='light']) .brand-logo-image--white {
+    opacity: 1;
   }
 }
 @media (max-width: 760px) {
   :root[data-theme='dark'] .auth-main:before {
+    background-image: url('/assets/kspps-logo-white-web.png');
+  }
+}
+@media (max-width: 760px) and (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .auth-main:before {
     background-image: url('/assets/kspps-logo-white-web.png');
   }
 }

@@ -2,6 +2,10 @@
 
 Snapshot serah terima: **14 Oktober 2026**, aplikasi **v39**. Periksa kode/commit terbaru sebelum memakai dokumen ini pada sesi berikutnya.
 
+## Pembaruan 26 Oktober 2026
+
+Pergantian tema diperhalus dengan lingkaran yang menyebar dari tombol dan animasi ikon. View Transitions dipakai bila tersedia; fallback warna dan preferensi pengurangan gerak tetap didukung. Klik ditahan selama transisi singkat tanpa melepas fokus, mengganti rute atau membuat ulang formulir. Logo portal kini berganti ke aset putih transparan dalam mode gelap, tanpa kotak putih.
+
 ## Pembaruan 25 Oktober 2026
 
 Penanda pengembangan pada UI dihapus: banner statis, badge pratinjau, strip konsep, footer pengujian, serta istilah demo/simulasi pada bantuan, layar masuk dan dialog. Tombol peran pada hasil statis bernama `Buka portal Manajer/Admin/Finance`. Tidak ada perubahan izin akun atau aturan finansial.
