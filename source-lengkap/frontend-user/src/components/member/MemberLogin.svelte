@@ -17,7 +17,7 @@
         label={'Email'}
         name={'email'}
         value={''}
-        options={{ type: 'email', placeholder: 'Email contoh' }}
+        options={{ type: 'email', placeholder: 'Email Anda' }}
       /><label class="form-field"
         ><span>Kata sandi</span>
         <div class="password-field">
@@ -25,7 +25,7 @@
             name="password"
             id="login-password"
             type="password"
-            placeholder="Kata sandi contoh"
+            placeholder="Kata sandi Anda"
             required
             autocomplete="off"
           /><button
@@ -45,9 +45,7 @@
     <button class="btn secondary full" type="button" data-action="enter-portal"
       >Jelajahi portal anggota</button
     >
-    <p class="demo-hint">
-      Form login masih simulasi; gunakan data contoh. Data portal dibuka dengan ChatGPT.
-    </p>
+    <p class="field-hint">Akses data keanggotaan menggunakan akun ChatGPT.</p>
     <p class="auth-foot">Belum menjadi anggota? <a href="#daftar">Daftar anggota</a></p>
   </MemberAuthLayout>
 {/if}

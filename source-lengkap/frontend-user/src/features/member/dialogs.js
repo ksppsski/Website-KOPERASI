@@ -118,9 +118,8 @@ export function createMemberDialogs({
 
   function fileValid(form) {
     const f = form.elements.proof?.files?.[0];
-    const sample = form.elements.sampleProof?.checked;
     let error = '';
-    if (!sample && !f) error = 'Pilih bukti pembayaran atau gunakan bukti contoh.';
+    if (!f) error = 'Pilih bukti pembayaran.';
     if (f && f.size > 10 * 1024 * 1024) error = 'Ukuran berkas maksimal 10 MB.';
     const e = $('#proof-error', form);
     e.textContent = error;

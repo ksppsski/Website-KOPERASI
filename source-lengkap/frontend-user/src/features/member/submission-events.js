@@ -46,7 +46,7 @@ export function bindMemberSubmissions({
     }
     if (form.id === 'forgot-form') {
       dialog(
-        'Simulasi pemulihan akun',
+        'Pemulihan akun',
         snippetView(BindMemberSubmissionsView, { icon: icon('mail') }),
       );
     }
@@ -88,7 +88,7 @@ export function bindMemberSubmissions({
       for (const key of ['name', 'email', 'phone', 'address', 'job'])
         state.profile[key] = data[key];
       render();
-      toast('Perubahan profil tersimpan dalam demo ini.');
+      toast('Perubahan profil dicatat pada laman ini. Perubahan belum dikirim ke koperasi.');
     }
     if (form.id === 'deposit-form') {
       if (!fileValid(form)) return;
@@ -97,19 +97,19 @@ export function bindMemberSubmissions({
       state.deposits.unshift({
         date: new Date().toLocaleDateString('id-ID'),
         type: data.type,
-        note: 'Setoran ' + period + ' (contoh)',
+        note: 'Setoran ' + period,
         amount: Number(data.amount),
-        status: 'Menunggu verifikasi',
+        status: 'Belum dikirim',
       });
       closeDialog();
       go('simpanan');
-      toast('Konfirmasi setoran contoh menunggu verifikasi.');
+      toast('Konfirmasi setoran dicatat pada laman ini. Data belum dikirim ke koperasi.');
     }
     if (form.id === 'application-form') {
       if (!(await app.services.workflow?.checkAccess())) return;
       const type = form.dataset.kind;
       state.requests.unshift({
-        id: 'DEMO-' + String(state.requestCounter++).padStart(3, '0'),
+        id: 'DRAF-' + String(state.requestCounter++).padStart(3, '0'),
         type,
         purpose: data.purpose,
         amount: Number(data.amount),
@@ -118,14 +118,14 @@ export function bindMemberSubmissions({
       closeDialog();
       state.financeTab = type === 'Pembiayaan' ? 'Pengajuan' : state.financeTab;
       go(type === 'Pembiayaan' ? 'pembiayaan' : 'modal');
-      toast('Pengajuan contoh dibuat dan menunggu verifikasi.');
+      toast('Pengajuan dicatat pada laman ini. Pengajuan belum dikirim ke koperasi.');
     }
     if (form.id === 'finance-payment-form') {
       if (!fileValid(form)) return;
       state.financePaymentPending = true;
       closeDialog();
       go('pembiayaan');
-      toast('Konfirmasi pembayaran contoh menunggu verifikasi.');
+      toast('Konfirmasi pembayaran dicatat pada laman ini. Data belum dikirim ke koperasi.');
     }
   });
 }

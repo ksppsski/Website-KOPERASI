@@ -30,7 +30,7 @@
     class="ski-art"
     class:is-open={expanded}
     data-ski-motion=""
-    aria-label="Konsep kartu anggota dan akses layanan digital KSPPS"
+    aria-label="Kartu anggota dan akses layanan digital KSPPS"
   >
     <div class="ski-motion-scene">
       <div class="ski-orbit" aria-hidden="true"><div class="ski-dot"></div></div>

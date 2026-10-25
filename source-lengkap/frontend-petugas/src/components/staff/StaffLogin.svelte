@@ -7,11 +7,9 @@
   import Icon from '../../../../shared/components/Icon.svelte';
 
   let { context } = $props();
-  let { badge, strip } = $derived(context);
 </script>
 
 {#if context}
-  <Content value={strip() ?? ''} />
   <div class="auth-layout staff-auth">
     <aside class="auth-aside">
       <a href="index.html"><Brand white={true} /></a>
@@ -34,14 +32,11 @@
         <h1>Portal Petugas KSPPS</h1>
         <p class="subtext">Ruang kerja internal koperasi.</p>
         {#if isStaticPreview}
-          <p>
-            Pilih tampilan peran untuk melihat rancangan. Pilihan ini tidak memberikan hak akses
-            akun.
-          </p>
+          <p>Pilih portal yang ingin dibuka.</p>
           <div class="staff-role-entry">
             {#each [['manager', 'Manajer'], ['admin', 'Admin'], ['finance', 'Finance']] as [role, label]}
               <button type="button" class="btn secondary full" data-action="enter" data-role={role}
-                >Pratinjau {label}</button
+                >Buka portal {label}</button
               >
             {/each}
           </div>

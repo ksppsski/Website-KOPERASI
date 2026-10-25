@@ -44,7 +44,7 @@
         ><Content value={label} /></button
       >
     </div>
-    <p class="dialog-note">Perubahan ini hanya berlaku pada data contoh di portal petugas.</p>
+    <p class="dialog-note">Perubahan ini berlaku pada catatan lokal di halaman ini.</p>
   </form>
 {/snippet}
 
@@ -54,7 +54,7 @@
 
 {#snippet CandidateDialog2View({ memberId })}
   <div class="info-box">
-    Keanggotaan contoh aktif dengan nomor <strong><Content value={memberId} /></strong>.
+    Catatan lokal: keanggotaan disetujui dengan nomor <strong><Content value={memberId} /></strong>.
   </div>
 {/snippet}
 
@@ -63,7 +63,7 @@
 {/snippet}
 
 {#snippet DepositDialog3View()}
-  <div class="info-box">Setoran contoh sudah diverifikasi. Pemeriksaan tidak dapat diulang.</div>
+  <div class="info-box">Catatan lokal: setoran sudah diverifikasi. Pemeriksaan tidak dapat diulang.</div>
 {/snippet}
 
 {#snippet DepositDialogView({
@@ -77,7 +77,7 @@
 })}
   <Content value={statusHead} /><Content value={review} />
   <div class="staff-proof">
-    <div class="eyebrow">Bukti pembayaran · Contoh</div>
+    <div class="eyebrow">Pencatatan dana lokal</div>
     <h3><Content value={fieldName} /></h3>
     <div class="proof-amount"><Content value={rupiah} /></div>
     <div class="proof-status">
@@ -131,9 +131,8 @@
     <div><span>Status akses portal</span><strong>Aktif</strong></div>
   </div>
   <p class="staff-dialog-note">
-    Ini gambaran data yang dikelola petugas untuk masing-masing anggota. Penyertaan modal dan
-    pengunduran diri dapat dicoba melalui alur pengajuan yang tersambung. Saldo pada ringkasan ini
-    tetap data contoh.
+    Ringkasan ini memakai catatan lokal. Periksa data anggota dan transaksi pada layanan terkait
+    sebelum mengambil keputusan.
   </p>
 {/snippet}
 
@@ -145,22 +144,22 @@
     <div class="decision-actions">
       <button type="button" class="btn secondary" data-action="close">Batal</button><button
         type="submit"
-        class="btn">Buat draf contoh</button
+        class="btn">Buat ringkasan draf</button
       >
     </div>
   </form>
-  <p class="dialog-note">Draf ini hanya ringkasan contoh, bukan naskah akad resmi.</p>
+  <p class="dialog-note">Ringkasan ini belum menjadi akad.</p>
 {/snippet}
 
 {#snippet ContractDialogView({ logo, typeContent, review })}
   <article class="document-preview">
     <Content value={logo} />
-    <div class="watermark">Dokumen contoh · Tidak berlaku sebagai akad</div>
+    <div class="watermark">Draf belum disahkan</div>
     <h3><Content value={typeContent} /></h3>
     <Content value={review} />
-    <p>Naskah dan ketentuan akad resmi akan disusun serta diperiksa oleh tim koperasi.</p>
+    <p>Ringkasan ini belum menjadi akad. Naskah akad memerlukan pemeriksaan dan pengesahan koperasi.</p>
   </article>
   <div class="form-actions">
-    <button type="button" class="btn secondary full" data-action="close"> Tutup pratinjau </button>
+    <button type="button" class="btn secondary full" data-action="close"> Tutup ringkasan </button>
   </div>
 {/snippet}

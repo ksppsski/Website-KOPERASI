@@ -107,7 +107,6 @@ export function initializeMemberPortal(app) {
       context: {
         icon,
         stat,
-        demoStrip,
         esc,
         rupiah,
         badge,
@@ -142,7 +141,7 @@ export function initializeMemberPortal(app) {
           masuk: 'Masuk Anggota',
           daftar: 'Daftar Anggota',
           'lupa-sandi': 'Pemulihan Akun',
-          'daftar-selesai': 'Pengajuan Contoh',
+          'daftar-selesai': 'Pendaftaran Tersimpan',
         }[route]) + ' · KSPPS Syirkah Kebaikan Indonesia';
     if (route === 'daftar' && state.registrationStep === 1) updateRegistrationKtpView();
     if (route === 'daftar' && state.registrationStep === 3) setupSignature();
@@ -167,7 +166,6 @@ export function initializeMemberPortal(app) {
     logo,
     badge,
     navLink,
-    demoStrip,
     field,
     selectField,
     review,

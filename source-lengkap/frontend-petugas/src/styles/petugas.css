@@ -281,9 +281,6 @@
   color: var(--muted);
   font-size: 13px;
 }
-.staff-auth .demo-hint {
-  font-size: 13px;
-}
 .staff-auth .auth-foot {
   font-size: 14px;
 }
@@ -343,10 +340,6 @@
   }
   .staff-shell .page-heading h1 {
     font-size: 25px;
-  }
-  .staff-shell .prototype-strip {
-    flex-wrap: wrap;
-    gap: 3px 7px;
   }
   .mobile-staff-close {
     display: flex;

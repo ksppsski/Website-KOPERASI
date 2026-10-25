@@ -5,7 +5,6 @@
     IconView,
     BadgeView,
     NavLinkView,
-    DemoStripView,
     Field2View,
     FieldView,
     SelectField2View,
@@ -34,14 +33,6 @@
   <a href={'#' + route} {...attributeProps(extra)}
     ><Content value={icoContent} /><Content value={label} /></a
   >
-{/snippet}
-
-{#snippet DemoStripView({ icon })}
-  <div class="prototype-strip">
-    <Content value={icon} /><strong>Pratinjau konsep</strong><span
-      >Pendaftaran, pengajuan, dan akad tersimpan dalam ruang pribadi Anda</span
-    >
-  </div>
 {/snippet}
 
 {#snippet Field2View()}

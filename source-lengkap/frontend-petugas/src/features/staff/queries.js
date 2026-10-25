@@ -9,7 +9,7 @@ import { view, fallbackView, snippetView } from '../../../../shared/runtime/view
 export function createStaffQueries({ app, runtime, esc, icon }) {
   const member = (id) => runtime.state.members.find((x) => x.id === id);
 
-  const name = (id) => member(id)?.name || 'Anggota contoh';
+  const name = (id) => member(id)?.name || 'Anggota';
 
   const workflowItems = () => app.services.workflow?.getItems() || [];
 

@@ -73,7 +73,7 @@ export function createStaffDialogs({
         ['Alamat domisili', x.address],
         ['Pekerjaan', x.job],
         ['Ahli waris', x.heir],
-        ['Setoran awal (contoh)', rupiah(x.amount)],
+        ['Setoran awal (catatan lokal)', rupiah(x.amount)],
       ]),
       x.note ? snippetView(CandidateDialogView, { note: esc(x.note) }) : '',
       x.status === 'Disetujui'
@@ -216,7 +216,7 @@ export function createStaffDialogs({
     const x = runtime.state.contracts.find((x) => x.id === id);
     if (!x) return;
     dialog(
-      'Pratinjau dokumen akad',
+      'Ringkasan draf akad',
       snippetView(ContractDialogView, {
         logo: logo(),
         typeContent: x.type === 'Pembiayaan' ? 'Akad Murabahah' : 'Akad Penyertaan Modal',

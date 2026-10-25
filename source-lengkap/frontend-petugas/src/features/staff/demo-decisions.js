@@ -21,7 +21,7 @@ export function createStaffDemoDecisions({ app, runtime, log, member, rupiah, ca
       item.status = 'Perlu perbaikan';
       item.note = note;
       log(`${id} dikembalikan untuk perbaikan.`);
-      return { ok: true, message: 'Catatan perbaikan tersimpan pada data contoh.' };
+      return { ok: true, message: 'Catatan perbaikan tersimpan pada catatan lokal.' };
     }
     const required =
       kind === 'candidate'
@@ -67,10 +67,10 @@ export function createStaffDemoDecisions({ app, runtime, log, member, rupiah, ca
       ok: true,
       message:
         kind === 'candidate'
-          ? 'Keanggotaan contoh sudah aktif.'
+          ? 'Catatan lokal: keanggotaan disetujui.'
           : kind === 'deposit'
-            ? 'Setoran contoh berhasil diverifikasi.'
-            : 'Pengajuan contoh disetujui.',
+            ? 'Catatan lokal: setoran sudah diverifikasi.'
+            : 'Catatan lokal: pengajuan disetujui.',
     };
   }
 
@@ -78,7 +78,7 @@ export function createStaffDemoDecisions({ app, runtime, log, member, rupiah, ca
     const r = runtime.state.requests.find((x) => x.id === id);
     if (!runtime.state.signedIn || !r || !checked || !canDraft(r)) return false;
     runtime.state.contracts.unshift({
-      id: 'DRAF-CONTOH-' + String(runtime.state.contracts.length + 1).padStart(3, '0'),
+      id: 'DRAF-LOKAL-' + String(runtime.state.contracts.length + 1).padStart(3, '0'),
       member: r.member,
       request: r.id,
       type: r.type,

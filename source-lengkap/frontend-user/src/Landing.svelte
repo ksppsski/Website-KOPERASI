@@ -1,5 +1,4 @@
 <script>
-  import PreviewBanner from '../../shared/components/PreviewBanner.svelte';
   import ThemeToggle from '../../shared/components/ThemeToggle.svelte';
   import { tick } from 'svelte';
   import Header from './components/public/Header.svelte';
@@ -41,7 +40,6 @@
   }
 </script>
 
-<PreviewBanner />
 <ThemeToggle />
 
 <svelte:document onclick={handleClick} />

@@ -49,7 +49,7 @@ export function createMemberHistoryViews({
     const rs = state.requests.filter((x) => x.type === type);
     if (!rs.length && !always) return '';
     return snippetView(RequestPanelView, {
-      badge: badge('Simulasi', 'gray'),
+      badge: badge('Belum dikirim', 'gray'),
       lengthContent: rs.length
         ? snippetView(RequestPanel2View, {
             rsRows: rs.map((x) =>
@@ -57,7 +57,7 @@ export function createMemberHistoryViews({
                 id: x.id,
                 purpose: esc(x.purpose),
                 rupiah: rupiah(x.amount),
-                badge: badge('Menunggu verifikasi', 'amber'),
+                badge: badge('Belum dikirim', 'gray'),
               }),
             ),
           })

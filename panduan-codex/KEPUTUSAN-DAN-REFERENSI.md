@@ -1,5 +1,9 @@
 # Keputusan, preferensi dan referensi proyek
 
+## Penulisan antarmuka, 25 Oktober 2026
+
+Pengguna meminta semua status yang memberi kesan website masih dikembangkan dihapus. UI tidak lagi memakai penanda pratinjau, prototipe, konsep, demo atau simulasi. Pesan fungsi tetap jujur: formulir statis tidak mengirim data; catatan pada laman belum dikirim; draf belum disahkan. Perubahan ini tidak mengaktifkan backend, mengganti autentikasi atau menjadikan ringkasan lokal sebagai akad.
+
 Disusun dari percakapan yang tersedia dan dicocokkan dengan source v39 pada 14 Oktober 2026. Urutan di bawah merekam perubahan keputusan; bukan transkrip verbatim setiap pesan.
 
 Pembaruan **23 Oktober 2026**: permintaan berdasarkan rekaman layar dibatasi pada pergantian mode terang dan gelap di seluruh laman. Gunakan perilaku bersama di `shared/lib/theme.js` dan `ThemeToggle.svelte`; fitur ini tidak mengubah aturan bisnis atau akses.

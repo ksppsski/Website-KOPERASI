@@ -24,10 +24,8 @@
 
 {#snippet ProofInputView()}
   <div class="file-picker">
-    <strong>Bukti pembayaran</strong><label class="check" style="margin:10px 0"
-      ><input type="checkbox" name="sampleProof" checked="" />Gunakan bukti contoh</label
-    ><label
-      >Atau pilih berkas (maks. 10 MB)<input
+    <strong>Bukti pembayaran</strong><label
+      >Pilih berkas (maks. 10 MB)<input
         type="file"
         name="proof"
         accept="image/png,image/jpeg,application/pdf"
@@ -58,11 +56,11 @@
     <div class="info-box">
       <Content value={financeContent2} />
     </div>
-    <p class="dialog-note">Pengajuan ini hanya simulasi, belum dikirim kepada koperasi.</p>
+    <p class="dialog-note">Pengajuan pada formulir ini belum dikirim kepada koperasi.</p>
     <div class="form-actions">
       <button class="btn secondary" type="button" data-action="close-dialog">Batal</button><button
         class="btn"
-        type="submit">Buat pengajuan contoh</button
+        type="submit">Catat pengajuan</button
       >
     </div>
   </form>

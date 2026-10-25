@@ -23,12 +23,14 @@ Framework frontend tetap **Svelte 5 + Vite**. Backend tetap Worker JavaScript de
 | Pengunduran diri                  | `shared/components/workflow/WorkflowPage.svelte`, `frontend-petugas/src/components/withdrawal/` | `shared/features/withdrawal/`                                                                                 | `backend/src/withdrawal.js`                                                |
 | Waktu kerja / KPI                 | `frontend-petugas/src/components/activity/ManagerActivity.svelte`                               | `frontend-petugas/src/features/activity/`                                                                     | `backend/src/activity.js`, `backend/src/manager.js`                        |
 | Warna status                      | `shared/components/Badge.svelte`                                                                | `shared/lib/status-colors.js`                                                                                 | Tidak mengubah aturan server                                               |
-| Mode terang/gelap                 | `shared/components/ThemeToggle.svelte`, `PreviewBanner.svelte`                                   | `shared/lib/theme.js`, `public/theme-preference.js`                                                            | Tidak memakai API atau mengubah data aplikasi                              |
+| Mode terang/gelap                 | `shared/components/ThemeToggle.svelte`                                                         | `shared/lib/theme.js`, `public/theme-preference.js`                                                            | Tidak memakai API atau mengubah data aplikasi                              |
 | Masalah akses akun                | `frontend-petugas/src/components/staff-access/StaffAccess.svelte`                               | `frontend-petugas/src/features/staff-access/controller.js`                                                    | `backend/src/access.js`, `backend/src/http/routes/accounts.js`             |
 
 Favicon tab mengikuti mode perangkat. `public/assets/kspps-symbol.svg` berisi bentuk vektor logo, `scripts/generate-favicons.mjs` menghasilkan varian terang/gelap secara otomatis saat build.
 
 ## Tema terang dan gelap
+
+Pada 25 Oktober 2026, banner statis serta strip/badge/footer pengembangan dihapus dari semua frontend. `PreviewBanner.svelte` tidak lagi dipakai. Adapter dan guard di `shared/preview/` tetap menolak pengumpulan data dan operasi simpan pada Pages. Pesan penolakannya kini memakai bahasa fungsi yang tidak tersedia pada alamat tersebut. `tests/static-preview.mjs` memeriksa tidak adanya penanda pengembangan sekaligus mempertahankan perlindungan formulir dan nol permintaan API.
 
 Pembaruan 23 Oktober 2026 memakai `ThemeToggle.svelte` sekali pada `PortalFrame.svelte` untuk Anggota/Petugas, serta pada `Landing.svelte` dan `frontend-avalist/src/Portal.svelte`. Komponen berada di luar konten rute agar pergantian tema tidak membuat ulang formulir.
 

@@ -77,7 +77,7 @@
     options={{ type: 'number', min: 0 }}
   />
   <div class="registration-total">
-    <span>Total setoran awal <small>Simulasi simpanan dan administrasi</small></span><strong
+    <span>Total setoran awal <small>Simpanan dan administrasi</small></span><strong
       id="registration-total">{rupiah(registrationTotal())}</strong
     >
   </div>

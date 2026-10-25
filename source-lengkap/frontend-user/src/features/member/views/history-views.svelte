@@ -54,7 +54,7 @@
 
 {#snippet RequestPanel4View({ icon })}
   <div class="empty-state">
-    <Content value={icon} /><strong>Belum ada pengajuan contoh.</strong>Mulai dari tombol Ajukan
+    <Content value={icon} /><strong>Belum ada pengajuan.</strong>Mulai dari tombol Ajukan
     pembiayaan di atas.
   </div>
 {/snippet}

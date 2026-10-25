@@ -75,7 +75,7 @@ export function bindMemberInteractions({
       state.profile = {};
       state.savedProfile = false;
       go('masuk');
-      toast('Anda sudah keluar dari akun demo.');
+      toast('Anda sudah keluar dari portal.');
     }
     if (action === 'registration-back') {
       saveRegistration($('#registration-form'));

@@ -1,6 +1,5 @@
 <script>
   import { createAvalistClient } from './features/client.js';
-  import PreviewBanner from '../../shared/components/PreviewBanner.svelte';
   import ThemeToggle from '../../shared/components/ThemeToggle.svelte';
   import { createLifecycle } from '../../shared/runtime/lifecycle.js';
   import { createRequest } from '../../shared/runtime/request.js';
@@ -90,7 +89,6 @@
   });
 </script>
 
-<PreviewBanner />
 <ThemeToggle />
 <a
   class="skip-link"

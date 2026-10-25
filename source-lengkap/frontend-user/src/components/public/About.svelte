@@ -28,7 +28,7 @@
     </details>
     <details>
       <summary>Di mana dokumen akad tersedia?</summary>
-      <p>Pada konsep portal anggota, dokumen tersedia di menu Dokumen Akad.</p>
+      <p>Dokumen tersedia di menu Dokumen Akad pada portal anggota.</p>
     </details>
   </div>
 </section>

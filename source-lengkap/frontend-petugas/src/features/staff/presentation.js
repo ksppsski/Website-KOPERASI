@@ -1,7 +1,6 @@
 import {
   IconView,
   BadgeView,
-  StripView,
   HeadingView,
   Review2View,
   ReviewView,
@@ -51,10 +50,6 @@ export function createStaffPresentation({ app, runtime }) {
 
   const badge = badgeView;
 
-  function strip() {
-    return snippetView(StripView, { icon: icon('shield') });
-  }
-
   const heading = headingView;
 
   const review = reviewView;
@@ -102,7 +97,6 @@ export function createStaffPresentation({ app, runtime }) {
     icon,
     logo,
     badge,
-    strip,
     heading,
     review,
     button,

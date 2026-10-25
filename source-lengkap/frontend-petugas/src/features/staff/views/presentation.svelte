@@ -4,7 +4,6 @@
   export {
     IconView,
     BadgeView,
-    StripView,
     HeadingView,
     Review2View,
     ReviewView,
@@ -28,14 +27,6 @@
 
 {#snippet BadgeView({ statusColor, s })}
   <span class={'badge ' + statusColor}><Content value={s} /></span>
-{/snippet}
-
-{#snippet StripView({ icon })}
-  <div class="prototype-strip">
-    <Content value={icon} /><strong>Portal Petugas</strong><span
-      >Akses sesuai akun yang disetujui Manajer</span
-    >
-  </div>
 {/snippet}
 
 {#snippet HeadingView({ title, description, action })}

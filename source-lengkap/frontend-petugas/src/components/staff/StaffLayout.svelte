@@ -15,7 +15,6 @@
     rolePicker,
     member,
     pending,
-    strip,
     button,
   } = $derived(context);
 </script>
@@ -88,14 +87,11 @@
           </div>
         </div>
       </header>
-      <Content value={strip() ?? ''} />
       <main class="portal-content" id="page-main" tabindex="-1">
         <div data-workflow="page-access"><Region name={'workflow:' + 'page-access'} /></div>
         {@render children()}
         <footer class="portal-footer">
-          <span>© 2026 KSPPS Syirkah Kebaikan Indonesia</span><span
-            >Prototipe petugas · Akad yang dibuat adalah dokumen contoh</span
-          >
+          <span>© 2026 KSPPS Syirkah Kebaikan Indonesia</span>
         </footer>
       </main>
     </div>

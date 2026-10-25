@@ -28,15 +28,13 @@
       <details class="faq-item">
         <summary>Di mana saya bisa melihat akad?</summary>
         <p>
-          Buka menu Dokumen Akad. Anda dapat mencoba pencarian dan dokumen yang telah diunggah
-          petugas.
+          Buka menu Dokumen Akad untuk mencari dan melihat dokumen yang telah diunggah petugas.
         </p>
       </details>
       <details class="faq-item">
-        <summary>Apakah data pada portal ini sudah nyata?</summary>
+        <summary>Kapan setoran tercatat pada saldo?</summary>
         <p>
-          Data ditampilkan dari pendaftaran dan pengajuan Anda. Portal ini masih berupa konsep untuk
-          mencoba alur bersama portal petugas. Belum ada transaksi koperasi yang sesungguhnya.
+          Bukti setoran masuk untuk diperiksa Finance. Saldo bertambah setelah rekonsiliasi selesai.
         </p>
       </details>
     </section>

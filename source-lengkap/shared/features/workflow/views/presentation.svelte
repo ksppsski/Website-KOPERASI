@@ -22,11 +22,11 @@
 
 {#snippet AuthView({ encodeURIComponent })}
   <div class="wf-empty">
-    <strong>Simpan pengajuan demo Anda</strong>
+    <strong>Masuk untuk melanjutkan</strong>
     <p>Masuk dengan ChatGPT untuk menyimpan pengajuan dan melihat hasil pemeriksaan.</p>
     <a class="btn" target="_top" href={'/signin-with-chatgpt?return_to=' + encodeURIComponent}
       >Lanjutkan dengan ChatGPT</a
-    ><small>Gunakan data contoh untuk mencoba alur pendaftaran dan akad.</small>
+    >
   </div>
 {/snippet}
 

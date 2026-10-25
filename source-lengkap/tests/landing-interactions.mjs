@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import { browser } from './helpers/svelte-browser.mjs';
 const h = await browser('index');
 const { document, window } = h;
+assert.equal(document.querySelector('.static-preview-banner, .prototype-strip'), null);
+assert.doesNotMatch(document.body.textContent, /pratinjau|prototipe|simulasi|\bdemo\b|konsep/i);
 assert.deepEqual(
   [...document.querySelector('main').children].map((node) => node.id || node.className),
   ['ski-beranda', 'ski-values ski-wrap', 'ski-layanan', 'ski-bergabung', 'ski-tentang'],

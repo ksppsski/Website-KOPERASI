@@ -4,6 +4,8 @@ Sumber aplikasi sudah disinkronkan dengan **revisi v39** pada 14 Oktober 2026. K
 
 Pembaruan **23 Oktober 2026** menambahkan mode terang dan gelap pada landing serta seluruh portal, termasuk layar masuk. Tombol di kanan atas menyimpan pilihan pada browser; sebelum dipilih, tampilan mengikuti tema perangkat. Perubahan tersedia pada source dan build pratinjau, dengan deployment aplikasi sebagai langkah terpisah.
 
+Pembaruan **25 Oktober 2026** menghapus banner, badge, strip dan footer berlabel pengembangan dari seluruh laman. Label masuk, bantuan, pendaftaran dan dialog memakai bahasa layanan. Pada hasil statis, formulir tetap tidak mengumpulkan data atau menghubungi API; pesan fungsi yang tidak tersedia menjelaskan batas alamat tersebut. Catatan lokal dan draf yang belum disahkan tetap dibedakan dari data yang sudah diterima koperasi.
+
 | Bagian | Lokasi | Status |
 | --- | --- | --- |
 | Aplikasi terbaru | `source-lengkap/` | Svelte 5 + Vite, Worker, skema/migrasi, template dokumen dan pengujian v39 |
