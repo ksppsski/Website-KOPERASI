@@ -14,7 +14,8 @@ import {
   restartMembership,
   withdrawalEligibility,
 } from '../withdrawal.js';
-import { cooperativeOwner, identity, requireStaff, selectedOwner } from '../access.js';
+import { cooperativeOwner, requireStaff, selectedOwner } from '../access.js';
+import { resolveSession } from '../authentication.js';
 import { claimAvalistEmail } from '../avalist-email.js';
 import { changeStaffRole, payouts, staffContext } from '../finance.js';
 
@@ -76,12 +77,13 @@ export async function appFetch(request, env) {
       },
     });
   }
-  const signedIn = request.headers.get('oai-authenticated-user-id');
+  const session = await resolveSession(request, env);
+  const signedIn = session?.id;
   let owner = signedIn;
   if (!owner)
     return json(
       {
-        error: 'Masuk dengan ChatGPT untuk menyimpan pengajuan dan melihat hasil pemeriksaan.',
+        error: 'Masuk untuk menyimpan pengajuan dan melihat hasil pemeriksaan.',
         signInRequired: true,
       },
       401,
@@ -92,7 +94,7 @@ export async function appFetch(request, env) {
     throw new Problem(403, 'Permintaan harus berasal dari website KSPPS.');
   env = { ...env, ACTOR_ID: signedIn };
   const ownMembership = await membershipOwner(env, signedIn);
-  const person = identity(request);
+  const person = { name: session.name, email: session.email };
   await claimAvalistEmail(env, signedIn, person);
   const context = await staffContext(env, signedIn);
   env.ACTOR_ROLE = context.accountRole;

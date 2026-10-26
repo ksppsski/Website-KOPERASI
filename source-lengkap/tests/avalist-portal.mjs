@@ -94,22 +94,32 @@ const fetch = async (url, options = {}) => {
   return { ok: status === 200, status, json: async () => structuredClone(data) };
 };
 const s = await browser('avalist', { fetch, hash: 'avalist-riwayat' });
+function assertNoChatGptAccess() {
+  assert(!s.document.querySelector('a[href*="chatgpt"]'), 'The portal has no ChatGPT access links');
+  assert(
+    !/chatgpt/i.test(s.document.body.textContent),
+    'The portal does not direct users to ChatGPT',
+  );
+}
 assert.match(s.document.title, /Portal Avalist/);
 assert.match(s.document.querySelector('h1').textContent, /Portal Avalist/);
-const login = s.document.querySelector('a[href^="/signin-with-chatgpt"]');
-assert.equal(new URL(login.href).searchParams.get('return_to'), '/avalist.html');
-assert.equal(login.target, '_top');
+assertNoChatGptAccess();
+assert.match(
+  s.document.body.textContent,
+  /Akses Avalist hanya untuk email yang telah didaftarkan Manajer koperasi\./,
+);
+assert.equal(s.document.querySelector('button.btn').textContent.trim(), 'Periksa akses');
+const anonymousCalls = calls.length;
+await s.click('button.btn');
+assert.equal(calls.length, anonymousCalls + 1, 'The access button retries the server access check');
+assert(!s.document.querySelector('.side-nav'), 'An anonymous retry does not open private views');
 assert(!s.document.body.textContent.includes('Portal Petugas'));
 assert(!s.document.querySelector('#staff-role'));
 state = 'denied';
-s.window.dispatchEvent(new s.window.Event('focus'));
-await s.settle();
+await s.click('button.btn');
 assert.match(s.document.body.textContent, /Akses Avalist belum tersedia/);
 assert.match(s.document.body.textContent, /avalist@example.test/);
-assert.equal(
-  s.document.querySelector('a[href^="/signout-with-chatgpt"]').getAttribute('href'),
-  '/signout-with-chatgpt?return_to=/avalist.html',
-);
+assertNoChatGptAccess();
 assert(
   !calls.some((c) => c.url.includes('view=personal')),
   'Denied users cannot load personal data',
@@ -123,6 +133,8 @@ assert.equal(
   '/api/workflow/avalist/payments/paid/proof',
 );
 assert.equal(s.document.querySelectorAll('.side-nav a').length, 4);
+assertNoChatGptAccess();
+assert.equal(s.document.querySelector('.sidebar-foot a').textContent.trim(), 'Website KSPPS');
 assert(!s.document.querySelector('form, #staff-role, [data-action="enter"]'));
 assert(!s.document.body.textContent.includes('Portal Petugas'));
 assert(!s.document.body.textContent.includes('Catat transfer'));
@@ -229,9 +241,12 @@ assert(s.document.querySelector('.side-nav'));
 state = 'anonymous';
 s.window.dispatchEvent(new s.window.Event('focus'));
 await s.settle();
-assert(s.document.querySelector('a[href^="/signin-with-chatgpt"]'));
+assert.equal(s.document.querySelector('button.btn').textContent.trim(), 'Periksa akses');
+assertNoChatGptAccess();
 assert(!s.document.querySelector('.side-nav'));
+assert(!s.document.body.textContent.includes('ANGGOTA REFERENSI'));
+assert(!s.document.body.textContent.includes('TRANSFER-123'));
 s.close();
 console.log(
-  'Avalist portal: separate entry/bundle, sign-in/out targets, registered-only access, four private pages, mobile navigation, old-data clearing, retries and no staff APIs passed.',
+  'Avalist portal: separate entry/bundle, no ChatGPT links, access retries, registered-only access, four private pages, mobile navigation, old-data clearing and no staff APIs passed.',
 );

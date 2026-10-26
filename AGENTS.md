@@ -41,6 +41,7 @@ Saat menyentuh alur keuangan atau akses, baca juga bagian terkait di `source-len
 ## Invarian penting
 
 - Otorisasi dan kepemilikan data diperiksa server. Pemilih role dan input email tidak memberi hak akses.
+- Identitas hanya berasal dari sesi yang diverifikasi binding server `AUTH`. Integrasi akun platform lama sudah dihapus. Jangan mengembalikan pembacaan header identitas klien atau membuka formulir Pages sebagai pengganti backend.
 - Avalist mempunyai portal sendiri; tidak harus menjadi Admin atau Finance. Hanya Manajer mengesahkan perubahan penetapan/persentase/koreksi fee.
 - Pembayaran selesai dan dokumen final tidak ditimpa. Koreksi keuangan dicatat terpisah dengan alasan dan jejak pemeriksa.
 - Penawaran penuh hilang dari portal anggota setelah 72 jam sejak terpenuhi; riwayat Manajer tetap utuh.

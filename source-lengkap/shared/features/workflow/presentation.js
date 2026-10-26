@@ -50,10 +50,7 @@ export const status = (item) =>
 export const action = (name, id, label, primary = false) =>
   view(WorkflowAction, { name, id: id || '', label, primary });
 
-export const auth = () =>
-  snippetView(AuthView, {
-    encodeURIComponent: encodeURIComponent(location.pathname + location.hash),
-  });
+export const auth = () => snippetView(AuthView);
 
 export function frame(key, title) {
   return snippetView(FrameView, {

@@ -37,7 +37,7 @@ export function createWorkflowCoordinator({
 
   async function saveRegistration(data, proof, id, version, ktp) {
     if (!(await ensureReady()))
-      throw new Error('Masuk dengan ChatGPT sebelum menyimpan pendaftaran.');
+      throw new Error('Masuk ke akun koperasi sebelum menyimpan pendaftaran.');
     const form = new FormData();
     form.set('id', id);
     form.set('version', String(version || 0));

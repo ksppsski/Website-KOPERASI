@@ -5,18 +5,8 @@
   import Brand from '../../../../shared/components/Brand.svelte';
 
   let { context, route, key = route, children } = $props();
-  let {
-    icon,
-    badge,
-    pages,
-    activeRole,
-    menuPages,
-    roleName,
-    rolePicker,
-    member,
-    pending,
-    button,
-  } = $derived(context);
+  let { icon, badge, pages, activeRole, menuPages, roleName, rolePicker, member, pending, button } =
+    $derived(context);
 </script>
 
 {#if context}
@@ -47,10 +37,7 @@
       </nav>
       <div class="side-bottom">
         <div class="sidebar-foot">
-          <a href="index.html"><Icon name={'home'} />Website KSPPS</a><a
-            href="/signout-with-chatgpt?return_to=/petugas.html"
-            target="_top"><Icon name={'logout'} />Keluar</a
-          >
+          <a href="index.html"><Icon name={'home'} />Website KSPPS</a>
         </div>
       </div>
     </aside>

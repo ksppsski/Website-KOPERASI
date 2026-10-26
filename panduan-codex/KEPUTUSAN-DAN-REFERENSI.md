@@ -1,5 +1,11 @@
 # Keputusan, preferensi dan referensi proyek
 
+## Penghapusan akses platform lama, 26 Oktober 2026
+
+Pengguna meminta akses pengisian melalui ChatGPT dihapus dari code domain `syirkahkebaikanindonesia.com`. Tautan masuk/keluar, instruksi akun platform dan pembacaan header identitas lama dicabut. Batas baru memakai verifikasi sesi dari binding server `AUTH`, dengan akses privat ditolak bila provider atau sesi tidak tersedia. Tidak membuat login anonim, akun email/kata sandi baru, atau penyimpanan data pribadi di Pages. Penyedia login dan hosting operasional tetap perlu ditentukan untuk penggunaan mandiri.
+
+Pengguna menegaskan pilihan tahap ini: **hapus seluruh ketergantungan ChatGPT terlebih dahulu**. Penggantian dengan akun email/kata sandi belum termasuk perubahan ini.
+
 ## Gerakan tema dan logo, 26 Oktober 2026
 
 Permintaan lanjutan berdasarkan tangkapan layar: perpindahan tema dimulai dari pusat ikon lalu menyebar halus ke seluruh halaman; logo pada tema gelap harus putih seperti landing. Gunakan aset putih transparan yang sudah tersedia, pertahankan tema terang, dan hormati pengurangan gerak. Jangan menambahkan kotak putih pada logo portal.

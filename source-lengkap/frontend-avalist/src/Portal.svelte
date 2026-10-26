@@ -24,8 +24,6 @@
     loading = $state(false),
     menuOpen = $state(false);
   let generation = 0;
-  const signIn = '/signin-with-chatgpt?return_to=' + encodeURIComponent('/avalist.html');
-  const signOut = '/signout-with-chatgpt?return_to=/avalist.html';
   const { get } = createAvalistClient(request);
   async function load() {
     const gen = ++generation;
@@ -133,9 +131,7 @@
           >
         </div>
         <div class="sidebar-foot">
-          <a href="index.html"><Icon name="home" />Website KSPPS</a><a href={signOut} target="_top"
-            ><Icon name="logout" />Keluar</a
-          >
+          <a href="index.html"><Icon name="home" />Website KSPPS</a>
         </div>
       </div>
     </aside>
@@ -198,10 +194,11 @@
         {#if phase === 'loading'}<p role="status">Memeriksa akses avalist…</p>
         {:else if phase === 'anonymous'}
           <p class="subtext">
-            Masuk menggunakan akun ChatGPT dengan email yang telah didaftarkan Manajer sebagai
-            avalist.
+            Akses Avalist hanya untuk email yang telah didaftarkan Manajer koperasi.
           </p>
-          <a class="btn full" href={signIn} target="_top">Masuk sebagai Avalist</a>
+          <button class="btn full" disabled={loading} onclick={load}
+            >{loading ? 'Memeriksa…' : 'Periksa akses'}</button
+          >
         {:else if phase === 'denied'}
           <h2>Akses Avalist belum tersedia</h2>
           {#if identity?.email}<p class="avalist-email">{identity.email}</p>{/if}
@@ -212,7 +209,6 @@
           <button class="btn full" disabled={loading} onclick={load}
             >{loading ? 'Memeriksa…' : 'Periksa akses'}</button
           >
-          <a class="btn secondary full" href={signOut} target="_top">Gunakan akun lain</a>
         {:else}
           <p class="form-error" role="alert">
             {error || 'Portal belum dapat dimuat. Silakan coba lagi.'}

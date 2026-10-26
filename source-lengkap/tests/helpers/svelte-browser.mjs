@@ -138,7 +138,7 @@ export async function browser(entry, { fetch, compare, hash = 'masuk', preview =
     (async () => ({
       ok: false,
       status: 401,
-      json: async () => ({ error: 'Masuk dengan ChatGPT', signInRequired: true }),
+      json: async () => ({ error: 'Masuk ke akun koperasi.', signInRequired: true }),
     }));
   window.__compare = compare;
   window.__navigations = [];

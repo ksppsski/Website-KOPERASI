@@ -71,7 +71,7 @@ Perintah terpisah tersedia untuk proses build: `npm run build:frontend`, lalu `n
 
 ## Status penggunaan
 
-Pemisahan sumber mempertahankan tampilan, aturan server, template PDF dan data pratinjau. Ini belum mengaktifkan login email/kata sandi mandiri atau memindahkan database ke domain sendiri. API pratinjau masih memakai identitas ChatGPT; sebagian pengajuan pembiayaan/angsuran masih simulasi.
+Pemisahan sumber mempertahankan tampilan, aturan server, template PDF dan data pratinjau. Integrasi masuk/keluar ChatGPT dan header identitas lama dihapus pada 26 Oktober 2026. API privat membutuhkan sesi yang diverifikasi binding `AUTH`; tanpa provider akses ditolak. Ini belum mengaktifkan login email/kata sandi mandiri atau memindahkan database ke domain sendiri; sebagian pengajuan pembiayaan/angsuran masih simulasi.
 
 Tabel, panel, dan dialog sekarang menggunakan komponen/snippet Svelte. `shared/runtime/` mengatur state per portal, region tampilan, serta pembersihan listener, timer, dan permintaan. Klien HTTP hanya mengirim permintaan dan membaca respons; aturan izin tetap diperiksa server.
 

@@ -107,7 +107,7 @@ Avalist adalah referral internal kantor. Ia dapat menerima bagian dari akad angg
 - Manajer mendaftarkan avalist dengan **email**. Nama/rekening dapat dilengkapi kemudian; rekening lengkap wajib sebelum pembayaran.
 - Email pendaftaran harus dicocokkan dengan email identitas yang telah terautentikasi, lalu diikat sekali ke ID pengguna yang stabil. Mengisi email pada form bukan bukti identitas.
 - Email dinormalisasi kapital/kecil tanpa menafsir ulang alias penyedia email. Duplikasi dan pemindahan ikatan identitas ditolak.
-- Pendaftaran belum mengirim undangan email otomatis. Pada Site saat ini orang tersebut memakai login yang tersedia melalui ChatGPT, dengan email yang didaftarkan.
+- Pendaftaran tidak mengirim undangan email otomatis. Akses akun membutuhkan sesi server yang sah dan email terverifikasi yang sesuai pendaftaran Manajer. Jalur login platform lama sudah dihapus; penyedia sesi mandiri masih perlu dihubungkan pada hosting aplikasi.
 - Portal pribadi ada di `/avalist.html`, terpisah dari portal petugas. Akun yang hanya berhak sebagai avalist ditolak oleh API operasional umum.
 - Perubahan kepemilikan fee dilakukan melalui penetapan/koreksi, **bukan mengganti email akun lama**.
 

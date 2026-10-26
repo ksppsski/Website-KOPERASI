@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { readFileSync, readdirSync } from 'node:fs';
 import worker from '../backend/src/index.js';
+import { withTestSession, testSessionCookie } from './helpers/test-session.mjs';
 import {
   allocation,
   assignmentAt,
@@ -228,10 +229,18 @@ for (const role of ['admin', 'finance', 'manager', 'avalist-a', 'avalist-b']) {
 db.prepare("INSERT INTO staff_bootstrap VALUES('primary','manager',?)").run(now);
 async function call(
   path = '',
-  { user = 'manager', body, staff = false, member, email, origin = 'https://kspps.test' } = {},
+  {
+    user = 'manager',
+    body,
+    staff = false,
+    member,
+    email,
+    emailVerified = !!email,
+    origin = 'https://kspps.test',
+  } = {},
 ) {
-  const headers = { 'oai-authenticated-user-id': user };
-  if (email) headers['oai-authenticated-user-email'] = email;
+  const headers = {};
+  if (user) headers.Cookie = testSessionCookie;
   if (staff) headers['x-kspps-portal'] = 'staff';
   if (member) headers['x-kspps-member'] = member;
   if (body) {
@@ -247,7 +256,7 @@ async function call(
       headers,
       body,
     }),
-    env,
+    withTestSession(env, user && { id: user, name: user, email: email || '', emailVerified }),
   );
   return {
     status: r.status,
@@ -792,6 +801,22 @@ assert.equal(
   null,
 );
 assert.equal(ok(await call('/staff/access', { user: 'new-referral' })).staff.accountRole, null);
+assert.equal(
+  ok(
+    await call('/staff/access', {
+      user: 'new-referral',
+      email: emailAddress,
+      emailVerified: false,
+    }),
+  ).staff.accountRole,
+  null,
+  'An unverified session email cannot claim an Avalist entitlement',
+);
+assert.equal(
+  db.prepare('SELECT bound_user_id FROM avalist_email_access WHERE email=?').get(emailAddress)
+    .bound_user_id,
+  null,
+);
 assert.equal(
   (
     await call('/staff/role', {

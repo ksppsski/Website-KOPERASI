@@ -6,6 +6,7 @@ const require = createRequire(import.meta.url);
 const { PDFDocument, StandardFonts } = require('pdf-lib');
 const UPNG = require('@pdf-lib/upng').default;
 import worker from '../backend/src/index.js';
+import { withTestSession, testSessionCookie } from './helpers/test-session.mjs';
 import { terbilang, cropSignature } from '../backend/src/contract-pdf.js';
 import { agreementRules } from '../backend/src/contract-rules.js';
 import { RESET_ID, RESET_CUTOFF } from '../backend/src/reset-demo.js';
@@ -90,7 +91,7 @@ async function call(
   { owner = 'user-a', body, origin = base, method = body ? 'POST' : 'GET' } = {},
 ) {
   const headers = {};
-  if (owner) headers['oai-authenticated-user-id'] = owner;
+  if (owner) headers.Cookie = testSessionCookie;
   if (method !== 'GET') headers.origin = origin;
   if (body && !(body instanceof FormData)) {
     headers['content-type'] = 'application/json';
@@ -98,7 +99,7 @@ async function call(
   }
   const r = await worker.fetch(
     new Request(base + '/api/workflow' + path, { headers, method, body }),
-    env,
+    withTestSession(env, owner),
   );
   return {
     status: r.status,

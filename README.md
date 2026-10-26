@@ -8,6 +8,8 @@ Pembaruan **25 Oktober 2026** menghapus banner, badge, strip dan footer berlabel
 
 Penyempurnaan **26 Oktober 2026**: pergantian tema menyebar dari pusat tombol selama 650 ms dengan gerakan ikon. Peramban tanpa View Transitions memakai perpindahan warna 420 ms; preferensi pengurangan gerak menerapkan tema langsung. Logo portal memakai aset putih transparan pada tema gelap, termasuk layar masuk, tanpa latar kotak putih.
 
+Pada **26 Oktober 2026**, integrasi masuk/keluar ChatGPT dan pembacaan header identitas platform lama dihapus dari source. Backend hanya menerima sesi yang diverifikasi layanan `AUTH` terpercaya; tanpa layanan tersebut akses privat ditolak. Login email/kata sandi serta penyimpanan pada domain GitHub Pages belum diaktifkan.
+
 | Bagian | Lokasi | Status |
 | --- | --- | --- |
 | Aplikasi terbaru | `source-lengkap/` | Svelte 5 + Vite, Worker, skema/migrasi, template dokumen dan pengujian v39 |
@@ -67,7 +69,7 @@ Pengujian khusus tema tersedia melalui `npm run test:theme` dari `source-lengkap
 
 Perubahan file `docs/` yang dikirim ke branch sumber GitHub Pages akan diterbitkan melalui konfigurasi Pages yang sudah terpasang. Sumber aplikasi dalam `source-lengkap/` memerlukan alur build dan deployment backend tersendiri agar tampil sebagai aplikasi operasional pada domain sendiri.
 
-Sebelum berpindah hosting, ikuti [`source-lengkap/docs/PINDAH-HOSTING.md`](source-lengkap/docs/PINDAH-HOSTING.md). Kode masih memakai identitas terpercaya dari lingkungan Sites; login email/kata sandi mandiri belum diaktifkan. GitHub Pages tidak menjalankan Worker, D1 atau R2.
+Sebelum berpindah hosting, ikuti [`source-lengkap/docs/PINDAH-HOSTING.md`](source-lengkap/docs/PINDAH-HOSTING.md). Backend membutuhkan layanan sesi `AUTH` yang diverifikasi server; login email/kata sandi mandiri belum diaktifkan. GitHub Pages tidak menjalankan Worker, D1 atau R2.
 
 Sinkronisasi ini hanya membawa source, template dan pengujian. Database anggota, berkas unggahan, password, token dan secret deployment tidak disertakan. Konfigurasi `.openai/hosting.json` hanya mempertahankan nama binding `DB` dan `BUCKET`.
 

@@ -45,7 +45,7 @@
     <button class="btn secondary full" type="button" data-action="enter-portal"
       >Jelajahi portal anggota</button
     >
-    <p class="field-hint">Akses data keanggotaan menggunakan akun ChatGPT.</p>
+    <p class="field-hint">Gunakan email akun keanggotaan yang terdaftar.</p>
     <p class="auth-foot">Belum menjadi anggota? <a href="#daftar">Daftar anggota</a></p>
   </MemberAuthLayout>
 {/if}
