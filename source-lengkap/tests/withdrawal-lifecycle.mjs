@@ -3,6 +3,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { readFileSync, readdirSync } from 'node:fs';
 import UPNGModule from '@pdf-lib/upng';
 import worker from '../backend/src/index.js';
+import { withTestSession, testSessionCookie } from './helpers/test-session.mjs';
 import { RESET_ID } from '../backend/src/reset-demo.js';
 import { localDate } from '../backend/src/savings.js';
 import { activityState } from '../backend/src/activity.js';
@@ -86,7 +87,7 @@ async function call(
   } = {},
 ) {
   const headers = {};
-  if (user) headers['oai-authenticated-user-id'] = user;
+  if (user) headers.Cookie = testSessionCookie;
   if (method !== 'GET') headers.origin = origin;
   if (staff) headers['x-kspps-portal'] = 'staff';
   if (member) headers['x-kspps-member'] = member;
@@ -96,7 +97,7 @@ async function call(
   }
   const r = await worker.fetch(
     new Request('https://kspps.test/api/workflow' + path, { method, headers, body }),
-    env,
+    withTestSession(env, user),
   );
   return {
     status: r.status,

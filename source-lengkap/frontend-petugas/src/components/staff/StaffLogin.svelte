@@ -44,11 +44,6 @@
           <Content value={app.services.staffAccess?.entry() || 'Memeriksa akses akun…'} />
         {/if}
         <p id="staff-access-error" class="form-error" role="alert" hidden></p>
-        {#if !isStaticPreview}<p class="auth-foot">
-            <a target="_top" href="/signout-with-chatgpt?return_to=/petugas.html"
-              >Gunakan akun lain</a
-            >
-          </p>{/if}
       </div>
     </main>
   </div>

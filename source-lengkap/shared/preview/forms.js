@@ -17,12 +17,6 @@ export function protectPreviewForms(scope) {
       if (!button.disabled) button.disabled = true;
       button.title = previewMessage;
     });
-    document
-      .querySelectorAll('a[href^="/signin-with-chatgpt"], a[href^="/signout-with-chatgpt"]')
-      .forEach((link) => {
-        link.setAttribute('aria-disabled', 'true');
-        link.title = previewMessage;
-      });
   }
   scope.listen(
     document,

@@ -55,7 +55,7 @@ The owner explicitly requested deletion of all previous demo data. `backend/src/
 
 Member **Pengunduran Diri** now follows Admin → Finance → Manager. An active/overdue financing contract or an unfinished capital contract/application blocks submission and approval. Ended capital must also have its recorded extension or completed return, so closure cannot strand outstanding capital or an unconfirmed maturity choice. Admin may reject with a visible reason or approve; approval creates a Finance task for exactly Rp100,000 principal savings. Finance records the completed transfer, date, reference and mandatory JPG/PNG/PDF proof; only then does the request enter Manager's final queue. Final approval permanently closes that membership. The app records transfers; it does not initiate bank transfers. All three stages retain server-side audit timestamps and real actor IDs. Version checks, unique open requests and transactional guards prevent duplicate refunds or concurrent creation of a new contract during resignation.
 
-The closed membership number and its records remain an archive. **Daftar ulang sebagai anggota** points the same authenticated identity to a fresh membership workspace. The former member supplies all registration data/files and initial savings again, even when their details are unchanged; the system allocates a new never-reused number. Old balances, documents, credits, tasks and financing are not reassigned. Closing a cooperative membership does not delete the user's ChatGPT identity. Admin can view the closed archive through the scoped member endpoints.
+The closed membership number and its records remain an archive. **Daftar ulang sebagai anggota** points the same authenticated identity to a fresh membership workspace. The former member supplies all registration data/files and initial savings again, even when their details are unchanged; the system allocates a new never-reused number. Old balances, documents, credits, tasks and financing are not reassigned. Closing a cooperative membership does not delete the user's login account. Admin can view the closed archive through the scoped member endpoints.
 
 Admin's **Kontrak Pembiayaan** register records already-agreed financing contracts and their verified settlement. An overdue date alone does not release the resignation block. Members see their registered contracts. Financing applications, pricing, installments and payment execution remain the prior concept; this registry is not a full loan-origination or banking integration. Existing two-step resignation approvals are returned for Admin review under the new three-stage flow, with a new auditable task; no refund or account closure is fabricated.
 
@@ -63,7 +63,7 @@ Run `npm run test:withdrawal` for contract blocks, role/stage guards, rejection 
 
 ## Authentication and production boundary
 
-This remains a workflow preview authenticated with ChatGPT. Assigned accounts in `staff_accounts` authorize Admin, Finance and Manager operations; choosing a role in the UI does not grant it. Manager bootstrap is protected by an expiring server-side activation token, after which the Manager grants/revokes staff requests. Anonymous visitors only see public pages and portal shells. All private uploads require an authenticated owner or the appropriate assigned staff role. Finance does not receive member KTP/signature/contract content for other members.
+The previous platform sign-in/out integration and identity headers were removed on 26 October 2026. Private API access requires a verified session from the trusted server binding `AUTH`; missing credentials, a missing provider or an invalid session never authenticate a visitor. The verifier receives only session cookies or Authorization, and supplies a stable ID plus a verified email when available. It does not issue sessions or implement email/password login. Assigned accounts in `staff_accounts` authorize Admin, Finance and Manager operations; choosing a role in the UI does not grant it. Manager bootstrap is protected by an expiring server-side activation token, after which the Manager grants/revokes staff requests. Anonymous visitors only see public pages and portal shells. All private uploads require an authenticated owner or the appropriate assigned staff role. Finance does not receive member KTP/signature/contract content for other members.
 
 The Site records reconciliations and payment confirmations but never moves money. Operational deployment still requires the cooperative's identity, banking, retention and signing arrangements.
 
@@ -161,8 +161,8 @@ Requests returned by either Admin or Finance expose their notes and **Perbaiki**
 `backend/src/avalist.js` owns the server rules; native Svelte pages live in
 `frontend-petugas/src/components/avalist/` for operations. The independent personal portal
 is `/avalist.html`, implemented in `frontend-avalist/`; shared read-only views live in
-`shared/components/avalist/`. It has its own branded sign-in, four-page navigation and
-sign-out destination. It calls only `/avalist/access` and `/avalist?view=personal`, and
+`shared/components/avalist/`. It has its own branded access screen and four-page navigation.
+It calls only `/avalist/access` and `/avalist?view=personal`, and
 never changes the selected staff role or loads operational queues. Entitlement is checked
 server-side. Refresh/session failures remove stale personal data. Legacy `petugas.html#avalist-*`
 links redirect to this entry, and staff role pickers link there instead of opening an
@@ -170,9 +170,9 @@ Avalist workspace inside the staff shell. There is no Avalist data in the member
 Manager registers an internal Avalist with only an email in Pengelolaan Avalist.
 Name and bank details are optional at registration; complete bank details are required
 before payment. Pending registrations can already receive assignments and complete old
-proposals. No outbound invitation is sent. The person signs in through the existing
-ChatGPT flow with the registered email; `avalist-email.js` matches only the platform's
-authenticated email and binds the grant once to the stable platform user ID. Subsequent
+proposals. No outbound invitation is sent. A trusted session service must verify the
+registered email; `avalist-email.js` receives only that verified email and binds the grant
+once to the stable account ID. Unverified email cannot claim access. Subsequent
 authorization uses that ID, never a form-provided email. Email case is normalized without
 provider-specific alias rewriting. Duplicate registrations and identity reassignment are
 rejected. The email binding cannot be changed to transfer financial history.

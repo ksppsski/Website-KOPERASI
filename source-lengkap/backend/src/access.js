@@ -65,20 +65,6 @@ export async function changeStaffRole(env, owner, role) {
   ).run();
   return { ...context, role };
 }
-export function identity(request) {
-  const email = (request.headers.get('oai-authenticated-user-email') || '').slice(0, 200);
-  let name = request.headers.get('oai-authenticated-user-full-name') || '';
-  if (
-    request.headers.get('oai-authenticated-user-full-name-encoding') === 'percent-encoded-utf-8'
-  ) {
-    try {
-      name = decodeURIComponent(name);
-    } catch {
-      name = '';
-    }
-  }
-  return { name: (name || email || 'Akun ChatGPT').slice(0, 160), email };
-}
 export async function accessState(env, id, person) {
   const staff = await staffContext(env, id),
     request = await stmt(

@@ -36,20 +36,18 @@ export function bindMemberSubmissions({
       form.reportValidity();
       return;
     }
-    const data = Object.fromEntries(new FormData(form));
     if (form.id === 'login-form') {
-      state.signedIn = true;
-      const p = app.services.workflow?.getProfile();
-      state.profile = p ? { ...p.data } : {};
-      state.savedProfile = !!p;
-      go('ringkasan');
+      const error = $('#login-error');
+      error.textContent =
+        'Layanan masuk akun tidak tersedia pada alamat ini. Hubungi koperasi untuk akses akun.';
+      error.hidden = false;
+      return;
     }
     if (form.id === 'forgot-form') {
-      dialog(
-        'Pemulihan akun',
-        snippetView(BindMemberSubmissionsView, { icon: icon('mail') }),
-      );
+      dialog('Pemulihan akun', snippetView(BindMemberSubmissionsView, { icon: icon('mail') }));
+      return;
     }
+    const data = Object.fromEntries(new FormData(form));
     if (form.id === 'registration-form') {
       saveRegistration(form);
       if (

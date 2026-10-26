@@ -28,6 +28,12 @@ Framework frontend tetap **Svelte 5 + Vite**. Backend tetap Worker JavaScript de
 
 Favicon tab mengikuti mode perangkat. `public/assets/kspps-symbol.svg` berisi bentuk vektor logo, `scripts/generate-favicons.mjs` menghasilkan varian terang/gelap secara otomatis saat build.
 
+## Identitas akun tanpa platform lama
+
+`backend/src/authentication.js` memeriksa sesi melalui binding server `AUTH`. Router memakai ID hasil verifikasi untuk pemeriksaan role/kepemilikan yang sudah ada. Header identitas platform lama tidak dibaca; hanya cookie atau token sesi yang diteruskan ke verifier terpercaya. Tanpa provider/sesi sah, akses privat ditolak. Tes `authentication.mjs` dan fixture `tests/helpers/test-session.mjs` memisahkan sesi terpercaya dari input browser. UI tidak lagi mempunyai tautan atau instruksi masuk/keluar platform lama. Login email/kata sandi belum dihubungkan.
+
+Jalankan `npm run test:auth` untuk memeriksa batas sesi dan memastikan isian login tidak dianggap sebagai autentikasi lokal. Kontrak binding dijelaskan pada `PINDAH-HOSTING.md`.
+
 ## Tata letak pendaftaran
 
 Tata letak pendaftaran memakai modifier `auth-layout--wide` dari prop `wide` pada `MemberAuthLayout.svelte`. Aturan di `portal.css` membuat panel kiri sticky, setinggi layar minimal, dan tidak meregang mengikuti formulir. Tinggi layar paling banyak 600 px memakai scroll dokumen untuk menjaga semua isi terjangkau; lebar paling banyak 760 px tetap satu kolom. Login Anggota, Petugas dan Avalist tidak memakai modifier ini.

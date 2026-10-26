@@ -7,12 +7,17 @@ const offline = async () => {
   throw new Error('Static previews must not contact a backend');
 };
 function assertServicePresentation(app) {
-  const labels = [...app.document.querySelectorAll('[title], [aria-label], [alt], [placeholder]')]
-    .flatMap((element) => ['title', 'aria-label', 'alt', 'placeholder'].map((key) => element.getAttribute(key) || ''));
+  const labels = [
+    ...app.document.querySelectorAll('[title], [aria-label], [alt], [placeholder]'),
+  ].flatMap((element) =>
+    ['title', 'aria-label', 'alt', 'placeholder'].map((key) => element.getAttribute(key) || ''),
+  );
   assert.doesNotMatch(
     [app.document.body.textContent, ...labels].join(' '),
-    /pratinjau|prototipe|simulasi|\bdemo\b|portal konsep|rancangan portal|data contoh/i,
+    /pratinjau|prototipe|simulasi|\bdemo\b|portal konsep|rancangan portal|data contoh|chatgpt/i,
   );
+  for (const link of app.document.querySelectorAll('a[href]'))
+    assert.doesNotMatch(link.getAttribute('href'), /chatgpt/i);
   assert.equal(app.document.querySelector('.static-preview-banner, .prototype-strip'), null);
 }
 const member = await browser('anggota', { preview: true, fetch: offline });
@@ -94,7 +99,12 @@ for (const [role, routes] of Object.entries(pages)) {
   }
 }
 const avalist = await browser('avalist', { preview: true, fetch: offline });
-for (const route of ['avalist-ringkasan', 'avalist-anggota', 'avalist-rincian', 'avalist-riwayat']) {
+for (const route of [
+  'avalist-ringkasan',
+  'avalist-anggota',
+  'avalist-rincian',
+  'avalist-riwayat',
+]) {
   await avalist.route(route);
   assertServicePresentation(avalist);
 }

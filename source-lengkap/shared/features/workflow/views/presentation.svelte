@@ -20,13 +20,11 @@
   <span class={'badge ' + statusColor}><Content value={statusLabel} /></span>
 {/snippet}
 
-{#snippet AuthView({ encodeURIComponent })}
+{#snippet AuthView()}
   <div class="wf-empty">
     <strong>Masuk untuk melanjutkan</strong>
-    <p>Masuk dengan ChatGPT untuk menyimpan pengajuan dan melihat hasil pemeriksaan.</p>
-    <a class="btn" target="_top" href={'/signin-with-chatgpt?return_to=' + encodeURIComponent}
-      >Lanjutkan dengan ChatGPT</a
-    >
+    <p>Akun koperasi diperlukan untuk menyimpan pengajuan dan melihat hasil pemeriksaan.</p>
+    <p>Hubungi koperasi untuk akses akun.</p>
   </div>
 {/snippet}
 

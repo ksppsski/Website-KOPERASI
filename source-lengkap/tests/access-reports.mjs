@@ -3,6 +3,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { readFileSync, readdirSync } from 'node:fs';
 import { PDFDocument } from 'pdf-lib';
 import worker from '../backend/src/index.js';
+import { withTestSession, testSessionCookie } from './helpers/test-session.mjs';
 import { RESET_ID } from '../backend/src/reset-demo.js';
 import { hash } from '../backend/src/membership.js';
 const db = new DatabaseSync(':memory:');
@@ -76,11 +77,7 @@ async function call(
   } = {},
 ) {
   const headers = {};
-  if (user) {
-    headers['oai-authenticated-user-id'] = user;
-    headers['oai-authenticated-user-email'] = user + '@example.test';
-    headers['oai-authenticated-user-full-name'] = 'Petugas ' + user;
-  }
+  if (user) headers.Cookie = testSessionCookie;
   if (method !== 'GET') headers.origin = origin;
   if (staff) headers['x-kspps-portal'] = 'staff';
   if (member) headers['x-kspps-member'] = member;
@@ -90,7 +87,15 @@ async function call(
   }
   const r = await worker.fetch(
     new Request('https://kspps.test/api/workflow' + path, { method, headers, body }),
-    env,
+    withTestSession(
+      env,
+      user && {
+        id: user,
+        name: 'Petugas ' + user,
+        email: user + '@example.test',
+        emailVerified: true,
+      },
+    ),
   );
   return {
     status: r.status,

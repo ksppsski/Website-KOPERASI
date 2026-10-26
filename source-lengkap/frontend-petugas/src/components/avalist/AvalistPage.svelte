@@ -159,7 +159,7 @@
               b,
               b.id
                 ? 'Data avalist tersimpan. Persiapan pembayaran yang terpengaruh perlu diperiksa ulang.'
-                : 'Email avalist terdaftar. Pemilik email dapat masuk melalui ChatGPT dengan email yang sama.',
+                : 'Email avalist terdaftar.',
             )}
         />
         <AvalistDirectory {data} />

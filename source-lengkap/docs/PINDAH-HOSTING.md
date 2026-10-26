@@ -12,9 +12,13 @@ GitHub Pages hanya menayangkan file statis dalam `../docs/`. Memasang bundle Wor
 
 ## Identitas dan izin
 
-Versi pratinjau menerima identitas dari dispatch Sites yang terpercaya, termasuk header `oai-authenticated-user-id`, serta memakai `/signin-with-chatgpt` dan `/signout-with-chatgpt`. Pada hosting lain, header yang dikirim klien tidak boleh dianggap sebagai bukti login.
+Integrasi masuk/keluar ChatGPT dan pembacaan header identitas platform lama dihapus pada 26 Oktober 2026. Backend tidak menganggap header identitas atau isian email sebagai bukti masuk akun.
 
-Siapkan autentikasi dan sesi yang diverifikasi server sebelum menjalankan backend pada hosting tujuan. Bersihkan header identitas dari klien, lalu tetapkan identitas hanya dari sesi yang sah. Petakan ID akun anggota, petugas dan avalist dengan hati-hati agar kepemilikan data dan riwayat tetap benar. Email avalist harus berasal dari identitas yang terverifikasi. Formulir email/kata sandi yang sudah terlihat belum merupakan autentikasi mandiri.
+`backend/src/authentication.js` memverifikasi sesi melalui binding layanan server `AUTH`. Resolver membuat permintaan `GET https://auth.internal/session` dan meneruskan hanya header `Cookie` serta `Authorization`. Alamat internal ini bukan URL yang dibuka pengguna atau layanan yang sudah disediakan repository. Binding harus menunjuk layanan terpercaya yang memverifikasi kredensial sesi, bukan membaca identitas langsung dari browser.
+
+Kontrak respons layanan: JSON `{ "id": "ID-stabil", "name": "Nama akun", "email": "email-terverifikasi", "emailVerified": true }`. ID harus stabil dan tidak kosong. Email hanya diteruskan ke aturan Avalist bila dinyatakan terverifikasi; email yang belum terverifikasi tidak dapat mengklaim akses Avalist. Respons 401/403 berarti tidak ada sesi sah. Respons gagal atau identitas tidak valid ditolak. Tanpa binding `AUTH`, endpoint privat menolak akses.
+
+Siapkan layanan masuk, keluar, verifikasi email, reset sandi dan pengelolaan sesi pada hosting tujuan. Resolver bukan penerbit sesi dan tidak membuat akun atau kata sandi baru. Petakan ID akun anggota, petugas dan avalist dengan hati-hati agar kepemilikan data dan riwayat tetap benar. Formulir email/kata sandi yang terlihat belum merupakan autentikasi mandiri; mengisinya tidak memberi akses. GitHub Pages tetap tidak menerima pengisian atau penyimpanan.
 
 Aktivasi Manajer memakai konfigurasi rahasia `KSPPS_MANAGER_SETUP`; nilainya tidak ada dalam repository. Ikuti implementasi `backend/src/access.js` untuk bootstrap tujuan dan simpan secret pada environment hosting. Jangan memasukkan nilainya ke source atau GitHub Pages.
 

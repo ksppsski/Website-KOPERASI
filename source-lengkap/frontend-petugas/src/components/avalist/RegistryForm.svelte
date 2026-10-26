@@ -33,8 +33,8 @@
 <section class="panel av-form-panel">
   <h2>Daftar avalist internal</h2>
   <p class="subtext">
-    Manajer cukup mendaftarkan email. Avalist masuk melalui ChatGPT dengan email yang sama dan
-    mendapat akses ke data avalist miliknya. Tidak perlu menjadi Admin atau Finance.
+    Manajer mendaftarkan email avalist untuk penetapan akses ke data miliknya. Avalist tidak perlu
+    menjadi Admin atau Finance.
   </p>
   <p class="field-hint">
     Tautan masuk khusus avalist: <a href="/avalist.html" target="_blank" rel="noreferrer"

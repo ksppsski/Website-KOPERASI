@@ -148,7 +148,8 @@ Project dibagi menjadi **frontend user**, **frontend petugas**, **frontend avali
 ### Pekerjaan sebelum penggunaan mandiri di domain sendiri
 
 - [ ] Pilih dan hubungkan layanan autentikasi email/kata sandi, verifikasi email, reset sandi dan sesi pengguna.
-- [ ] Sesuaikan pemetaan identitas anggota/petugas serta izin server untuk autentikasi mandiri; backend saat ini memakai identitas ChatGPT.
+- [x] Hapus jalur masuk/keluar platform lama dan pembacaan header identitasnya; akses privat ditolak tanpa sesi terverifikasi.
+- [ ] Hubungkan penyedia sesi pada binding `AUTH` dan petakan ID stabil anggota/petugas/Avalist tanpa memindahkan kepemilikan berdasarkan input email.
 - [ ] Siapkan hosting backend, database dan penyimpanan privat yang terhubung ke domain sendiri. Unggah source ke GitHub saja tidak memindahkan layanan/data pratinjau.
 - [ ] Siapkan konfigurasi lingkungan, pengelolaan secret, backup dan uji pemulihan data.
 - [ ] Lengkapi implementasi pembiayaan/angsuran yang masih simulasi sebelum digunakan untuk transaksi nyata.

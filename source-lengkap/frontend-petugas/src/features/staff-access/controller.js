@@ -68,10 +68,7 @@ export function initializeStaffAccess(app) {
   function entry() {
     if (!state.loaded) return snippetView(EntryView);
     if (state.error) return snippetView(Entry2View, { error: esc(state.error) });
-    if (!state.signedIn) {
-      const target = '/petugas.html' + (token ? '#setup=' + encodeURIComponent(token) : '');
-      return snippetView(Entry3View, { encodeURIComponent: encodeURIComponent(target) });
-    }
+    if (!state.signedIn) return snippetView(Entry3View);
     const who = snippetView(WhoView, {
       slice: esc((state.identity?.name || 'P').slice(0, 1)),
       fieldName: esc(state.identity?.name),

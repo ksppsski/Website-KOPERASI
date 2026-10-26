@@ -32,11 +32,9 @@
   <button type="button" class="btn" data-access-action="refresh">Coba lagi</button>
 {/snippet}
 
-{#snippet Entry3View({ encodeURIComponent })}
-  <p>Masuk menggunakan akun yang terdaftar sebagai petugas.</p>
-  <a class="btn full" target="_top" href={'/signin-with-chatgpt?return_to=' + encodeURIComponent}
-    >Masuk dengan ChatGPT</a
-  >
+{#snippet Entry3View()}
+  <p>Layanan akun tidak tersedia pada alamat ini. Hubungi Manajer koperasi untuk akses petugas.</p>
+  <button type="button" class="btn full" data-access-action="refresh">Periksa akses</button>
 {/snippet}
 
 {#snippet WhoView({ slice, fieldName, email })}

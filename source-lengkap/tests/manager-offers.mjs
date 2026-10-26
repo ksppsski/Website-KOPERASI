@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { readFileSync, readdirSync } from 'node:fs';
 import worker from '../backend/src/index.js';
+import { withTestSession, testSessionCookie } from './helpers/test-session.mjs';
 import { reportWindow, inReportWindow, reportSummary } from '../backend/src/manager.js';
 import { RESET_ID } from '../backend/src/reset-demo.js';
 import { offers } from '../backend/src/offers.js';
@@ -81,7 +82,7 @@ for (const owner of ['a', 'b']) {
   );
 }
 async function call(path = '', body, owner = 'a', staffView = false) {
-  const headers = { 'oai-authenticated-user-id': owner, origin: 'https://kspps.test' };
+  const headers = { Cookie: testSessionCookie, origin: 'https://kspps.test' };
   if (staffView) headers['x-kspps-portal'] = 'staff';
   if (body && !(body instanceof FormData)) {
     headers['content-type'] = 'application/json';
@@ -93,7 +94,7 @@ async function call(path = '', body, owner = 'a', staffView = false) {
       body,
       headers,
     }),
-    env,
+    withTestSession(env, owner),
   );
   return { status: res.status, data: await res.json() };
 }

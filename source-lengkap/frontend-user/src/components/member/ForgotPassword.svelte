@@ -18,7 +18,7 @@
       >
     </form>
     <p class="field-hint">
-      Pemulihan kata sandi tidak tersedia melalui formulir ini. Gunakan akun ChatGPT.
+      Pemulihan kata sandi tidak tersedia melalui formulir ini.
     </p>
     <p class="auth-foot"><a href="#masuk">Kembali ke halaman masuk</a></p>
   </MemberAuthLayout>

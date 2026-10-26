@@ -4,6 +4,8 @@ Snapshot serah terima: **14 Oktober 2026**, aplikasi **v39**. Periksa kode/commi
 
 ## Pembaruan 26 Oktober 2026
 
+Seluruh tautan, instruksi masuk/keluar ChatGPT dan pembacaan header identitasnya telah dihapus dari source. API privat memakai resolver sesi dari binding `AUTH` terpercaya. Tanpa provider atau sesi sah, server menolak akses; nama/email/role dari browser tidak memberikan izin. Form login tidak lagi menandai pengguna masuk hanya karena isian diisi. Domain Pages tetap tidak menyimpan data atau menjalankan login mandiri.
+
 Pergantian tema diperhalus dengan lingkaran yang menyebar dari tombol dan animasi ikon. View Transitions dipakai bila tersedia; fallback warna dan preferensi pengurangan gerak tetap didukung. Klik ditahan selama transisi singkat tanpa melepas fokus, mengganti rute atau membuat ulang formulir. Logo portal kini berganti ke aset putih transparan dalam mode gelap, tanpa kotak putih.
 
 Panel kiri Daftar Anggota tetap tersusun setinggi layar dan mengikuti pengguliran formulir pada desktop. Panel tidak lagi meregang setinggi Data diri yang panjang. Pada layar dengan tinggi paling banyak 600 px, seluruh isi mengikuti scroll dokumen agar tidak terpotong. Tampilan ponsel tetap memakai satu kolom.
@@ -35,7 +37,7 @@ Mode terang dan gelap tersedia pada landing, portal Anggota, Petugas dan Avalist
 | Pengunduran diri | Alur Admin → Finance → Manajer dan pendaftaran ulang tersedia |
 | Pembiayaan | Register kontrak petugas tersedia; pengajuan/angsuran tertentu masih simulasi |
 | Login email/kata sandi mandiri | **Belum terhubung**; tampilan formulir bukan autentikasi nyata |
-| Login pada Site | Bergantung pada identitas terpercaya dari lingkungan Sites/ChatGPT |
+| Identitas akun | Integrasi platform lama dicabut; membutuhkan sesi server yang sah dari binding `AUTH` |
 | Hosting aplikasi di domain sendiri | **Belum dinyatakan operasional**; sinkronisasi source tidak memindahkan backend/data |
 | GitHub Pages | Build pratinjau v39 dari sumber Svelte yang sama; data kosong, formulir nonaktif, tanpa API |
 | Bank, email/WhatsApp otomatis, Privy/e-meterai | Belum terintegrasi |
@@ -83,7 +85,7 @@ Pengguna pernah menunda pembahasan DNS. Jangan mengubah nameserver/record DNS se
 
 ## Titik rawan saat pindah hosting
 
-- Backend sekarang menerima header identitas dari dispatch Sites yang dipercaya. Pada hosting umum, jangan mempercayai `oai-authenticated-user-id` atau email yang dikirim klien. Identitas harus dihasilkan dari sesi yang diverifikasi server.
+- Backend tidak menerima header identitas platform lama. Hubungkan `AUTH` ke layanan sesi terpercaya; ID stabil dan email terverifikasi harus berasal dari hasil verifikasi server. Tanpa provider, akses privat ditolak.
 - Pendaftaran avalist hanya memberikan hak yang belum diklaim; mengganti email bukan cara memindahkan histori. Pertahankan ID pengguna stabil saat migrasi auth.
 - `.openai/hosting.json` dalam ekspor GitHub hanya mempertahankan nama binding `DB`/`BUCKET`, tanpa identitas proyek Site. Jangan menebak ID proyek dari URL.
 - Bootstrap Manajer memakai secret `KSPPS_MANAGER_SETUP`. Nilainya tidak ikut repository. Jangan mengendurkan pemeriksaan role agar akun dapat masuk.
