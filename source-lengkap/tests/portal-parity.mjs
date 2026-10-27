@@ -60,7 +60,7 @@ let activeProfile = null,
 const staff = () => ({
   role: currentRole,
   accountRole: 'manager',
-  allowedRoles: ['admin', 'finance', 'manager'],
+  allowedRoles: ['admin', 'finance', 'manager', 'customer_relation'],
 });
 const fetch = async (url, options = {}) => {
   const path = new URL(url, 'https://kspps.example').pathname;

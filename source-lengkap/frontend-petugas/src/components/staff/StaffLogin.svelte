@@ -34,7 +34,7 @@
         {#if isStaticPreview}
           <p>Pilih portal yang ingin dibuka.</p>
           <div class="staff-role-entry">
-            {#each [['manager', 'Manajer'], ['admin', 'Admin'], ['finance', 'Finance']] as [role, label]}
+            {#each [['manager', 'Manajer'], ['admin', 'Admin'], ['finance', 'Finance'], ['customer_relation', 'Customer Relation']] as [role, label]}
               <button type="button" class="btn secondary full" data-action="enter" data-role={role}
                 >Buka portal {label}</button
               >

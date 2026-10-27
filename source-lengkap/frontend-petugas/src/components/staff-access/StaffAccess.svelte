@@ -19,7 +19,7 @@
     </div>
   </section>
   <p class="field-hint">
-    Admin dan Finance bekerja sesuai hak aksesnya. Avalist hanya melihat referensi dan bagi hasil
-    miliknya. Manajer mengelola penetapan dan hak akses.
+    Admin, Finance, dan Customer Relation bekerja sesuai hak aksesnya. Avalist hanya melihat
+    referensi dan bagi hasil miliknya. Manajer mengelola penetapan dan hak akses.
   </p>
 {/if}

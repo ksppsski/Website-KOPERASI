@@ -66,6 +66,11 @@ async function mutate(env, row, actor, person, context, changes, events) {
 }
 
 export async function createComplaint(env, actor, person, context, body) {
+  if (context.accountRole === 'customer_relation')
+    throw new Problem(
+      403,
+      'Customer Relation hanya dapat menindaklanjuti keluhan yang ditugaskan kepadanya.',
+    );
   const id = requestId(body.id);
   const subject = shortText(body.subject, 5, 160, 'Subjek keluhan');
   const description = shortText(body.description, 10, 4000, 'Uraian keluhan');
@@ -148,7 +153,7 @@ export async function assignComplaint(env, actor, person, context, id, body) {
     'SELECT user_id,display_name,role FROM staff_accounts WHERE user_id=?',
     String(body.assigneeId || ''),
   ).first();
-  if (!assignee || !['admin', 'finance', 'manager'].includes(assignee.role))
+  if (!assignee || !['admin', 'finance', 'manager', 'customer_relation'].includes(assignee.role))
     throw new Problem(400, 'Pilih PIC yang masih memiliki akses petugas.');
   if (assignee.role !== body.division)
     throw new Problem(400, 'PIC harus memiliki akses sesuai divisi penanggung jawab.');

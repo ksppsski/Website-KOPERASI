@@ -14,6 +14,8 @@ export function avalistEmail(value) {
 // Never read a claimed identity from a form, query parameter, or portal header.
 export async function claimAvalistEmail(env, id, identity) {
   if (!identity.email) return;
+  const account = await stmt(env, 'SELECT role FROM staff_accounts WHERE user_id=?', id).first();
+  if (account?.role === 'customer_relation') return;
   const email = identity.email.trim().toLowerCase();
   const grant = await stmt(
     env,

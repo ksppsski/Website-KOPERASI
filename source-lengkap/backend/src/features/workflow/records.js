@@ -129,10 +129,10 @@ export function dto(row) {
 }
 
 export async function staffPayload(env, actor, context) {
-  const profiles = (
-    await stmt(env, 'SELECT owner FROM member_profiles ORDER BY created_at DESC').all()
-  ).results;
-  if (['finance', 'avalist'].includes(context.role))
+  if (
+    context.accountRole === 'customer_relation' ||
+    ['finance', 'avalist', 'customer_relation'].includes(context.role)
+  )
     return {
       items: [],
       profiles: [],
@@ -142,6 +142,9 @@ export async function staffPayload(env, actor, context) {
       members: [],
       demo: true,
     };
+  const profiles = (
+    await stmt(env, 'SELECT owner FROM member_profiles ORDER BY created_at DESC').all()
+  ).results;
   const out = [],
     items = [];
   for (const ref of profiles) {

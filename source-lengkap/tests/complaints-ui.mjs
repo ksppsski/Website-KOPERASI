@@ -81,9 +81,9 @@ const initialEvent = {
   createdAt: '2026-09-25T02:03:00Z',
 };
 
-function mockApi({ staff = false } = {}) {
+function mockApi({ staff = false, accountRole = 'manager' } = {}) {
   const model = {
-    role: 'manager',
+    role: accountRole,
     items: [sample()],
     events: [initialEvent],
     calls: [],
@@ -93,12 +93,17 @@ function mockApi({ staff = false } = {}) {
     failReadAfterMutation: false,
     nextMutation: null,
     nextList: null,
+    accounts: [],
   };
   const staffState = () => ({
     role: model.role,
-    accountRole: 'manager',
-    allowedRoles: ['manager', 'admin', 'finance', 'avalist'],
+    accountRole,
+    allowedRoles:
+      accountRole === 'manager'
+        ? ['manager', 'admin', 'finance', 'customer_relation', 'avalist']
+        : [accountRole],
   });
+  const canManage = staff && ['manager', 'admin'].includes(accountRole);
   const response = (body, status = 200) => ({
     ok: status < 400,
     status,
@@ -108,6 +113,7 @@ function mockApi({ staff = false } = {}) {
     { id: 'staff-admin', name: 'ADMIN PENANGGUNG JAWAB', role: 'admin' },
     { id: 'staff-finance', name: 'FINANCE PENANGGUNG JAWAB', role: 'finance' },
     { id: 'staff-manager', name: 'MANAJER PENANGGUNG JAWAB', role: 'manager' },
+    { id: 'staff-cr', name: 'PETUGAS CUSTOMER RELATION', role: 'customer_relation' },
   ];
   const fetch = async (url, options = {}) => {
     const path = new URL(url, 'https://kspps.example').pathname;
@@ -115,8 +121,8 @@ function mockApi({ staff = false } = {}) {
     model.calls.push({ url, method });
     if (path === '/api/workflow')
       return response({
-        profile,
-        profiles: staff ? [profile] : [],
+        profile: staff && accountRole === 'customer_relation' ? null : profile,
+        profiles: staff && accountRole !== 'customer_relation' ? [profile] : [],
         members: [],
         items: [],
         offers: [],
@@ -151,22 +157,27 @@ function mockApi({ staff = false } = {}) {
           staff ? 'staff' : null,
         );
         return response({
-          items: model.items,
-          assignees: staff ? assignees : [],
-          canManage: staff,
+          items:
+            accountRole === 'customer_relation'
+              ? model.items.filter((item) => item.assignee?.id === 'staff-cr')
+              : model.items,
+          assignees: canManage ? assignees : [],
+          canManage,
         });
       }
       const item = model.items.find((entry) => entry.id === suffix.split('/')[1]);
       if (method === 'GET') {
         assert(item, 'A detail request must reference an existing case');
+        if (accountRole === 'customer_relation' && item.assignee?.id !== 'staff-cr')
+          return response({ error: 'Keluhan tidak ditemukan.' }, 404);
         return response({
           item,
           events: model.events,
-          canManage: staff,
+          canManage,
           canReply: item.status !== 'closed',
           canReplyAsStaff: staff,
           canResolve: staff && item.status !== 'resolved' && item.status !== 'closed',
-          canClose: item.status === 'resolved',
+          canClose: canManage && item.status === 'resolved',
         });
       }
       const body = JSON.parse(options.body);
@@ -223,7 +234,10 @@ function mockApi({ staff = false } = {}) {
     if (path.endsWith('/staff/tasks')) return response({ tasks: [] });
     if (path.endsWith('/finance/payouts')) return response({ items: [], members: [], total: 0 });
     if (path.endsWith('/reports')) return response({ reports: [] });
-    if (path.endsWith('/staff/accounts')) return response({ accounts: [] });
+    if (path.endsWith('/staff/accounts')) {
+      if (method === 'POST') model.mutations.push({ path, body: JSON.parse(options.body) });
+      return response({ accounts: model.accounts });
+    }
     return response({ items: [], today: '2026-09-25' });
   };
   return { model, fetch };
@@ -384,7 +398,24 @@ saved.close();
 const staffApi = mockApi({ staff: true });
 const staff = await browser('petugas', { fetch: staffApi.fetch });
 await staff.click('[data-action="enter"][data-role="manager"]');
-for (const role of ['manager', 'admin', 'finance']) {
+assert.equal(
+  staff.document.querySelector('#staff-role option[value="customer_relation"]').textContent,
+  'Customer Relation',
+  'Manager inherits the Customer Relation workspace',
+);
+staffApi.model.accounts = [
+  {
+    code: 'CR-REQUEST',
+    name: 'CALON CUSTOMER RELATION',
+    email: 'cr@example.test',
+    status: 'pending',
+  },
+];
+await staff.route('manager-akses');
+await staff.click('[data-access-action="grant"][data-role="customer_relation"]');
+assert.equal(staffApi.model.mutations.at(-1).body.role, 'customer_relation');
+assert.equal(staffApi.model.mutations.at(-1).body.code, 'CR-REQUEST');
+for (const role of ['manager', 'admin', 'finance', 'customer_relation']) {
   if (role !== 'manager') await staff.window.KsppsWorkflow.setStaffRole(role);
   await staff.settle();
   assert.equal(
@@ -399,6 +430,17 @@ await staff.window.KsppsWorkflow.setStaffRole('manager');
 await staff.settle();
 await staff.route('keluhan');
 await staff.click('button[aria-label="Lihat detail KLH-2026-000001"]');
+await set(staff, 'Divisi penanggung jawab', 'customer_relation');
+assert.equal(
+  byLabel(staff, 'PIC').querySelector('option[value="staff-cr"]').textContent,
+  'PETUGAS CUSTOMER RELATION',
+);
+await set(staff, 'PIC', 'staff-cr');
+await set(staff, 'Batas waktu penanganan', '2026-09-27T16:30');
+await set(staff, 'Alasan perubahan', 'Pendampingan diteruskan kepada Customer Relation.');
+await submit(staff, byLabel(staff, 'Alasan perubahan').form);
+assert.equal(staffApi.model.items[0].division, 'customer_relation');
+assert.equal(staffApi.model.items[0].assignee.id, 'staff-cr');
 await set(staff, 'Divisi penanggung jawab', 'finance');
 await set(staff, 'PIC', 'staff-finance');
 await set(staff, 'Batas waktu penanganan', '2026-09-27T16:30');
@@ -473,6 +515,93 @@ assert(
 assert(!staff.document.querySelector('#staff-role option[value="avalist"]'));
 staff.close();
 
+const relationApi = mockApi({ staff: true, accountRole: 'customer_relation' });
+const assigned = {
+  ...sample('case-customer-relation'),
+  number: 'KLH-2026-000003',
+  subject: 'Pendampingan dokumen anggota',
+  assignee: { id: 'staff-cr', name: 'PETUGAS CUSTOMER RELATION' },
+  division: 'customer_relation',
+};
+relationApi.model.items = [
+  assigned,
+  { ...sample('case-not-assigned'), number: 'KLH-2026-000099', subject: 'KELUHAN PETUGAS LAIN' },
+];
+const relation = await browser('petugas', { fetch: relationApi.fetch });
+assert.equal(byButton(relation, 'Buka portal Customer Relation').dataset.role, 'customer_relation');
+assert(!relation.document.querySelector('[data-action="enter"][data-role="admin"]'));
+assert(!relation.document.querySelector('[data-action="enter"][data-role="finance"]'));
+assert(!relation.document.querySelector('[data-action="enter"][data-role="manager"]'));
+await relation.click('[data-action="enter"][data-role="customer_relation"]');
+assert.equal(
+  relation.window.location.hash,
+  '#keluhan',
+  'Customer Relation starts on its complaint workspace',
+);
+assert.equal(relation.window.KsppsWorkflow.getProfile(), null);
+assert.deepEqual(relation.window.KsppsWorkflow.getProfiles(), []);
+assert.equal(relation.document.querySelector('.member-chip .avatar').textContent.trim(), 'CR');
+assert(
+  !relation.document.querySelector('#staff-role'),
+  'A Customer Relation account cannot select another workspace',
+);
+assert.deepEqual(
+  [...relation.document.querySelectorAll('.side-nav a')].map((link) => link.getAttribute('href')),
+  ['#keluhan'],
+  'Customer Relation has no Admin, Finance, or Manager menus',
+);
+assert.match(
+  relation.document.querySelector('.complaint-list').textContent,
+  /Pendampingan dokumen anggota/,
+);
+assert(!relation.document.body.textContent.includes('KELUHAN PETUGAS LAIN'));
+for (const route of ['pendaftaran', 'finance-rekonsiliasi', 'manager-akses']) {
+  await relation.route(route);
+  assert.equal(
+    relation.window.location.hash,
+    '#keluhan',
+    'An unsupported route returns to the Customer Relation workspace',
+  );
+  assert.match(relation.document.querySelector('h1').textContent, /Keluhan Anggota/);
+}
+assert(
+  !relationApi.model.calls.some(({ url }) =>
+    /\/finance\/|\/staff\/accounts|\/staff\/activity/.test(url),
+  ),
+  'Customer Relation does not request finance, access-management, or staff-monitoring data',
+);
+await relation.click('button[aria-label="Lihat detail KLH-2026-000003"]');
+assert.match(relation.document.body.textContent, /PETUGAS CUSTOMER RELATION/);
+assert(!relation.document.querySelector('.complaint-assignment'));
+assert(!relation.document.body.textContent.includes('Simpan penugasan'));
+assert(!relation.document.body.textContent.includes('Tutup kasus'));
+await set(relation, 'Tanggapan', 'Dokumen sudah diperiksa oleh Customer Relation.');
+await set(relation, 'Status setelah tanggapan', 'waiting_member');
+await submit(relation, byLabel(relation, 'Tanggapan').form);
+assert.equal(assigned.status, 'waiting_member');
+assert.match(relation.document.body.textContent, /Dokumen sudah diperiksa oleh Customer Relation/);
+await set(
+  relation,
+  'Catatan hasil penyelesaian',
+  'Dokumen telah tersedia dan anggota sudah menerima penjelasan.',
+);
+await submit(relation, byLabel(relation, 'Catatan hasil penyelesaian').form);
+assert.equal(assigned.status, 'resolved');
+assert.match(
+  relation.document.body.textContent,
+  /Dokumen telah tersedia dan anggota sudah menerima penjelasan/,
+);
+assert(
+  !relation.document.body.textContent.includes('Tutup kasus'),
+  'Customer Relation resolves cases but does not close them',
+);
+assert(
+  relationApi.model.mutations.every(
+    ({ path }) => path.endsWith('/reply') || path.endsWith('/status'),
+  ),
+);
+relation.close();
+
 const avalistCalls = [];
 const avalist = await browser('avalist', {
   fetch: async (url) => {
@@ -521,5 +650,5 @@ assert.equal(previewCalls, 0, 'Member and staff Pages never use authenticated co
 previewStaff.close();
 
 console.log(
-  'PASS: complaint creation/idempotent retries, WITA receipt and deadline, PIC/division, status/history/resolution, draft/detail persistence, three staff roles, role-change cleanup, Avalist isolation and static Pages guards.',
+  'PASS: complaint retries, WITA tracking, PIC/division, history/resolution, stable drafts, four staff workspaces, Customer Relation boundaries, Manager grants, role cleanup, Avalist isolation and static Pages guards.',
 );

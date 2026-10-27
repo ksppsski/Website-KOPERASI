@@ -78,7 +78,17 @@ assert.match(
   /Pilih portal yang ingin dibuka/,
 );
 assertServicePresentation(staff);
+assert.equal(
+  staff.document
+    .querySelector('[data-action="enter"][data-role="customer_relation"]')
+    .textContent.trim(),
+  'Buka portal Customer Relation',
+);
 await staff.click('[data-action="enter"][data-role="manager"]');
+assert.equal(
+  staff.document.querySelector('#staff-role option[value="customer_relation"]').textContent,
+  'Customer Relation',
+);
 const pages = {
   manager: [
     'waktu-kerja',
@@ -111,6 +121,7 @@ const pages = {
     'admin-avalist',
     'keluhan',
   ],
+  customer_relation: ['keluhan'],
 };
 for (const [role, routes] of Object.entries(pages)) {
   await staff.window.KsppsWorkflow.setStaffRole(role);
@@ -137,6 +148,21 @@ for (const [role, routes] of Object.entries(pages)) {
         !staff.document.querySelector('.complaints form'),
         'Empty staff Pages offer no case mutations',
       );
+      if (role === 'customer_relation') {
+        assert.deepEqual(
+          [...staff.document.querySelectorAll('.side-nav a')].map((link) =>
+            link.getAttribute('href'),
+          ),
+          ['#keluhan'],
+        );
+        await assert.rejects(
+          staff.window.KsppsWorkflow.api('/complaints/11111111-1111-4111-8111-111111111111/reply', {
+            method: 'POST',
+            body: JSON.stringify({ version: 1, message: 'Tidak dikirim.' }),
+          }),
+          /Penyimpanan, unggahan, dan layanan akun tidak tersedia pada alamat ini/,
+        );
+      }
     }
   }
 }

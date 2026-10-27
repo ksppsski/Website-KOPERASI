@@ -32,7 +32,9 @@
           <StaffLayout {context} {route}>
             <PageHeading
               title="Keluhan Anggota"
-              description="Tetapkan penanggung jawab dan pantau tindak lanjut keluhan anggota."
+              description={context.activeRole() === 'customer_relation'
+                ? 'Tindak lanjuti keluhan yang ditugaskan kepada Anda.'
+                : 'Tetapkan penanggung jawab dan pantau tindak lanjut keluhan anggota.'}
             />
             <ComplaintsPanel staff={true} />
           </StaffLayout>

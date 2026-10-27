@@ -40,9 +40,10 @@ export async function record(env, id, actor, context) {
   const row = await stmt(env, 'SELECT * FROM complaints WHERE id=?', id).first();
   const visible =
     row &&
-    (row.owner === actor ||
+    ((context.accountRole !== 'customer_relation' && row.owner === actor) ||
       canManage(context) ||
-      (context.accountRole === 'finance' && row.assignee_id === actor));
+      (['finance', 'customer_relation'].includes(context.accountRole) &&
+        row.assignee_id === actor));
   if (!visible) throw new Problem(404, 'Keluhan tidak ditemukan.');
   return row;
 }
@@ -76,9 +77,19 @@ export async function detail(env, id, actor, context) {
 }
 
 export async function list(env, actor, context, staffView) {
-  if (staffView && !['admin', 'manager', 'finance'].includes(context.accountRole))
+  if (
+    staffView &&
+    !['admin', 'manager', 'finance', 'customer_relation'].includes(context.accountRole)
+  )
     throw new Problem(403, 'Daftar keluhan hanya dapat dibuka oleh petugas pengelola.');
-  const condition = !staffView ? 'WHERE owner=?' : canManage(context) ? '' : 'WHERE assignee_id=?';
+  const condition =
+    context.accountRole === 'customer_relation'
+      ? 'WHERE assignee_id=?'
+      : !staffView
+        ? 'WHERE owner=?'
+        : canManage(context)
+          ? ''
+          : 'WHERE assignee_id=?';
   const rows = (
     await stmt(
       env,
@@ -91,7 +102,8 @@ export async function list(env, actor, context, staffView) {
       ? (
           await stmt(
             env,
-            "SELECT user_id,display_name,role FROM staff_accounts WHERE role IN ('admin','finance','manager') ORDER BY display_name,user_id",
+            `SELECT user_id,display_name,role FROM staff_accounts
+              WHERE role IN ('admin','finance','manager','customer_relation') ORDER BY display_name,user_id`,
           ).all()
         ).results.map((row) => ({ id: row.user_id, name: row.display_name, role: row.role }))
       : [];

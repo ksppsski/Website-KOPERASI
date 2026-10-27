@@ -10,7 +10,7 @@ Backend memerlukan database D1 bernama binding `DB` dan bucket R2 privat bernama
 
 GitHub Pages hanya menayangkan file statis dalam `../docs/`. Memasang bundle Worker di folder tersebut tidak membuat API atau database berjalan. Deployment aplikasi perlu menjalankan frontend dan backend dengan pemetaan rute yang sesuai.
 
-Pada 27 Oktober 2026 pengguna menunda penyiapan layanan operasional untuk melanjutkan pengembangan website. Sumber Bantuan/Keluhan Anggota sudah tersedia, tetapi domain Pages tetap tidak menerima atau menyimpan keluhan. Saat hosting dilanjutkan, terapkan migrasi baru dan uji pemilik akun, penugasan Finance, tenggat per kasus, riwayat serta penutupan sebelum mengaktifkan pengiriman.
+Pada 27 Oktober 2026 pengguna menunda penyiapan layanan operasional untuk melanjutkan pengembangan website. Sumber Bantuan/Keluhan Anggota sudah tersedia, tetapi domain Pages tetap tidak menerima atau menyimpan keluhan. Saat hosting dilanjutkan, terapkan migrasi baru dan uji pemilik akun, penugasan Finance/Customer Relation, tenggat per kasus, riwayat serta penutupan sebelum mengaktifkan pengiriman.
 
 ## Identitas dan izin
 

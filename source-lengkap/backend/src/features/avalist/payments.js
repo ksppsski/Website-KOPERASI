@@ -1,5 +1,5 @@
 /** Modul fitur; aturan dan izin diperiksa pada fungsi terkait. */
-import { actorId, requireStaffRole, staffContext } from '../../access.js';
+import { actorId, requireStaffRole, staffContext, requireOperationalAccess } from '../../access.js';
 import { calendarDate, makassarToday } from '../../finance.js';
 import { dataset } from './records.js';
 import { scheduled } from './schedule.js';
@@ -217,7 +217,7 @@ export async function payAvalist(env, id, key, body, file) {
 }
 
 export async function paymentProof(env, id, key) {
-  const s = await staffContext(env, id),
+  const s = requireOperationalAccess(await staffContext(env, id)),
     row = await stmt(env, 'SELECT * FROM avalist_payments WHERE id=?', key).first();
   if (!row?.proof_key) throw new Problem(404, 'Bukti tidak ditemukan.');
   const personal = await stmt(

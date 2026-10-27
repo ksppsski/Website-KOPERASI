@@ -41,6 +41,10 @@ export function createStaffNavigation({ app }) {
     keluhan: ['Keluhan Anggota', 'help'],
   };
 
+  const customerRelationPages = {
+    keluhan: ['Keluhan Anggota', 'help'],
+  };
+
   const avalistPages = {
     'avalist-ringkasan': ['Ringkasan Avalist', 'home'],
     'avalist-anggota': ['Anggota Referensi', 'user'],
@@ -48,30 +52,41 @@ export function createStaffNavigation({ app }) {
     'avalist-riwayat': ['Riwayat Pembayaran', 'file'],
   };
 
-  const pages = { ...adminPages, ...financePages, ...managerPages, ...avalistPages };
+  const pages = {
+    ...adminPages,
+    ...financePages,
+    ...managerPages,
+    ...customerRelationPages,
+    ...avalistPages,
+  };
 
   const activeRole = () => app.services.workflow?.getStaff()?.role || 'admin';
 
-  const menuPages = () =>
-    activeRole() === 'avalist'
-      ? avalistPages
-      : activeRole() === 'manager'
-        ? managerPages
-        : activeRole() === 'finance'
-          ? financePages
-          : adminPages;
+  const menusByRole = {
+    admin: adminPages,
+    finance: financePages,
+    manager: managerPages,
+    customer_relation: customerRelationPages,
+    avalist: avalistPages,
+  };
+  const menuPages = () => menusByRole[activeRole()] || {};
 
   const roleName = () =>
-    ({ admin: 'Admin', finance: 'Finance', manager: 'Manajer', avalist: 'Avalist' })[activeRole()];
+    ({
+      admin: 'Admin',
+      finance: 'Finance',
+      manager: 'Manajer',
+      customer_relation: 'Customer Relation',
+      avalist: 'Avalist',
+    })[activeRole()];
 
   const homeFor = (role) =>
-    role === 'avalist'
-      ? 'avalist-ringkasan'
-      : role === 'manager'
-        ? 'waktu-kerja'
-        : role === 'finance'
-          ? 'finance-ringkasan'
-          : 'ringkasan';
+    ({
+      avalist: 'avalist-ringkasan',
+      manager: 'waktu-kerja',
+      finance: 'finance-ringkasan',
+      customer_relation: 'keluhan',
+    })[role] || 'ringkasan';
 
   function rolePicker() {
     const s = app.services.workflow?.getStaff(),
@@ -87,6 +102,7 @@ export function createStaffNavigation({ app }) {
                   admin: 'Admin',
                   finance: 'Finance',
                   manager: 'Manajer',
+                  customer_relation: 'Customer Relation',
                   avalist: 'Avalist',
                 }[r],
               }),
@@ -99,6 +115,7 @@ export function createStaffNavigation({ app }) {
     adminPages,
     financePages,
     managerPages,
+    customerRelationPages,
     avalistPages,
     pages,
     activeRole,

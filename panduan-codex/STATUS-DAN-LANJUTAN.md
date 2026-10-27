@@ -4,7 +4,9 @@ Snapshot serah terima: **14 Oktober 2026**, aplikasi **v39**. Periksa kode/commi
 
 ## Pembaruan 27 Oktober 2026
 
-Sumber fitur keluhan tersedia pada **Bantuan** anggota dan **Keluhan Anggota** petugas. Keluhan mendapat nomor `KLH-<tahun WITA>-<urutan global minimal enam digit>` dan waktu masuk dari server. Admin atau Manajer menetapkan PIC, divisi dan batas waktu per kasus. Finance hanya melihat serta menindaklanjuti kasus yang ditugaskan kepadanya. Riwayat tanggapan, perubahan penugasan/status dan catatan hasil penyelesaian tersimpan bersama perubahan kasus.
+Peran **Customer Relation** ditambahkan sebagai PIC Bantuan. Manajer memberikan atau mencabut aksesnya melalui **Akses Petugas**. Peran ini hanya membuka **Keluhan Anggota**, menangani kasus yang ditugaskan kepadanya, memberi tanggapan, memperbarui status dan mencatat hasil penyelesaian. Penugasan serta penutupan tetap dilakukan Admin/Manajer. Server menolak akses Customer Relation ke data keanggotaan, berkas privat, keuangan dan API operasional umum; bootstrap portal hanya memuat konteks akun serta daftar kosong. Penambahan ini tidak mengubah skema database.
+
+Sumber fitur keluhan tersedia pada **Bantuan** anggota dan **Keluhan Anggota** petugas. Keluhan mendapat nomor `KLH-<tahun WITA>-<urutan global minimal enam digit>` dan waktu masuk dari server. Admin atau Manajer menetapkan PIC, divisi dan batas waktu per kasus. Finance dan Customer Relation hanya melihat serta menindaklanjuti kasus yang ditugaskan kepadanya. Riwayat tanggapan, perubahan penugasan/status dan catatan hasil penyelesaian tersimpan bersama perubahan kasus.
 
 Statusnya **Baru → Dalam penanganan → Menunggu tanggapan anggota / Selesai → Ditutup**. Balasan anggota pada kasus yang menunggu tanggapan atau sudah Selesai mengembalikannya ke Dalam penanganan. PIC/Admin/Manajer juga dapat membuka kembali kasus Selesai melalui tanggapan tindak lanjut sebelum ditutup. Penutupan membutuhkan hasil penyelesaian dan hanya dilakukan Admin/Manajer. Kasus Ditutup tidak dapat diubah atau dibalas; riwayat tetap disimpan. Batas waktu ditetapkan per kasus.
 
@@ -54,7 +56,7 @@ Mode terang dan gelap tersedia pada landing, portal Anggota, Petugas dan Avalist
 | Hosting aplikasi di domain sendiri | **Belum dinyatakan operasional**; sinkronisasi source tidak memindahkan backend/data |
 | GitHub Pages | Build pratinjau v39 dari sumber Svelte yang sama; data kosong, formulir nonaktif, tanpa API |
 | Bank, email/WhatsApp otomatis, Privy/e-meterai | Belum terintegrasi |
-| Uji penerimaan operasional | Masih diperlukan dengan anggota, Admin, Finance, Manajer dan Avalist |
+| Uji penerimaan operasional | Masih diperlukan dengan anggota, Admin, Finance, Manajer, Customer Relation dan Avalist |
 
 ## Tujuh masalah pemeliharaan yang sudah diperbaiki pada v39
 
@@ -91,7 +93,7 @@ Urutan berikut adalah peta kebutuhan teknis, bukan klaim pekerjaan sudah dikerja
 | 4 | Siapkan aset privat, konfigurasi, backup dan pemulihan | Build lengkap, akses berkas terbatas, backup dapat dipulihkan; tidak ada secret di repository |
 | 5 | Rencanakan pemindahan database/objek bila dibutuhkan | Audit jumlah/relasi, saldo, akad dan ledger; reset demo historis ditangani sebelum impor |
 | 6 | Lengkapi pembiayaan bila akan dipakai operasional | Persyaratan pengajuan/angsuran disepakati dan alurnya tidak lagi simulasi |
-| 7 | Lakukan browser QA dan uji penerimaan | Alur anggota/Admin/Finance/Manajer/Avalist, desktop/ponsel, cetak PDF dan pembatasan akun lolos |
+| 7 | Lakukan browser QA dan uji penerimaan | Alur anggota/Admin/Finance/Manajer/Customer Relation/Avalist, desktop/ponsel, cetak PDF dan pembatasan akun lolos |
 | 8 | Hubungkan domain ke deployment yang sudah layak | Target DNS/HTTPS diverifikasi dan alur pada domain benar-benar diuji |
 
 Pengguna pernah menunda pembahasan DNS. Jangan mengubah nameserver/record DNS sebagai efek samping refactor atau dokumentasi. DNS menentukan tujuan alamat; DNS sendiri tidak menjalankan backend. Penyedia DNS dan penyedia hosting aplikasi dapat berbeda.

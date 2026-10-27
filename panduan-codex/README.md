@@ -6,7 +6,7 @@ Dokumen ini membawa konteks kerja website KSPPS Syirkah Kebaikan Indonesia ke re
 
 ## Tujuan produk
 
-Website menyediakan landing page koperasi serta portal anggota, Admin, Finance, Manajer, dan Avalist. Fokusnya adalah pendaftaran anggota, simpanan, penyertaan modal, rekonsiliasi, dokumen akad, daftar pembayaran, pengunduran diri, jatuh tempo, dan fee avalist. Aplikasi menyiapkan data dan mencatat pekerjaan; transfer bank dilakukan di luar aplikasi.
+Website menyediakan landing page koperasi serta portal anggota, Admin, Finance, Manajer, Customer Relation, dan Avalist. Fokusnya adalah pendaftaran anggota, simpanan, penyertaan modal, rekonsiliasi, dokumen akad, daftar pembayaran, pengunduran diri, jatuh tempo, dan fee avalist. Aplikasi menyiapkan data dan mencatat pekerjaan; transfer bank dilakukan di luar aplikasi.
 
 Pengguna menghendaki website yang mudah dipakai dan mudah dirawat tim IT. Bahasa komunikasi adalah Indonesia. Istilah pada layanan anggota adalah **anggota koperasi** dan **penyertaan modal**, mengikuti teks fitur saat ini. Kode wajib tetap memakai Svelte dan disusun per fitur dengan baris yang terbaca.
 

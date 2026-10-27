@@ -1,10 +1,10 @@
 import { PDFDocument } from 'pdf-lib';
 import { Problem, stmt, getProfile } from './membership.js';
-import { staffContext, requireStaffRole, actorId } from './access.js';
+import { staffContext, requireStaffRole, actorId, requireOperationalAccess } from './access.js';
 
 const MAX_REPORT = 10 * 1024 * 1024;
 export async function reportAccess(env, id) {
-  if ((await staffContext(env, id)).accountRole) return;
+  if (requireOperationalAccess(await staffContext(env, id)).accountRole) return;
   if ((await getProfile(env, id))?.status !== 'approved')
     throw new Problem(403, 'Laporan tersedia setelah keanggotaan disetujui.');
 }
