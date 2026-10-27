@@ -210,3 +210,47 @@ export const avalistPayments = sqliteTable('avalist_payments', {
   version:integer('version').notNull().default(1), paidAt:text('paid_at'), paidBy:text('paid_by'), transferDate:text('transfer_date'), reference:text('reference'),
   proofKey:text('proof_key'), proofName:text('proof_name'), proofType:text('proof_type'),
 }, t => [uniqueIndex('idx_avalist_regular_period').on(t.contractId,t.dueDate).where(sql`${t.kind} = 'regular'`),index('idx_avalist_person_history').on(t.personId,t.dueDate),index('idx_avalist_corrections').on(t.originalId)]);
+
+// Complaint ownership follows the verified account, including archived memberships.
+export const complaintNumbers = sqliteTable('complaint_numbers', {
+  serial: integer('serial').primaryKey({ autoIncrement: true }),
+  complaintId: text('complaint_id').notNull().unique(),
+});
+
+export const complaints = sqliteTable('complaints', {
+  id: text('id').primaryKey(),
+  owner: text('owner').notNull(),
+  number: text('number').notNull().unique(),
+  memberName: text('member_name').notNull(),
+  memberNumber: text('member_number'),
+  subject: text('subject').notNull(),
+  description: text('description').notNull(),
+  status: text('status').notNull().default('new'),
+  division: text('division'),
+  assigneeId: text('assignee_id'),
+  assigneeName: text('assignee_name'),
+  dueAt: text('due_at'),
+  resolution: text('resolution'),
+  resolvedAt: text('resolved_at'),
+  closedAt: text('closed_at'),
+  createdAt: text('created_at').notNull(),
+  updatedAt: text('updated_at').notNull(),
+  version: integer('version').notNull().default(1),
+  mutationToken: text('mutation_token').notNull(),
+}, table => [
+  index('idx_complaints_owner_created').on(table.owner, table.createdAt),
+  index('idx_complaints_assignee_status').on(table.assigneeId, table.status),
+]);
+
+// The guarded case mutation and its immutable event commit in one D1 batch.
+export const complaintEvents = sqliteTable('complaint_events', {
+  sequence: integer('sequence').primaryKey({ autoIncrement: true }),
+  id: text('id').notNull().unique(),
+  complaintId: text('complaint_id').notNull(),
+  kind: text('kind').notNull(),
+  message: text('message').notNull(),
+  actorId: text('actor_id').notNull(),
+  actorName: text('actor_name').notNull(),
+  actorRole: text('actor_role').notNull(),
+  createdAt: text('created_at').notNull(),
+}, table => [index('idx_complaint_events_case_sequence').on(table.complaintId, table.sequence)]);

@@ -1,6 +1,6 @@
 # To-do pengembangan website KSPPS
 
-Diperbarui: 14 Oktober 2026 — baseline aplikasi v39. Konteks lanjutan: [panduan Codex](../panduan-codex/README.md).
+Diperbarui: 27 Oktober 2026. Baseline serah terima: aplikasi v39, 14 Oktober 2026. Konteks lanjutan: [panduan Codex](../panduan-codex/README.md).
 
 Project dibagi menjadi **frontend user**, **frontend petugas**, **frontend avalist**, dan **backend**. Daftar ini mengikuti fitur terakhir yang sudah disepakati. `[x]` berarti sudah tersedia pada implementasi/pratinjau; `[ ]` berarti masih perlu dikerjakan atau diverifikasi. Status tersedia tidak berarti seluruh kebutuhan operasional produksi sudah selesai.
 
@@ -12,6 +12,18 @@ Project dibagi menjadi **frontend user**, **frontend petugas**, **frontend avali
 | Backend          | `backend/`          | API, otorisasi, aturan keuangan, database, berkas dan PDF |
 
 `shared/` memuat komponen, CSS dan controller browser yang dipakai lintas frontend. `public/` memuat aset bersama. Keduanya adalah pendukung, bukan aplikasi atau backend tambahan. Semua bagian masih dibangun dari satu repository dan dipublikasikan pada satu origin.
+
+## Bantuan dan keluhan, 27 Oktober 2026
+
+- [x] Sediakan pengiriman dan daftar/detail keluhan di Bantuan anggota serta Keluhan Anggota petugas.
+- [x] Beri nomor keluhan dan waktu masuk server, dengan kirim ulang yang tidak menggandakan kasus.
+- [x] Batasi anggota pada kasus akunnya, termasuk sebelum persetujuan atau setelah keanggotaan ditutup; tolak Avalist dan pemilih identitas anggota.
+- [x] Sediakan penugasan PIC sesuai divisi, batas waktu per kasus dan alasan perubahan; tanpa SLA bawaan.
+- [x] Batasi Finance pada kasus yang ditugaskan kepadanya; Admin/Manajer mengelola seluruh kasus.
+- [x] Simpan status, tanggapan dan riwayat penugasan; wajibkan hasil penyelesaian sebelum Admin/Manajer menutup kasus.
+- [x] Lindungi kasus Ditutup dari perubahan dan simpan mutasi/riwayat secara atomik dengan pemeriksaan versi.
+- [x] Tambahkan migrasi `0015_complaint_tracking.sql` dan pengujian backend serta interaksi portal.
+- [ ] Terapkan migrasi dan uji alur keluhan antar akun pada hosting operasional ketika penyiapan layanan dilanjutkan. Source yang tersedia tidak mengaktifkan pengiriman pada domain Pages; formulir statis tetap nonaktif.
 
 ## 1. Frontend user
 

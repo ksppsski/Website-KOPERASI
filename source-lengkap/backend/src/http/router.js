@@ -3,6 +3,7 @@ import { handleAvalistRoutes } from './routes/avalist.js';
 import { handleReportRoutes } from './routes/reports.js';
 import { handleSettlementRoutes } from './routes/settlements.js';
 import { handleFinanceRoutes } from './routes/finance.js';
+import { handleComplaintRoutes } from './routes/complaints.js';
 /** Modul fitur; aturan dan izin diperiksa pada fungsi terkait. */
 import { Problem, getProfile as rawProfile, profileDTO, stmt } from '../membership.js';
 import { resetPreviousDemo } from '../reset-demo.js';
@@ -99,6 +100,17 @@ export async function appFetch(request, env) {
   const context = await staffContext(env, signedIn);
   env.ACTOR_ROLE = context.accountRole;
   env.ACTOR_NAME = person.name;
+  const complaintResponse = await handleComplaintRoutes({
+    pathname,
+    request,
+    env,
+    signedIn,
+    person,
+    context,
+    url,
+    scopedPath,
+  });
+  if (complaintResponse) return complaintResponse;
   if (pathname === '/api/workflow/avalist/access' && request.method === 'GET')
     return json({ identity: person, allowed: context.allowedRoles.includes('avalist') });
   const accountsResponse = await handleAccountRoutes({ pathname, request, env, signedIn, person });

@@ -2,6 +2,18 @@
 
 Snapshot serah terima: **14 Oktober 2026**, aplikasi **v39**. Periksa kode/commit terbaru sebelum memakai dokumen ini pada sesi berikutnya.
 
+## Pembaruan 27 Oktober 2026
+
+Sumber fitur keluhan tersedia pada **Bantuan** anggota dan **Keluhan Anggota** petugas. Keluhan mendapat nomor `KLH-<tahun WITA>-<urutan global minimal enam digit>` dan waktu masuk dari server. Admin atau Manajer menetapkan PIC, divisi dan batas waktu per kasus. Finance hanya melihat serta menindaklanjuti kasus yang ditugaskan kepadanya. Riwayat tanggapan, perubahan penugasan/status dan catatan hasil penyelesaian tersimpan bersama perubahan kasus.
+
+Statusnya **Baru → Dalam penanganan → Menunggu tanggapan anggota / Selesai → Ditutup**. Balasan anggota pada kasus yang menunggu tanggapan atau sudah Selesai mengembalikannya ke Dalam penanganan. PIC/Admin/Manajer juga dapat membuka kembali kasus Selesai melalui tanggapan tindak lanjut sebelum ditutup. Penutupan membutuhkan hasil penyelesaian dan hanya dilakukan Admin/Manajer. Kasus Ditutup tidak dapat diubah atau dibalas; riwayat tetap disimpan. Batas waktu ditetapkan per kasus.
+
+API memakai kepemilikan akun terverifikasi, termasuk bagi akun yang belum disetujui atau keanggotaannya sudah ditutup. Avalist tidak mendapat akses keluhan. Migrasi baru `0015_complaint_tracking.sql` menambah tabel kasus, urutan nomor dan riwayat. Tes backend `tests/complaints.mjs` mencakup otorisasi, penugasan, transisi, hasil wajib, kirim ulang, konkurensi dan rollback riwayat.
+
+Verifikasi pengembangan: seluruh suite aplikasi lulus, termasuk pengujian formulir keluhan, ketahanan draft, kegagalan pembacaan setelah kiriman tersimpan, dan batas Pages tanpa jaringan. Pemeriksaan browser nyata memakai data uji lokal pada lebar 390 px dan 1280 px; formulir, penugasan, hasil penyelesaian dan penutupan terbaca tanpa luapan halaman. Build frontend serta pemeriksaan kesesuaian hasil Pages lulus. Pemeriksaan ini tidak menjalankan transaksi pada database produksi.
+
+Pengguna menunda penyiapan layanan operasional. Kesiapan source ini tidak mengaktifkan backend pada domain: GitHub Pages tetap hanya membaca tampilan, tanpa pengiriman keluhan, penyimpanan data atau API. Aktifkan penyimpanan setelah hosting, migrasi dan sesi server tersedia serta diuji.
+
 ## Pembaruan 26 Oktober 2026
 
 Seluruh tautan, instruksi masuk/keluar ChatGPT dan pembacaan header identitasnya telah dihapus dari source. API privat memakai resolver sesi dari binding `AUTH` terpercaya. Tanpa provider atau sesi sah, server menolak akses; nama/email/role dari browser tidak memberikan izin. Form login tidak lagi menandai pengguna masuk hanya karena isian diisi. Domain Pages tetap tidak menyimpan data atau menjalankan login mandiri.
@@ -35,6 +47,7 @@ Mode terang dan gelap tersedia pada landing, portal Anggota, Petugas dan Avalist
 | Avalist, pergantian, koreksi, fee bulanan | Tersedia dan diuji; pembayaran selesai tidak ditimpa |
 | Jatuh tempo/perpanjangan/pengembalian | Alur dan pencatatan tersedia |
 | Pengunduran diri | Alur Admin → Finance → Manajer dan pendaftaran ulang tersedia |
+| Bantuan dan keluhan | Sumber UI/API dan migrasi tersedia; nomor, PIC, tenggat, riwayat dan hasil penutupan; Pages tetap tidak mengirim data |
 | Pembiayaan | Register kontrak petugas tersedia; pengajuan/angsuran tertentu masih simulasi |
 | Login email/kata sandi mandiri | **Belum terhubung**; tampilan formulir bukan autentikasi nyata |
 | Identitas akun | Integrasi platform lama dicabut; membutuhkan sesi server yang sah dari binding `AUTH` |
@@ -91,7 +104,7 @@ Pengguna pernah menunda pembahasan DNS. Jangan mengubah nameserver/record DNS se
 - Bootstrap Manajer memakai secret `KSPPS_MANAGER_SETUP`. Nilainya tidak ikut repository. Jangan mengendurkan pemeriksaan role agar akun dapat masuk.
 - Build backend membutuhkan `KSPPS_MEMBERSHIP_SIGNATURE_FILE`. Tanpa berkas sah, build harus berhenti dengan pesan jelas; frontend/tes tetap dapat berjalan.
 - `backend/src/reset-demo.js` memiliki cutoff historis tetap `2026-09-21T05:53:39.000Z`. Tinjau dan nonaktifkan pekerjaan reset historis melalui perubahan terarah sebelum mengimpor data operasional lama. Jangan menjalankan tes pada database produksi.
-- Migrasi saat baseline berakhir pada `0014_tense_exodus.sql`. Periksa daftar terkini; jangan mengedit migrasi yang sudah diterapkan.
+- Migrasi baseline berakhir pada `0014_tense_exodus.sql`; pembaruan 27 Oktober 2026 menambah `0015_complaint_tracking.sql`. Terapkan berurutan dan jangan mengedit migrasi yang sudah diterapkan.
 
 ## Alur publikasi setelah pengembangan
 

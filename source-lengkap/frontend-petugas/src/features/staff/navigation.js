@@ -17,6 +17,7 @@ export function createStaffNavigation({ app }) {
     anggota: ['Data Anggota', 'card'],
     akad: ['Dokumen Akad', 'file'],
     'admin-avalist': ['Usulan Avalist', 'user'],
+    keluhan: ['Keluhan Anggota', 'help'],
   };
 
   const financePages = {
@@ -26,6 +27,7 @@ export function createStaffNavigation({ app }) {
     'finance-bagi-hasil': ['Bagi Hasil Harian', 'calendar'],
     'finance-avalist': ['Pembayaran Avalist', 'user'],
     'finance-pengembalian': ['Pengembalian Modal', 'wallet'],
+    keluhan: ['Keluhan Anggota', 'help'],
   };
 
   const managerPages = {
@@ -36,6 +38,7 @@ export function createStaffNavigation({ app }) {
     'manager-akses': ['Akses Petugas', 'shield'],
     'manager-avalist': ['Pengelolaan Avalist', 'user'],
     'manager-jatuh-tempo': ['Akad Jatuh Tempo', 'calendar'],
+    keluhan: ['Keluhan Anggota', 'help'],
   };
 
   const avalistPages = {

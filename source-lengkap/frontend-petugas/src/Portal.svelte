@@ -9,6 +9,8 @@
   import ContractDocuments from './components/staff/ContractDocuments.svelte';
   import FeaturePage from './components/FeaturePage.svelte';
   import PortalFrame from '../../shared/components/PortalFrame.svelte';
+  import ComplaintsPanel from '../../shared/components/complaints/ComplaintsPanel.svelte';
+  import PageHeading from '../../shared/components/PageHeading.svelte';
   let { view } = $props();
   const staffPages = {
     ringkasan: AdminDashboard,
@@ -25,7 +27,17 @@
       {@const model = $view}
       {@const context = model.context}
       {@const route = model.route}
-      {#if route.includes('avalist')}
+      {#if route === 'keluhan'}
+        {#key context.activeRole()}
+          <StaffLayout {context} {route}>
+            <PageHeading
+              title="Keluhan Anggota"
+              description="Tetapkan penanggung jawab dan pantau tindak lanjut keluhan anggota."
+            />
+            <ComplaintsPanel staff={true} />
+          </StaffLayout>
+        {/key}
+      {:else if route.includes('avalist')}
         {#key route.split('-')[0]}
           <StaffLayout {context} {route}><AvalistPage {route} /></StaffLayout>
         {/key}
