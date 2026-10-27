@@ -25,6 +25,7 @@ Framework frontend tetap **Svelte 5 + Vite**. Backend tetap Worker JavaScript de
 | Warna status                      | `shared/components/Badge.svelte`                                                                | `shared/lib/status-colors.js`                                                                                 | Tidak mengubah aturan server                                               |
 | Mode terang/gelap dan gerakan     | `shared/components/ThemeToggle.svelte`, `Brand.svelte`                                         | `shared/lib/theme.js`, `theme-motion.js`, `public/theme-preference.js`                                         | Tidak memakai API atau mengubah data aplikasi                              |
 | Masalah akses akun                | `frontend-petugas/src/components/staff-access/StaffAccess.svelte`                               | `frontend-petugas/src/features/staff-access/controller.js`                                                    | `backend/src/access.js`, `backend/src/http/routes/accounts.js`             |
+| Bantuan dan pelacakan keluhan     | `frontend-user/src/components/member/MemberHelp.svelte`, `shared/components/complaints/`       | `shared/features/complaints/controller.js`, `shared/lib/complaints.js`                                       | `backend/src/features/complaints/`, `backend/src/http/routes/complaints.js` |
 
 Favicon tab mengikuti mode perangkat. `public/assets/kspps-symbol.svg` berisi bentuk vektor logo, `scripts/generate-favicons.mjs` menghasilkan varian terang/gelap secara otomatis saat build.
 
@@ -33,6 +34,14 @@ Favicon tab mengikuti mode perangkat. `public/assets/kspps-symbol.svg` berisi be
 `backend/src/authentication.js` memeriksa sesi melalui binding server `AUTH`. Router memakai ID hasil verifikasi untuk pemeriksaan role/kepemilikan yang sudah ada. Header identitas platform lama tidak dibaca; hanya cookie atau token sesi yang diteruskan ke verifier terpercaya. Tanpa provider/sesi sah, akses privat ditolak. Tes `authentication.mjs` dan fixture `tests/helpers/test-session.mjs` memisahkan sesi terpercaya dari input browser. UI tidak lagi mempunyai tautan atau instruksi masuk/keluar platform lama. Login email/kata sandi belum dihubungkan.
 
 Jalankan `npm run test:auth` untuk memeriksa batas sesi dan memastikan isian login tidak dianggap sebagai autentikasi lokal. Kontrak binding dijelaskan pada `PINDAH-HOSTING.md`.
+
+## Bantuan dan keluhan, 27 Oktober 2026
+
+`ComplaintsPanel.svelte` dipasang pada **Bantuan** anggota dan rute `#keluhan` dengan judul **Keluhan Anggota** di portal petugas. Komponen daftar, detail, penugasan dan tindakan berada di `shared/components/complaints/`; status, divisi, peran dan format WITA berasal dari `shared/lib/complaints.js`. Controller memiliki permintaan, detail dan umpan balik per instance.
+
+Endpoint `/api/workflow/complaints` didaftarkan setelah autentikasi tetapi sebelum pembatasan keanggotaan ditutup. `records.js` membatasi daftar/detail berdasarkan akun dan PIC; `service.js` mengatur nomor server, penugasan, tenggat, tanggapan, hasil wajib dan penutupan. Admin/Manajer mengelola seluruh kasus; Finance hanya penugasannya. Pemilih/header anggota tidak diterima pada endpoint keluhan.
+
+Migrasi `0015_complaint_tracking.sql` menambah `complaint_numbers`, `complaints` dan `complaint_events`. Setiap pembaruan memakai versi optimistis serta token transaksi agar riwayat hanya muncul untuk perubahan yang berhasil. Tidak ada endpoint penghapusan atau SLA bawaan. Tes: `tests/complaints.mjs` untuk backend dan `tests/complaints-ui.mjs` untuk interaksi portal. Pada hasil Pages, formulir tetap nonaktif dan tidak memanggil API; mengubah source tidak mengaktifkan layanan operasional.
 
 ## Tata letak pendaftaran
 

@@ -166,3 +166,16 @@ Satu pembayaran reguler per akad/tanggal jatuh hak. Menyiapkan daftar anggota be
 ## 11. Invarian lintas fitur
 
 Identitas, role, kepemilikan, kuota, transisi status, tanggal dan nominal diperiksa server. Nomor/transaksi tidak boleh ganda akibat klik ulang atau permintaan bersamaan. Riwayat final dan audit tidak ditimpa. Refresh latar belakang tidak menghapus isian/file/persetujuan. Semua waktu operasional mengikuti Asia/Makassar, kecuali timestamp teknis yang memang disimpan sebagai UTC lalu ditampilkan dalam WITA.
+
+## 12. Bantuan dan keluhan, 27 Oktober 2026
+
+- **Bantuan** anggota menampilkan keluhan milik akun yang masuk. Kepemilikan memakai ID sesi server, bukan pemilih anggota, email, atau nomor anggota. Akun yang belum mempunyai pendaftaran disetujui atau keanggotaannya sudah ditutup tetap dapat meminta bantuan. Avalist tidak mengakses fitur ini.
+- Subjek keluhan wajib 5–160 karakter dan uraian 10–4000 karakter. Nomor `KLH-<tahun WITA>-<urutan global minimal enam digit>` serta waktu masuk diberikan server. Kirim ulang ID dan isi yang sama mempertahankan kasus/nomor semula.
+- **Keluhan Anggota** tersedia untuk Admin, Finance dan Manajer. Admin/Manajer melihat seluruh kasus. Finance hanya melihat kasus yang PIC-nya adalah akun Finance tersebut.
+- Admin/Manajer menetapkan PIC aktif, divisi dan batas waktu. Divisi **Administrasi** memakai PIC Admin, **Keuangan** memakai Finance, dan **Manajemen** memakai Manajer. Batas waktu penugasan harus di masa depan. Perubahan PIC, divisi atau batas waktu yang sudah ditetapkan wajib menyertakan alasan.
+- Tidak ada SLA atau batas waktu otomatis. Penanda melewati batas waktu dihitung dari waktu server ketika status masih Baru, Dalam penanganan atau Menunggu tanggapan anggota.
+- Setelah PIC dan batas waktu tersedia, PIC/Admin/Manajer dapat memulai penanganan dan memberi tanggapan. Tanggapan wajib 1–4000 karakter. Anggota dapat menambahkan tanggapan pada kasus sendiri meskipun penugasan belum ada.
+- Alur status: **Baru → Dalam penanganan ↔ Menunggu tanggapan anggota → Selesai → Ditutup**. Dari Dalam penanganan juga dapat langsung Selesai. Balasan anggota pada Menunggu tanggapan anggota atau Selesai mengembalikan kasus ke Dalam penanganan. PIC/Admin/Manajer dapat membuka kembali Selesai melalui tanggapan dengan status Dalam penanganan atau Menunggu tanggapan anggota sebelum kasus ditutup. Hasil sebelumnya tetap ada pada riwayat; penyelesaian ulang membutuhkan catatan baru.
+- **Selesaikan keluhan** hanya tersedia setelah penanganan dimulai dan wajib menyertakan **Catatan hasil penyelesaian** 10–4000 karakter. **Tutup kasus** hanya untuk Admin/Manajer setelah status Selesai mempunyai catatan hasil. Kasus Ditutup tidak dapat diubah, ditugaskan ulang atau dibalas.
+- Pembuatan, penugasan, tanggapan dan perubahan status dicatat sebagai riwayat yang tidak dapat diedit atau dihapus melalui API. Perubahan kasus dan riwayat disimpan dalam satu transaksi; versi lama ditolak tanpa menambah riwayat palsu.
+- Sumber fitur tersedia; penyimpanan pada domain belum aktif selama domain memakai GitHub Pages tanpa backend dan sesi server.

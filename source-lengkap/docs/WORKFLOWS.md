@@ -4,6 +4,20 @@ The approved public website is authored in `frontend-user/`, `frontend-petugas/`
 
 Handoff baseline: v39, 14 October 2026. Read `../../panduan-codex/README.md` for project context and the distinction between application hosting and static Pages.
 
+## Bantuan dan pelacakan keluhan, 27 Oktober 2026
+
+Anggota mengirim **Subjek keluhan** (5–160 karakter) dan **Uraian keluhan** (10–4000 karakter) dari **Bantuan**. Server memberi nomor `KLH-<tahun WITA>-<urutan global minimal enam digit>` dan waktu masuk. ID kiriman dari browser hanya untuk mencegah duplikasi: pengulangan ID, pemilik dan isi yang sama tidak menambah nomor atau riwayat baru. ID akun sesi tetap menjadi pemilik kasus meskipun keanggotaan belum disetujui, sudah ditutup, atau kemudian berganti ruang keanggotaan.
+
+Admin/Manajer membuka **Keluhan Anggota**, menetapkan PIC dan batas waktu masa depan per kasus. PIC Admin sesuai divisi Administrasi, Finance sesuai Keuangan, dan Manajer sesuai Manajemen. Perubahan penugasan/tenggat wajib beralasan. Finance hanya dapat membaca serta menindaklanjuti kasus yang ditugaskan kepadanya; Avalist ditolak. Endpoint keluhan menolak URL, query dan header pemilih anggota agar tidak mengubah identitas pelapor.
+
+Status dimulai **Baru**. Setelah PIC dan tenggat tersedia, PIC/Admin/Manajer memakai **Mulai penanganan** ke **Dalam penanganan**. Tanggapan petugas dapat mempertahankan Dalam penanganan atau memilih **Menunggu tanggapan anggota**. Balasan anggota pada Menunggu tanggapan anggota atau **Selesai** mengembalikan kasus ke Dalam penanganan. PIC/Admin/Manajer juga dapat membuka kembali Selesai lewat tanggapan dengan pilihan status Dalam penanganan atau Menunggu tanggapan anggota sebelum penutupan. Penyelesaian wajib mencatat hasil 10–4000 karakter. Admin/Manajer memakai **Tutup kasus** hanya sesudah Selesai mempunyai hasil. Kasus **Ditutup** tidak dapat diubah atau dibalas. Hasil lama tetap ada pada riwayat ketika ada tindak lanjut sebelum kasus ditutup; penyelesaian berikutnya membutuhkan hasil baru.
+
+API: `GET/POST /api/workflow/complaints`; `?view=staff` memilih antrean petugas; `GET /api/workflow/complaints/:id` memberi detail, riwayat dan izin tindakan. Mutasi `POST /:id/assign`, `/:id/reply`, dan `/:id/status` wajib membawa versi terkini. Mutasi kasus serta peristiwa riwayat berada dalam satu batch D1 dengan versi dan token bersyarat; penolakan versi atau kegagalan penulisan riwayat tidak meninggalkan perubahan setengah jalan. Tidak ada API edit/hapus riwayat atau penghapusan kasus. Penanda melewati batas waktu hanya berlaku pada Baru, Dalam penanganan dan Menunggu tanggapan anggota.
+
+Izin detail `canReplyAsStaff` membedakan tanggapan petugas dari tanggapan pemilik. Pemilik yang juga PIC dapat memilih status petugas selama haknya masih aktif; kepemilikan saja tidak memberikan izin itu. Balasan pemilik tanpa pilihan status mengikuti aturan tanggapan anggota.
+
+Migrasi tambahan: `0015_complaint_tracking.sql`, setelah seluruh migrasi terdahulu. Tes `tests/complaints.mjs` mencakup nomor lintas tahun WITA, pengiriman bersamaan, akses akun/PIC, divisi/tenggat, status/hasil wajib, kasus ditutup dan rollback. `tests/complaints-ui.mjs` memeriksa interaksi antarmuka. Fitur source ini tetap tidak mengirim atau menyimpan keluhan pada GitHub Pages. Hosting operasional dan penyedia sesi ditunda pengguna; aktivasi backend adalah tahap terpisah.
+
 ## Current workflow
 
 1. Members register at `anggota.html#daftar` with identity/KTP, account, signature and initial savings proof.

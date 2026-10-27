@@ -49,10 +49,29 @@ for (const route of [
   'laporan',
   'profil',
   'pengunduran',
+  'bantuan',
 ]) {
   await member.route(route);
   assertServicePresentation(member);
 }
+const complaintForm = member.document.querySelector('.complaint-create form');
+assert(complaintForm, 'Bantuan includes the complaint form');
+for (const input of complaintForm.querySelectorAll('input,textarea,button[type="submit"]'))
+  assert(
+    input.matches(':disabled'),
+    `${input.name || input.textContent} must not collect complaint data`,
+  );
+complaintForm.dispatchEvent(new member.window.Event('submit', { bubbles: true, cancelable: true }));
+await member.settle();
+assert(
+  !member.document.querySelector('.complaint-notice--success'),
+  'A disabled form never claims a complaint was sent',
+);
+assert(!member.document.querySelector('.complaint-notice--error'));
+await assert.rejects(
+  member.window.KsppsWorkflow.api('/complaints', { method: 'POST', body: '{}' }),
+  /Penyimpanan, unggahan, dan layanan akun tidak tersedia pada alamat ini/,
+);
 const staff = await browser('petugas', { preview: true, fetch: offline });
 assert.match(
   staff.document.body.textContent.replace(/\s+/g, ' '),
@@ -69,6 +88,7 @@ const pages = {
     'manager-avalist',
     'manager-jatuh-tempo',
     'manager-pengunduran',
+    'keluhan',
   ],
   finance: [
     'finance-ringkasan',
@@ -77,6 +97,7 @@ const pages = {
     'finance-pengembalian',
     'finance-pengunduran',
     'finance-avalist',
+    'keluhan',
   ],
   admin: [
     'ringkasan',
@@ -88,6 +109,7 @@ const pages = {
     'anggota',
     'akad',
     'admin-avalist',
+    'keluhan',
   ],
 };
 for (const [role, routes] of Object.entries(pages)) {
@@ -96,6 +118,26 @@ for (const [role, routes] of Object.entries(pages)) {
     await staff.route(route);
     assert(staff.document.querySelector('h1'), route + ' must render');
     assertServicePresentation(staff);
+    if (route === 'keluhan') {
+      assert.equal(staff.document.querySelector('h1').textContent, 'Keluhan Anggota');
+      assert(
+        staff.document.querySelector('a[href="#keluhan"]'),
+        role + ' can view the complaint menu',
+      );
+      assert.match(
+        staff.document.querySelector('.complaint-list').textContent,
+        /Belum ada keluhan/,
+      );
+      assert(!staff.document.querySelector('.complaint-notice--error'));
+      assert(
+        !staff.document.querySelector('.complaint-create'),
+        'Staff do not submit member complaints',
+      );
+      assert(
+        !staff.document.querySelector('.complaints form'),
+        'Empty staff Pages offer no case mutations',
+      );
+    }
   }
 }
 const avalist = await browser('avalist', { preview: true, fetch: offline });
@@ -107,6 +149,10 @@ for (const route of [
 ]) {
   await avalist.route(route);
   assertServicePresentation(avalist);
+  assert(
+    !avalist.document.querySelector('a[href="#keluhan"]'),
+    'Avalist has no complaint-management menu',
+  );
 }
 assert.equal(networkCalls, 0, 'All three previews are independent of authenticated APIs');
 member.close();

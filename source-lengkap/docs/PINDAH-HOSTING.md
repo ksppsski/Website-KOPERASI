@@ -6,9 +6,11 @@ Sumber aplikasi v39 berasal dari aplikasi pratinjau yang memakai Svelte 5, Vite 
 
 Jalankan `npm ci` dan `npm test` dari `source-lengkap/`. Sediakan aset tanda tangan privat sesuai [panduan template](../backend/templates/README.md), lalu jalankan `npm run build`. Untuk frontend saja, gunakan `npm run build:frontend`. Hasil frontend dan Worker ada di `dist/`. `.openai/hosting.json` mempertahankan nama binding logis, tanpa identitas proyek hosting asal.
 
-Backend memerlukan database D1 bernama binding `DB` dan bucket R2 privat bernama binding `BUCKET`. Buat resource tujuan, konfigurasi lingkungan dan jalankan migrasi berurutan dari `backend/migrations/`. Migrasi terakhir pada revisi ini adalah `0014_tense_exodus.sql`. Jangan mengubah migrasi yang sudah diterapkan.
+Backend memerlukan database D1 bernama binding `DB` dan bucket R2 privat bernama binding `BUCKET`. Buat resource tujuan, konfigurasi lingkungan dan jalankan migrasi berurutan dari `backend/migrations/`. Pembaruan 27 Oktober 2026 menambah migrasi terakhir `0015_complaint_tracking.sql` untuk nomor, kasus dan riwayat keluhan. Jangan mengubah migrasi yang sudah diterapkan.
 
 GitHub Pages hanya menayangkan file statis dalam `../docs/`. Memasang bundle Worker di folder tersebut tidak membuat API atau database berjalan. Deployment aplikasi perlu menjalankan frontend dan backend dengan pemetaan rute yang sesuai.
+
+Pada 27 Oktober 2026 pengguna menunda penyiapan layanan operasional untuk melanjutkan pengembangan website. Sumber Bantuan/Keluhan Anggota sudah tersedia, tetapi domain Pages tetap tidak menerima atau menyimpan keluhan. Saat hosting dilanjutkan, terapkan migrasi baru dan uji pemilik akun, penugasan Finance, tenggat per kasus, riwayat serta penutupan sebelum mengaktifkan pengiriman.
 
 ## Identitas dan izin
 

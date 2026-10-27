@@ -34,28 +34,30 @@
       {@const model = $view}
       {@const context = model.context}
       {@const route = model.route}
-      {#key model}
-        {#if route === 'masuk'}
-          <MemberLogin {context} />
-        {:else if route === 'lupa-sandi'}
-          <ForgotPassword {context} />
-        {:else if route === 'daftar-selesai'}
-          <RegistrationComplete {context} />
-        {:else if route === 'daftar'}
-          <MemberRegistration {context} />
-        {:else}
-          <MemberLayout {context} {route}>
-            {#if app.services.workflow?.getProfile()?.status === 'closed'}
-              <Content value={app.services.withdrawal?.closedPage() || 'Keanggotaan ditutup.'} />
-            {:else if memberPages[route]}
-              {@const Page = memberPages[route]}
-              <Page {context} {route} />
-            {:else}
-              <FeaturePage {route} />
-            {/if}
-          </MemberLayout>
-        {/if}
-      {/key}
+      {#if route === 'bantuan'}
+        <MemberLayout {context} {route}><MemberHelp {context} /></MemberLayout>
+      {:else}{#key model}
+          {#if route === 'masuk'}
+            <MemberLogin {context} />
+          {:else if route === 'lupa-sandi'}
+            <ForgotPassword {context} />
+          {:else if route === 'daftar-selesai'}
+            <RegistrationComplete {context} />
+          {:else if route === 'daftar'}
+            <MemberRegistration {context} />
+          {:else}
+            <MemberLayout {context} {route}>
+              {#if app.services.workflow?.getProfile()?.status === 'closed'}
+                <Content value={app.services.withdrawal?.closedPage() || 'Keanggotaan ditutup.'} />
+              {:else if memberPages[route]}
+                {@const Page = memberPages[route]}
+                <Page {context} {route} />
+              {:else}
+                <FeaturePage {route} />
+              {/if}
+            </MemberLayout>
+          {/if}
+        {/key}{/if}
     {/if}
   </div>
 </PortalFrame>

@@ -1,5 +1,13 @@
 # Keputusan, preferensi dan referensi proyek
 
+## Pelacakan keluhan, 27 Oktober 2026
+
+Pengguna menunda penyiapan hosting, database dan akun operasional untuk berfokus pada pengembangan website. Fitur Bantuan harus mencatat nomor keluhan dan waktu masuk, PIC dan divisi penanggung jawab, status dan batas waktu, riwayat tanggapan, serta catatan hasil penyelesaian sebagai dasar penutupan.
+
+Implementasi memakai nomor dan waktu server, batas waktu yang ditetapkan per kasus, serta divisi **Administrasi**, **Keuangan** dan **Manajemen**. PIC harus mempunyai akses aktif sesuai divisinya: Admin, Finance atau Manajer. Admin/Manajer mengatur penugasan dan menutup kasus; Finance menangani penugasannya sendiri. Anggota mengakses kasus milik akunnya, termasuk sesudah penutupan keanggotaan. Kasus Ditutup menyimpan hasil serta riwayat dan tidak dapat diedit.
+
+Batas waktu ditetapkan oleh petugas untuk setiap kasus. Source UI/backend dikembangkan sekarang; domain Pages tetap tidak menerima pengisian sampai backend operasional disiapkan pada tahap berikutnya.
+
 ## Penghapusan akses platform lama, 26 Oktober 2026
 
 Pengguna meminta akses pengisian melalui ChatGPT dihapus dari code domain `syirkahkebaikanindonesia.com`. Tautan masuk/keluar, instruksi akun platform dan pembacaan header identitas lama dicabut. Batas baru memakai verifikasi sesi dari binding server `AUTH`, dengan akses privat ditolak bila provider atau sesi tidak tersedia. Tidak membuat login anonim, akun email/kata sandi baru, atau penyimpanan data pribadi di Pages. Penyedia login dan hosting operasional tetap perlu ditentukan untuk penggunaan mandiri.

@@ -2,6 +2,7 @@
   import PageHeading from '../../../../shared/components/PageHeading.svelte';
   import Content from '../../../../shared/components/Content.svelte';
   import Icon from '../../../../shared/components/Icon.svelte';
+  import ComplaintsPanel from '../../../../shared/components/complaints/ComplaintsPanel.svelte';
 
   let { context } = $props();
   let { heading } = $derived(context);
@@ -9,6 +10,7 @@
 
 {#if context}
   <PageHeading title={'Bantuan'} description={'Temukan informasi dan hubungi tim koperasi.'} />
+  <ComplaintsPanel />
   <div class="content-grid">
     <section class="panel">
       <div class="panel-head"><h2>Pertanyaan umum</h2></div>
@@ -27,9 +29,7 @@
       </details>
       <details class="faq-item">
         <summary>Di mana saya bisa melihat akad?</summary>
-        <p>
-          Buka menu Dokumen Akad untuk mencari dan melihat dokumen yang telah diunggah petugas.
-        </p>
+        <p>Buka menu Dokumen Akad untuk mencari dan melihat dokumen yang telah diunggah petugas.</p>
       </details>
       <details class="faq-item">
         <summary>Kapan setoran tercatat pada saldo?</summary>

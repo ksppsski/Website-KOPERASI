@@ -55,6 +55,12 @@ export function createPreviewTransport(portal = 'member') {
         });
       case '/staff/accounts':
         return reply({ accounts: [] });
+      case '/complaints':
+        return reply({
+          items: [],
+          assignees: [],
+          canManage: portal === 'staff' && selectedRole !== 'finance',
+        });
       case '/reports':
         return reply({ reports: [] });
       case '/offers':
