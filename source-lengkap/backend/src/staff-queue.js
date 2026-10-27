@@ -1,5 +1,10 @@
 import { stmt, Problem } from './membership.js';
-import { requireStaff, requireStaffRole, accessDirectory, cooperativeOwner } from './access.js';
+import {
+  requireOperationalStaff,
+  requireStaffRole,
+  accessDirectory,
+  cooperativeOwner,
+} from './access.js';
 import { bootstrapActivity, activityState, startTask } from './activity.js';
 import { reconciliationQueue, syncDuePayoutTasks } from './finance.js';
 
@@ -32,7 +37,7 @@ export async function allReconciliations(env, actor) {
   return items.sort((a, b) => b.receivedAt.localeCompare(a.receivedAt) || a.id.localeCompare(b.id));
 }
 export async function allStaffTasks(env, actor) {
-  const { role } = await requireStaff(env, actor);
+  const { role } = await requireOperationalStaff(env, actor);
   if (!['admin', 'finance', 'manager'].includes(role))
     throw new Problem(403, 'Antrean ini khusus petugas.');
   const profiles = (await stmt(env, 'SELECT owner FROM member_profiles').all()).results;
@@ -73,7 +78,7 @@ export async function allStaffTasks(env, actor) {
   return items;
 }
 export async function startStaffTask(env, actor, body) {
-  await requireStaff(env, actor);
+  await requireOperationalStaff(env, actor);
   const event = await stmt(
     env,
     "SELECT a.owner FROM staff_activity a,json_each(a.payload) j WHERE json_extract(j.value,'$.task.id')=? LIMIT 1",

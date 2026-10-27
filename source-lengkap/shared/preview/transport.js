@@ -11,7 +11,7 @@ export function createPreviewTransport(portal = 'member') {
       ? {
           role: selectedRole,
           accountRole: 'manager',
-          allowedRoles: ['manager', 'admin', 'finance'],
+          allowedRoles: ['manager', 'admin', 'finance', 'customer_relation'],
           concept: true,
         }
       : { role: null, accountRole: null, allowedRoles: [], concept: true };
@@ -28,7 +28,7 @@ export function createPreviewTransport(portal = 'member') {
     // This selects a drawing of a role, never an authenticated account or permission.
     if (path === '/staff/role' && method === 'POST' && portal === 'staff') {
       const role = JSON.parse(options.body || '{}').role;
-      if (!['manager', 'admin', 'finance'].includes(role))
+      if (!['manager', 'admin', 'finance', 'customer_relation'].includes(role))
         return reply({ error: previewMessage }, 403);
       selectedRole = role;
       return reply({ staff: staff() });
@@ -59,7 +59,7 @@ export function createPreviewTransport(portal = 'member') {
         return reply({
           items: [],
           assignees: [],
-          canManage: portal === 'staff' && selectedRole !== 'finance',
+          canManage: portal === 'staff' && ['admin', 'manager'].includes(selectedRole),
         });
       case '/reports':
         return reply({ reports: [] });

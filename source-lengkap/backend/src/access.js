@@ -7,12 +7,13 @@ export async function staffContext(env, owner) {
   const accountRole = account?.role || null,
     allowedRoles =
       accountRole === 'manager'
-        ? ['manager', 'admin', 'finance']
+        ? ['manager', 'admin', 'finance', 'customer_relation']
         : accountRole
           ? [accountRole]
           : [];
   if (
     accountRole &&
+    accountRole !== 'customer_relation' &&
     !allowedRoles.includes('avalist') &&
     (await stmt(env, 'SELECT id FROM avalist_people WHERE user_id=?', id).first())
   )
@@ -36,8 +37,13 @@ export async function requireStaffRole(env, owner, role) {
     throw new Problem(
       403,
       'Akun Anda tidak memiliki akses ' +
-        ({ manager: 'Manajer', admin: 'Admin', finance: 'Finance', avalist: 'Avalist' }[role] ||
-          'petugas') +
+        ({
+          manager: 'Manajer',
+          admin: 'Admin',
+          finance: 'Finance',
+          avalist: 'Avalist',
+          customer_relation: 'Customer Relation',
+        }[role] || 'petugas') +
         '.',
     );
   return context;
@@ -47,6 +53,18 @@ export async function requireStaff(env, owner) {
   if (!context.accountRole)
     throw new Problem(403, 'Akun ini belum mendapat akses petugas dari Manajer.');
   return context;
+}
+export function requireOperationalAccess(context) {
+  if (context.accountRole === 'customer_relation')
+    throw new Problem(
+      403,
+      'Customer Relation hanya dapat menindaklanjuti keluhan yang ditugaskan kepadanya.',
+    );
+  return context;
+}
+
+export async function requireOperationalStaff(env, owner) {
+  return requireOperationalAccess(await requireStaff(env, owner));
 }
 export async function changeStaffRole(env, owner, role) {
   const context = await requireStaff(env, owner);
@@ -180,8 +198,8 @@ export async function accessDirectory(env, id) {
 }
 export async function assignAccess(env, id, body) {
   await requireStaffRole(env, id, 'manager');
-  if (!['admin', 'finance', 'avalist', 'revoke'].includes(body.role))
-    throw new Problem(400, 'Pilih akses Admin, Finance, atau Avalist.');
+  if (!['admin', 'finance', 'customer_relation', 'avalist', 'revoke'].includes(body.role))
+    throw new Problem(400, 'Pilih akses Admin, Finance, Customer Relation, atau Avalist.');
   const row = await stmt(
     env,
     'SELECT * FROM staff_access_requests WHERE request_code=?',
@@ -236,7 +254,7 @@ export async function assignAccess(env, id, body) {
   return { ok: true };
 }
 export async function memberDirectory(env, id) {
-  const access = await requireStaff(env, id);
+  const access = await requireOperationalStaff(env, id);
   if (access.accountRole === 'avalist')
     throw new Problem(403, 'Avalist hanya dapat melihat referensi dan hak miliknya.');
   return (
@@ -252,6 +270,7 @@ export async function memberDirectory(env, id) {
   }));
 }
 export async function selectedOwner(request, env, id) {
+  requireOperationalAccess(await staffContext(env, id));
   const url = new URL(request.url),
     selected =
       request.headers.get('x-kspps-member') ||
@@ -276,6 +295,7 @@ export async function selectedOwner(request, env, id) {
   return profile.owner;
 }
 export async function cooperativeOwner(env, fallback) {
+  requireOperationalAccess(await staffContext(env, fallback));
   const row = await stmt(env, "SELECT manager_id FROM staff_bootstrap WHERE id='primary'").first();
   return row?.manager_id || fallback;
 }

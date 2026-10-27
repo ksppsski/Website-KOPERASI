@@ -6,6 +6,17 @@ import worker from '../backend/src/index.js';
 import { withTestSession, testSessionCookie } from './helpers/test-session.mjs';
 import { RESET_ID } from '../backend/src/reset-demo.js';
 import { hash } from '../backend/src/membership.js';
+import {
+  memberDirectory,
+  selectedOwner,
+  cooperativeOwner,
+  staffContext,
+} from '../backend/src/access.js';
+import { reportList } from '../backend/src/reports.js';
+import { staffPayload } from '../backend/src/features/workflow/records.js';
+import { allStaffTasks, startStaffTask } from '../backend/src/staff-queue.js';
+import { avalistView } from '../backend/src/features/avalist/queries.js';
+import { paymentProof } from '../backend/src/features/avalist/payments.js';
 const db = new DatabaseSync(':memory:');
 for (const f of readdirSync('backend/migrations')
   .filter((f) => f.endsWith('.sql'))
@@ -123,7 +134,7 @@ assert.equal(
   (await call('/staff/activate', { user: 'stranger', body: { token, confirm: true } })).status,
   409,
 );
-for (const r of ['admin', 'finance', 'manager'])
+for (const r of ['admin', 'finance', 'customer_relation', 'manager'])
   assert.equal((await switchRole(r)).status, 200, 'manager can open ' + r);
 for (const user of ['admin', 'finance']) {
   const request = await call('/staff/access-request', { user, body: {} });
@@ -359,6 +370,202 @@ assert.equal(
   (await call('/finance/reconciliations', { user: 'finance', member: p1, staff: true })).status,
   403,
   'revocation applies even with stale client state',
+);
+// Customer Relation is assigned explicitly and receives only complaint duties.
+const crUser = 'customer-relation';
+const crRequest = await call('/staff/access-request', { user: crUser, body: {} });
+assert.equal(crRequest.status, 200);
+const crCode = crRequest.data.request.code;
+assert.equal(
+  (
+    await call('/staff/accounts', {
+      user: 'admin',
+      body: { code: crCode, role: 'customer_relation' },
+    })
+  ).status,
+  403,
+);
+assert.equal(
+  (
+    await call('/staff/accounts', {
+      body: { code: crCode, role: 'customer_relation' },
+    })
+  ).status,
+  200,
+);
+assert.equal(
+  (await call('/staff/accounts')).data.accounts.find((account) => account.code === crCode).role,
+  'customer_relation',
+);
+assert.equal((await switchRole('customer_relation', crUser)).status, 200);
+for (const role of ['manager', 'admin', 'finance', 'avalist'])
+  assert.equal((await switchRole(role, crUser)).status, 403, 'CR cannot elevate to ' + role);
+const managerCr = await switchRole('customer_relation');
+assert.equal(managerCr.status, 200);
+assert.equal(managerCr.data.staff.accountRole, 'manager');
+assert(managerCr.data.staff.allowedRoles.includes('customer_relation'));
+assert.equal(
+  (await call('/reports')).status,
+  200,
+  'Manager keeps original authority while viewing CR',
+);
+assert.deepEqual(
+  (await call('', { staff: true })).data.profiles,
+  [],
+  'CR workspace bootstrap contains no member profiles',
+);
+assert.equal((await switchRole('manager')).status, 200);
+// A stale or forged workspace selection cannot enlarge a CR account's authority.
+db.prepare('UPDATE staff_workspaces SET active_role=? WHERE owner=?').run('manager', crUser);
+const crAccess = await call('/staff/access', { user: crUser });
+assert.equal(crAccess.status, 200);
+assert.equal(crAccess.data.staff.role, 'customer_relation');
+assert.deepEqual(crAccess.data.staff.allowedRoles, ['customer_relation']);
+for (const staff of [false, true]) {
+  const bootstrap = await call('', { user: crUser, staff });
+  assert.equal(bootstrap.status, 200);
+  assert.equal(bootstrap.data.staff.accountRole, 'customer_relation');
+  assert.equal(bootstrap.data.profile, null);
+  for (const field of ['items', 'profiles', 'offers', 'members'])
+    assert.deepEqual(bootstrap.data[field], []);
+  assert(!JSON.stringify(bootstrap.data).includes('private-nik'));
+}
+const blockedCrReads = [
+  '/reports',
+  '/reports/' + reportId + '/file',
+  '/offers',
+  '/staff/accounts',
+  '/staff/tasks',
+  '/staff/activity',
+  '/finance/reconciliations',
+  '/finance/payouts',
+  '/financing',
+  '/withdrawal/eligibility',
+  '/profile/letter',
+  '/profile/ktp',
+  '/profile/signature',
+  '/profile/proof',
+  '/avalist/access',
+  '/avalist?view=personal',
+  '/avalist',
+  '/member/' + p1 + '/profile/ktp',
+];
+for (const path of blockedCrReads)
+  assert.equal((await call(path, { user: crUser })).status, 403, 'CR cannot read ' + path);
+for (const path of [
+  '/profile',
+  '/profile/restart',
+  '/capital',
+  '/savings',
+  '/withdrawal',
+  '/reports',
+  '/offers',
+  '/staff/accounts',
+  '/staff/access-request',
+  '/staff/activate',
+  '/staff/activity/start',
+  '/finance/reconcile',
+  '/finance/payouts/complete',
+  '/financing',
+  '/avalist/people',
+  '/avalist/assignments',
+  '/avalist/prepare',
+])
+  assert.equal(
+    (await call(path, { user: crUser, body: {} })).status,
+    403,
+    'CR cannot mutate ' + path,
+  );
+assert.equal((await call('', { user: crUser, member: p1, staff: true })).status, 403);
+assert.equal((await call('/staff/access', { user: crUser, member: p1 })).status, 403);
+assert.equal((await call('?member=' + p1, { user: crUser })).status, 403);
+const crEnv = { ...env, ACTOR_ID: crUser };
+for (const operation of [
+  () => memberDirectory(crEnv, crUser),
+  () => selectedOwner(new Request('https://kspps.test/api/workflow'), crEnv, crUser),
+  () => cooperativeOwner(crEnv, 'manager'),
+  () => reportList(crEnv, 'member-a'),
+  () => allStaffTasks(crEnv, crUser),
+  () => startStaffTask(crEnv, crUser, { taskId: 'any' }),
+])
+  await assert.rejects(operation, (error) => error.status === 403);
+assert.deepEqual(
+  (await staffPayload(crEnv, crUser, { accountRole: 'customer_relation', role: 'admin' })).profiles,
+  [],
+);
+
+// An existing or pending Avalist entitlement never broadens a CR assignment.
+db.prepare(
+  `INSERT INTO avalist_people
+  (id,user_id,name,bank_name,bank_account,account_name,active,version,updated_at,updated_by)
+  VALUES (?,?,?,?,?,?,1,1,?,?)`,
+).run(
+  'cr-avalist',
+  crUser,
+  'Customer Relation',
+  'private-bank',
+  'private-account',
+  'private-name',
+  now,
+  'manager',
+);
+assert.deepEqual((await staffContext(crEnv, crUser)).allowedRoles, ['customer_relation']);
+await assert.rejects(
+  () => avalistView(crEnv, crUser, '2026-10-27', true),
+  (error) => error.status === 403,
+);
+await assert.rejects(
+  () => paymentProof(crEnv, crUser, crypto.randomUUID()),
+  (error) => error.status === 403,
+);
+const pendingCr = 'cr-pending';
+db.prepare('INSERT INTO staff_accounts VALUES (?,?,?,?,?,?,?)').run(
+  pendingCr,
+  'customer_relation',
+  'Customer Relation',
+  pendingCr + '@example.test',
+  'manager',
+  now,
+  now,
+);
+db.prepare(
+  `INSERT INTO avalist_people
+  (id,user_id,name,bank_name,bank_account,account_name,active,version,updated_at,updated_by)
+  VALUES (?,?,?,?,?,?,1,1,?,?)`,
+).run(
+  'cr-pending-person',
+  'pending-email:cr-pending-person',
+  'Pending CR',
+  '',
+  '',
+  '',
+  now,
+  'manager',
+);
+db.prepare(
+  `INSERT INTO avalist_email_access(email,person_id,created_by,created_at)
+  VALUES (?,?,?,?)`,
+).run(pendingCr + '@example.test', 'cr-pending-person', 'manager', now);
+assert.equal((await call('/staff/access', { user: pendingCr })).status, 200);
+assert.equal(
+  db
+    .prepare('SELECT bound_user_id FROM avalist_email_access WHERE person_id=?')
+    .get('cr-pending-person').bound_user_id,
+  null,
+);
+assert.equal(
+  db.prepare('SELECT user_id FROM avalist_people WHERE id=?').get('cr-pending-person').user_id,
+  'pending-email:cr-pending-person',
+);
+assert.equal(
+  (await call('/staff/accounts', { body: { code: crCode, role: 'revoke' } })).status,
+  200,
+);
+assert.equal((await call('', { user: crUser, staff: true })).status, 403);
+assert.equal((await switchRole('customer_relation', crUser)).status, 403);
+assert.equal(
+  db.prepare('SELECT count(*) n FROM staff_access_audit WHERE target_user_id=?').get(crUser).n,
+  2,
 );
 for (const file of [
   'frontend-user/src/Landing.svelte',

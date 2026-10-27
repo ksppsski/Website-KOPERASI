@@ -13,7 +13,7 @@ Buka **[Peta kode dan panduan pemeliharaan](docs/PETA-KODE.md)** untuk mencari f
 | Bagian           | Folder              | Isi                                                             |
 | ---------------- | ------------------- | --------------------------------------------------------------- |
 | Frontend user    | `frontend-user/`    | Landing page, pendaftaran dan seluruh halaman anggota           |
-| Frontend petugas | `frontend-petugas/` | Halaman admin, finance dan manajer                              |
+| Frontend petugas | `frontend-petugas/` | Halaman Admin, Finance, Manajer dan Customer Relation                              |
 | Frontend avalist | `frontend-avalist/` | Halaman masuk dan portal pribadi avalist                        |
 | Backend          | `backend/`          | API, izin akses, aturan keuangan, database, PDF dan penyimpanan |
 

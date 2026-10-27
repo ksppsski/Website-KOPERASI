@@ -24,7 +24,13 @@ import { view, fallbackView, snippetView } from '../../../../shared/runtime/view
  */
 import { statusColor } from '../../../../shared/lib/status-colors.js';
 export function createActivityPresentation({ app, state, wf, esc, newestFirst }) {
-  const roleLabel = (r) => (r === 'manager' ? 'Manajer' : r === 'finance' ? 'Finance' : 'Admin');
+  const roleLabel = (r) =>
+    ({
+      manager: 'Manajer',
+      finance: 'Finance',
+      admin: 'Admin',
+      customer_relation: 'Customer Relation',
+    })[r] || 'Admin';
 
   const statusLabel = (t) =>
     t.closedAt

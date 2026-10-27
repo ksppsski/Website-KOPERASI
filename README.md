@@ -41,7 +41,7 @@ Mulai dari **[Peta kode dan panduan pemeliharaan](source-lengkap/docs/PETA-KODE.
 - Penetapan dan pergantian avalist untuk pengajuan baru maupun akad berjalan, berdasarkan periode efektif dan persetujuan Manajer.
 - Fee avalist 1% atau 2%, dengan sisa alokasi menjadi hak koperasi. Pembayaran selesai tetap tersimpan; koreksi dicatat terpisah.
 - Total fee kumulatif, total hak fee bulanan, pembayaran pada bulan terpilih, dan rincian pembayaran untuk periode hak tersebut.
-- Alur anggota, Admin, Finance dan Manajer; rekonsiliasi, akad PDF, simpanan, jatuh tempo, pengunduran diri dan laporan.
+- Alur anggota, Admin, Finance, Manajer dan Customer Relation; rekonsiliasi, akad PDF, simpanan, jatuh tempo, pengunduran diri dan laporan.
 
 Rincian implementasi: [`source-lengkap/to-do.md`](source-lengkap/to-do.md) dan [`source-lengkap/docs/WORKFLOWS.md`](source-lengkap/docs/WORKFLOWS.md).
 

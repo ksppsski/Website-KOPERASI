@@ -46,7 +46,13 @@ export function initializeStaffAccess(app) {
     accountsLoaded: false,
     busy: false,
   });
-  const names = { manager: 'Manajer', admin: 'Admin', finance: 'Finance', avalist: 'Avalist' };
+  const names = {
+    manager: 'Manajer',
+    admin: 'Admin',
+    finance: 'Finance',
+    customer_relation: 'Customer Relation',
+    avalist: 'Avalist',
+  };
   const announce = () => app.events.dispatchEvent(new CustomEvent('kspps-access-loaded'));
   const { api } = createStaffAccessClient(app.request);
   async function load() {
@@ -116,7 +122,7 @@ export function initializeStaffAccess(app) {
               email: esc(x.email),
               code: esc(x.code),
               role: names[x.role] || (x.status === 'revoked' ? 'Dicabut' : 'Menunggu persetujuan'),
-              Rows: ['admin', 'finance', 'avalist'].map((r) =>
+              Rows: ['admin', 'finance', 'customer_relation', 'avalist'].map((r) =>
                 snippetView(AccountRows4View, {
                   code: esc(x.code),
                   r: r,

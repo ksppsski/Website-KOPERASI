@@ -10,6 +10,7 @@ export const complaintDivisionLabels = Object.freeze({
   admin: 'Administrasi',
   finance: 'Keuangan',
   manager: 'Manajemen',
+  customer_relation: 'Customer Relation',
 });
 
 export const complaintRoleLabels = Object.freeze({
@@ -17,6 +18,7 @@ export const complaintRoleLabels = Object.freeze({
   admin: 'Admin',
   finance: 'Finance',
   manager: 'Manajer',
+  customer_relation: 'Customer Relation',
 });
 
 export const complaintEventLabels = Object.freeze({

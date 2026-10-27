@@ -514,6 +514,210 @@ assert.equal(
   ).status,
   400,
 );
+// Customer Relation is a complaint PIC role, with no unassigned or ownership bypass.
+const beforeCrGrant = (await call(base, { user: 'cr-one', body: createBody() })).data.item;
+for (const user of ['cr-one', 'cr-two'])
+  db.prepare('INSERT INTO staff_accounts VALUES (?,?,?,?,?,?,?)').run(
+    user,
+    'customer_relation',
+    'Customer Relation ' + user,
+    user + '@private.test',
+    'manager',
+    now,
+    now,
+  );
+assert.equal((await call(base, { user: 'cr-one', body: createBody() })).status, 403);
+assert.equal(
+  (await call(base + '/' + beforeCrGrant.id, { user: 'cr-one' })).status,
+  404,
+  'owning a historical complaint does not bypass the CR assignment boundary',
+);
+for (const suffix of ['', '?view=staff'])
+  assert.deepEqual((await call(base + suffix, { user: 'cr-one' })).data.items, []);
+const crDirectory = (await call(base + '?view=staff', { user: 'admin' })).data.assignees;
+assert.equal(crDirectory.find((person) => person.id === 'cr-one').role, 'customer_relation');
+assert(!JSON.stringify(crDirectory).includes('@private.test'));
+const crCase = (await call(base, { user: 'cr-reporter', body: createBody() })).data.item;
+const crPath = base + '/' + crCase.id;
+const crAssignment = {
+  version: 1,
+  assigneeId: 'cr-one',
+  division: 'customer_relation',
+  dueAt: new Date(Date.now() + 86400000).toISOString(),
+};
+assert.equal((await call(crPath, { user: 'cr-one' })).status, 404);
+assert.equal(
+  (
+    await call(crPath + '/assign', {
+      user: 'admin',
+      body: { ...crAssignment, division: 'admin' },
+    })
+  ).status,
+  400,
+);
+assert.equal(
+  (
+    await call(crPath + '/assign', {
+      user: 'admin',
+      body: { ...crAssignment, assigneeId: 'admin' },
+    })
+  ).status,
+  400,
+);
+const assignedCr = await call(crPath + '/assign', { user: 'admin', body: crAssignment });
+assert.equal(assignedCr.status, 200);
+assert.equal(assignedCr.data.item.division, 'customer_relation');
+assert(assignedCr.data.events.at(-1).message.includes('Divisi: Customer Relation.'));
+for (const suffix of ['', '?view=staff']) {
+  const crList = await call(base + suffix, { user: 'cr-one' });
+  assert.deepEqual(
+    crList.data.items.map((item) => item.id),
+    [crCase.id],
+  );
+  assert.deepEqual(crList.data.assignees, []);
+  assert.equal(crList.data.canManage, false);
+}
+let crDetail = (await call(crPath, { user: 'cr-one' })).data;
+assert.equal(crDetail.canReply, true);
+assert.equal(crDetail.canReplyAsStaff, true);
+assert.equal(crDetail.canManage, false);
+assert.equal(crDetail.canResolve, false);
+assert.equal((await call(crPath, { user: 'cr-two' })).status, 404);
+assert.equal((await call(crPath, { user: 'other' })).status, 404);
+assert.equal((await call(crPath + '/assign', { user: 'cr-one', body: crAssignment })).status, 403);
+assert.equal(
+  (
+    await call(crPath + '/status', {
+      user: 'cr-one',
+      body: { version: 2, status: 'closed' },
+    })
+  ).status,
+  403,
+);
+crDetail = (
+  await call(crPath + '/status', {
+    user: 'cr-one',
+    body: { version: 2, status: 'in_progress' },
+  })
+).data;
+assert.equal(crDetail.canResolve, true);
+crDetail = (
+  await call(crPath + '/reply', {
+    user: 'cr-one',
+    body: {
+      version: 3,
+      message: 'Mohon berikan nomor setoran yang dimaksud.',
+      status: 'waiting_member',
+    },
+  })
+).data;
+assert.equal(crDetail.item.status, 'waiting_member');
+assert.equal(crDetail.events.at(-2).actorRole, 'customer_relation');
+crDetail = (
+  await call(crPath + '/reply', {
+    user: 'cr-reporter',
+    body: { version: 4, message: 'Nomor setoran adalah CR-001.' },
+  })
+).data;
+assert.equal(crDetail.item.status, 'in_progress');
+assert.equal(
+  (
+    await call(crPath + '/status', {
+      user: 'cr-one',
+      body: { version: 5, status: 'resolved', resolution: 'ok' },
+    })
+  ).status,
+  400,
+);
+crDetail = (
+  await call(crPath + '/status', {
+    user: 'cr-one',
+    body: {
+      version: 5,
+      status: 'resolved',
+      resolution: 'Setoran sudah diperiksa bersama petugas terkait dan hasilnya sesuai.',
+    },
+  })
+).data;
+assert.equal(crDetail.item.status, 'resolved');
+assert.equal(crDetail.canClose, false);
+assert.equal(
+  (
+    await call(crPath + '/status', {
+      user: 'cr-one',
+      body: { version: 6, status: 'closed' },
+    })
+  ).status,
+  403,
+);
+assert.equal(
+  (
+    await call(crPath + '/status', {
+      user: 'manager',
+      body: { version: 6, status: 'closed' },
+    })
+  ).status,
+  200,
+);
+assert.equal(
+  (
+    await call(crPath + '/reply', {
+      user: 'cr-one',
+      body: { version: 7, message: 'Tidak boleh mengubah kasus yang ditutup.' },
+    })
+  ).status,
+  409,
+);
+const transferCase = (await call(base, { user: 'cr-reporter', body: createBody() })).data.item;
+const transferPath = base + '/' + transferCase.id;
+assert.equal(
+  (
+    await call(transferPath + '/assign', {
+      user: 'manager',
+      body: crAssignment,
+    })
+  ).status,
+  200,
+);
+assert.equal(
+  (
+    await call(transferPath + '/assign', {
+      user: 'manager',
+      body: {
+        ...crAssignment,
+        version: 2,
+        assigneeId: 'admin',
+        division: 'admin',
+        reason: 'Dialihkan untuk pemeriksaan administrasi.',
+      },
+    })
+  ).status,
+  200,
+);
+assert.equal((await call(transferPath, { user: 'cr-one' })).status, 404);
+const revokeCase = (await call(base, { user: 'cr-reporter', body: createBody() })).data.item;
+const revokePath = base + '/' + revokeCase.id;
+assert.equal(
+  (
+    await call(revokePath + '/assign', {
+      user: 'admin',
+      body: crAssignment,
+    })
+  ).status,
+  200,
+);
+db.prepare('DELETE FROM staff_accounts WHERE user_id=?').run('cr-one');
+assert.equal((await call(revokePath, { user: 'cr-one' })).status, 404);
+assert.equal(
+  (
+    await call(revokePath + '/reply', {
+      user: 'cr-one',
+      body: { version: 2, message: 'Percobaan dengan akses yang dicabut.' },
+    })
+  ).status,
+  404,
+);
+assert.equal((await call(base + '?view=staff', { user: 'cr-one' })).status, 403);
 db.close();
 console.log(
   'PASS: complaint numbering, account privacy, PIC/division/deadline checks, complete case history, resolution, closure and atomic optimistic updates.',

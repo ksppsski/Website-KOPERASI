@@ -287,6 +287,13 @@
 .staff-shell .member-chip > div {
   display: block;
 }
+.staff-shell.customer-relation .breadcrumb {
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.staff-shell.customer-relation .member-chip strong {
+  max-width: 160px;
+}
 .mobile-staff-close {
   display: none;
 }

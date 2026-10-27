@@ -111,6 +111,19 @@ export async function appFetch(request, env) {
     scopedPath,
   });
   if (complaintResponse) return complaintResponse;
+  if (context.accountRole === 'customer_relation') {
+    if (scopedPath || request.headers.has('x-kspps-member') || url.searchParams.has('member'))
+      throw new Problem(403, 'Customer Relation tidak dapat memilih atau membuka data anggota.');
+    if (pathname === '/api/workflow' && request.method === 'GET')
+      return json(await staffPayload(env, signedIn, context));
+    const accessRoute = pathname === '/api/workflow/staff/access' && request.method === 'GET';
+    const roleRoute = pathname === '/api/workflow/staff/role' && request.method === 'POST';
+    if (!accessRoute && !roleRoute)
+      throw new Problem(
+        403,
+        'Customer Relation hanya dapat menindaklanjuti keluhan yang ditugaskan kepadanya.',
+      );
+  }
   if (pathname === '/api/workflow/avalist/access' && request.method === 'GET')
     return json({ identity: person, allowed: context.allowedRoles.includes('avalist') });
   const accountsResponse = await handleAccountRoutes({ pathname, request, env, signedIn, person });

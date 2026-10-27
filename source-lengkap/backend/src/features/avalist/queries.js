@@ -1,6 +1,6 @@
 /** Modul fitur; aturan dan izin diperiksa pada fungsi terkait. */
 import { calendarDate, makassarToday } from '../../finance.js';
-import { actorId, staffContext } from '../../access.js';
+import { actorId, staffContext, requireOperationalAccess } from '../../access.js';
 import { Problem } from '../../membership.js';
 import { dataset, eventDTO, paymentDTO, personDTO } from './records.js';
 import {
@@ -15,7 +15,7 @@ import { missingAssignmentFields } from '../../../../shared/lib/avalist-assignme
 
 export async function avalistView(env, id, date, personal = false) {
   calendarDate(date);
-  const s = await staffContext(env, id);
+  const s = requireOperationalAccess(await staffContext(env, id));
   if (personal) {
     if (!s.accountRole) throw new Problem(403, 'Akses Avalist belum diberikan Manajer.');
     const data = await dataset(env),

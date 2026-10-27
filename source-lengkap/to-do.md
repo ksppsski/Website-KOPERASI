@@ -7,7 +7,7 @@ Project dibagi menjadi **frontend user**, **frontend petugas**, **frontend avali
 | Bagian           | Folder              | Tanggung jawab                                            |
 | ---------------- | ------------------- | --------------------------------------------------------- |
 | Frontend user    | `frontend-user/`    | Landing page, pendaftaran dan portal anggota              |
-| Frontend petugas | `frontend-petugas/` | Portal admin, finance dan manajer                         |
+| Frontend petugas | `frontend-petugas/` | Portal Admin, Finance, Manajer dan Customer Relation                         |
 | Frontend avalist | `frontend-avalist/` | Portal pribadi avalist |
 | Backend          | `backend/`          | API, otorisasi, aturan keuangan, database, berkas dan PDF |
 
@@ -19,7 +19,8 @@ Project dibagi menjadi **frontend user**, **frontend petugas**, **frontend avali
 - [x] Beri nomor keluhan dan waktu masuk server, dengan kirim ulang yang tidak menggandakan kasus.
 - [x] Batasi anggota pada kasus akunnya, termasuk sebelum persetujuan atau setelah keanggotaan ditutup; tolak Avalist dan pemilih identitas anggota.
 - [x] Sediakan penugasan PIC sesuai divisi, batas waktu per kasus dan alasan perubahan; tanpa SLA bawaan.
-- [x] Batasi Finance pada kasus yang ditugaskan kepadanya; Admin/Manajer mengelola seluruh kasus.
+- [x] Tambahkan Customer Relation sebagai peran PIC khusus Bantuan, dengan akses yang diberikan/dicabut Manajer dan tanpa akses operasional umum.
+- [x] Batasi Finance dan Customer Relation pada kasus yang ditugaskan kepadanya; Admin/Manajer mengelola seluruh kasus.
 - [x] Simpan status, tanggapan dan riwayat penugasan; wajibkan hasil penyelesaian sebelum Admin/Manajer menutup kasus.
 - [x] Lindungi kasus Ditutup dari perubahan dan simpan mutasi/riwayat secara atomik dengan pemeriksaan versi.
 - [x] Tambahkan migrasi `0015_complaint_tracking.sql` dan pengujian backend serta interaksi portal.

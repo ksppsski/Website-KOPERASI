@@ -11,7 +11,10 @@
 
 {#if context}
   {@const counts = pending()}
-  <div class="portal-shell staff-shell">
+  <div
+    class={'portal-shell staff-shell' +
+      (activeRole() === 'customer_relation' ? ' customer-relation' : '')}
+  >
     <button type="button" class="mobile-scrim" data-action="close-menu" aria-label="Tutup navigasi"
     ></button>
     <aside class="sidebar" id="staff-sidebar">
@@ -65,6 +68,8 @@
                   AV
                 {:else if activeRole() === 'finance'}
                   FN
+                {:else if activeRole() === 'customer_relation'}
+                  CR
                 {:else}
                   AD
                 {/if}
