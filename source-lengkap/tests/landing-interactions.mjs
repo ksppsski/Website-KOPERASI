@@ -22,6 +22,15 @@ const link = (label, root = document) => {
   assert(node, 'Missing link: ' + label);
   return node;
 };
+const originalBrand = (container, label) => {
+  assert(container, 'Missing original brand: ' + label);
+  assert.deepEqual(
+    [...container.querySelectorAll('img')].map((image) => image.getAttribute('src')),
+    ['assets/kspps-logo-color-web.png', 'assets/kspps-logo-white-web.png'],
+    label + ' uses the original color and white logo images',
+  );
+  assert.equal(text(container), '', label + ' does not reconstruct the logo with web text');
+};
 
 assert.equal(document.querySelector('.static-preview-banner, .prototype-strip'), null);
 assert.doesNotMatch(document.body.textContent, /pratinjau|prototipe|simulasi|\bdemo\b|konsep/i);
@@ -30,14 +39,24 @@ assert.match(text(document.querySelector('h1')), /Langkah Baik,\s*Tumbuh Bersama
 assert.equal(document.querySelectorAll('.theme-toggle').length, 1);
 assert.equal(document.querySelectorAll('a[href*="petugas"], a[href*="avalist"]').length, 0);
 
-// The mockup becomes real headings, controls and cards, with only the photo rasterized.
+// Headings, controls and cards are native; visual assets keep the original branding.
 const main = document.querySelector('main');
 assert(main);
 const headings = [...main.querySelectorAll('h2')].map(text);
 assert.deepEqual(headings, ['Simpanan untuk setiap langkah.', 'Tentang KSPPS', 'Pertanyaan umum']);
 assert.equal(document.querySelector('#ski-values, #ski-bergabung, .ski-values, .ski-join'), null);
 const hero = document.querySelector('h1').closest('section');
-assert(hero.querySelector('img'), 'The building is a separate visual asset');
+const scene = hero.querySelector('.ski-building-scene');
+assert(scene, 'The building and its original signage share one visual scene');
+const building = scene.querySelector('img.ski-building-photo');
+assert(building, 'The 3D building is a separate visual asset');
+assert.match(building.getAttribute('alt'), /3D/i);
+assert.match(building.getAttribute('src'), /^assets\/.+\.webp$/);
+const signage = scene.querySelector('svg image');
+assert(signage, 'Facade signage uses the supplied logo image, not generated lettering');
+assert.equal(signage.getAttribute('href'), 'assets/kspps-logo-color-hd.png');
+assert.equal(scene.querySelector('svg text'), null, 'Facade lettering is not reconstructed');
+originalBrand(hero.querySelector('.ski-member-preview-icon'), 'Member icon');
 assert.match(hero.textContent, /Ruang Anggota/);
 assert.match(hero.textContent, /Simpanan dan akad, lebih mudah dipantau\./);
 assert.equal(
@@ -50,6 +69,8 @@ assert.match(discover.getAttribute('href'), /^#/);
 assert(document.querySelector(discover.getAttribute('href')));
 
 const header = document.querySelector('header');
+originalBrand(header.querySelector('.ski-brand'), 'Header');
+originalBrand(document.querySelector('footer .ski-footer-brand'), 'Footer');
 assert.equal(link('Portal Anggota', header).getAttribute('href'), 'anggota.html#masuk');
 const nav = document.querySelector('nav[aria-label="Navigasi utama"]');
 assert(nav);

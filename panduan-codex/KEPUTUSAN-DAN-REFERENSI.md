@@ -1,5 +1,11 @@
 # Keputusan, preferensi dan referensi proyek
 
+## Gedung 3D dan logo asli, 2 November 2026
+
+Pengguna meminta visual gedung menjadi render 3D dan mengoreksi logo pada fasad maupun web. Logo rekonstruksi mockup dibuang. Header, footer dan ikon Ruang Anggota kembali memakai PNG asli dari baseline proyek melalui `shared/components/Brand.svelte`: `kspps-logo-color-web.png` untuk terang dan `kspps-logo-white-web.png` untuk gelap. Susunan asli menempatkan KSPPS kecil di atas nama Syirkah Kebaikan Indonesia, bukan KSPPS besar seperti mockup. Simbol favicon dan logo portal yang sudah memakai sumber asli dipertahankan.
+
+`kspps-building-3d.webp` adalah render ilustratif hasil imagegen tanpa tulisan. Logo HD asli `kspps-logo-color-hd.png` ditempatkan sebagai lapisan SVG pada fasad, sehingga bentuk dan teks tidak digambar ulang oleh AI. Foto dan logo berada dalam satu scene agar motion scroll tetap selaras. Tujuan tombol, susunan beranda, reduced motion serta fungsi portal dipertahankan.
+
 ## Gerakan saat menggulir beranda, 2 November 2026
 
 Pengguna meminta kesan gerakan halus pada setiap scroll beranda. Bagian halaman dan kartu muncul bertahap saat memasuki layar, lalu dapat muncul kembali setelah keluar sepenuhnya. Foto gedung mendapat parallax ringan. Pertahankan scroll bawaan perangkat, susunan mockup, tujuan tombol dan fungsi portal. Pengurangan gerak menonaktifkan efek, fokus keyboard langsung memperlihatkan kontrol, dan semua isi tetap terlihat saat JavaScript/IntersectionObserver tidak tersedia atau halaman dicetak. Observer, listener dan frame hanya dimiliki instance beranda serta dilepas saat unmount.

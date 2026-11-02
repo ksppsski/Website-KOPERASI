@@ -1,4 +1,9 @@
-<span class="ski-wordmark-logo" aria-hidden="true">
-  <img class="ski-brand-symbol" src="assets/kspps-symbol.svg" width="27" height="49" alt="" />
-  <span class="ski-wordmark"><strong>KSPPS</strong><small>Syirkah Kebaikan Indonesia</small></span>
+<script>
+  import Brand from '../../../../shared/components/Brand.svelte';
+
+  let { symbol = false } = $props();
+</script>
+
+<span class={symbol ? 'ski-original-symbol' : 'ski-original-brand'} aria-hidden="true">
+  <Brand />
 </span>
