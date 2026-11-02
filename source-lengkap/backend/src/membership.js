@@ -24,10 +24,19 @@ export async function assignMemberNumbers(env) {
     stmt(
       env,
       `
-  UPDATE member_profiles SET member_number = printf( 'SKI-%s-%04d' , strftime( '%Y' ,
-  created_at, '+8 hours' ), (SELECT serial FROM member_numbers WHERE profile_id =
-  member_profiles.id)) WHERE member_number IS NULL AND EXISTS (SELECT 1 FROM member_numbers
-  WHERE profile_id = member_profiles.id)
+  UPDATE member_profiles SET member_number = printf(
+    'SKI-%s-%s-%04d',
+    strftime('%Y', created_at, '+8 hours'),
+    CASE strftime('%m', created_at, '+8 hours')
+      WHEN '01' THEN 'I' WHEN '02' THEN 'II' WHEN '03' THEN 'III'
+      WHEN '04' THEN 'IV' WHEN '05' THEN 'V' WHEN '06' THEN 'VI'
+      WHEN '07' THEN 'VII' WHEN '08' THEN 'VIII' WHEN '09' THEN 'IX'
+      WHEN '10' THEN 'X' WHEN '11' THEN 'XI' WHEN '12' THEN 'XII'
+    END,
+    (SELECT serial FROM member_numbers WHERE profile_id = member_profiles.id)
+  ) WHERE member_number IS NULL AND EXISTS (
+    SELECT 1 FROM member_numbers WHERE profile_id = member_profiles.id
+  )
 `,
     ),
   ]);

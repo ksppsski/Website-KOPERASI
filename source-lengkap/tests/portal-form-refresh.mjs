@@ -4,7 +4,7 @@ import { calculateSavings } from '../backend/src/savings.js';
 
 const profile = {
   id: 'profile-test',
-  memberNumber: 'SKI-2026-0001',
+  memberNumber: 'SKI-2026-IX-0001',
   status: 'approved',
   version: 1,
   createdAt: '2026-09-21',

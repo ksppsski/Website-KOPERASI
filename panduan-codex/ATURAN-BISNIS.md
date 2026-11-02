@@ -21,8 +21,8 @@ Portal: `/anggota.html`, `/petugas.html`, dan `/avalist.html`; landing berada di
 
 - Anggota mengisi identitas, alamat, kontak, rekening, foto KTP, tanda tangan, dan bukti setoran awal. KTP dan bukti setoran wajib. Bukti transfer menerima JPG/PNG/PDF sesuai validasi server.
 - KTP tampil di kanan tanda tangan pada layar lebar dan ditumpuk pada layar kecil.
-- Nomor anggota: `SKI-<tahun daftar>-<nomor urut>`, minimal empat digit urutan. Tahun mengikuti waktu pendaftaran yang dicatat server di Asia/Makassar.
-- Urutan global terus bertambah lintas tahun; nomor tidak digunakan ulang. Edit, refresh atau kirim ulang tidak memberi nomor kedua.
+- Mulai perubahan 2 November 2026, nomor anggota yang belum diterbitkan memakai `SKI-<tahun masuk>-<bulan masuk Romawi>-<nomor urut>`, contoh `SKI-2026-XI-0001`. Tahun dan bulan mengikuti waktu pendaftaran asli yang dicatat server di Asia/Makassar. Nomor urut minimal empat digit; nomor yang sudah terbit dengan format lama tetap dipertahankan.
+- Urutan global terus bertambah lintas bulan dan tahun; nomor tidak digunakan ulang. Edit, refresh atau kirim ulang tidak memberi nomor kedua.
 - Finance merekonsiliasi setoran. Admin memeriksa identitas dan menyetujui sesuai tahap; persetujuan yang mensyaratkan dana menunggu rekonsiliasi sah.
 - Surat keanggotaan satu halaman tersedia setelah rekonsiliasi pembayaran awal. Tanggal surat mengikuti tanggal rekonsiliasi WITA; bulan nomor surat memakai Romawi.
 - Nama file surat: `SPA <nomor anggota> a.n <nama anggota>.pdf`.

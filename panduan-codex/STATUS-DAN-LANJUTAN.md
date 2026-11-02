@@ -2,6 +2,12 @@
 
 Snapshot serah terima: **14 Oktober 2026**, aplikasi **v39**. Periksa kode/commit terbaru sebelum memakai dokumen ini pada sesi berikutnya.
 
+## Pembaruan 2 November 2026
+
+Standar nomor anggota yang belum diterbitkan berubah menjadi **SKI-tahun masuk-bulan masuk Romawi-nomor urut**, misalnya `SKI-2026-XI-0001`. Tahun dan bulan memakai tanggal pendaftaran asli dalam WITA; nomor urut tetap global, minimal empat digit, terus berlanjut lintas bulan/tahun. Perubahan ini hanya mengisi nomor yang belum ada. Nomor anggota yang sudah terbit, arsip keanggotaan ditutup, snapshot dan PDF historis tetap dipertahankan. Tidak ada migrasi skema atau penomoran ulang massal.
+
+Pengujian mencakup seluruh bulan I–XII, batas pergantian bulan/tahun WITA, kirim ulang bersamaan, nomor lama, urutan di atas 9999, propagasi nomor baru ke surat keanggotaan, nama berkas PDF dan pendaftaran ulang. Perubahan source tidak mengaktifkan backend pada domain Pages.
+
 ## Pembaruan 27 Oktober 2026
 
 Peran **Customer Relation** ditambahkan sebagai PIC Bantuan. Manajer memberikan atau mencabut aksesnya melalui **Akses Petugas**. Peran ini hanya membuka **Keluhan Anggota**, menangani kasus yang ditugaskan kepadanya, memberi tanggapan, memperbarui status dan mencatat hasil penyelesaian. Penugasan serta penutupan tetap dilakukan Admin/Manajer. Server menolak akses Customer Relation ke data keanggotaan, berkas privat, keuangan dan API operasional umum; bootstrap portal hanya memuat konteks akun serta daftar kosong. Penambahan ini tidak mengubah skema database.

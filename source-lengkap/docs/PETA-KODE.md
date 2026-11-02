@@ -29,6 +29,10 @@ Framework frontend tetap **Svelte 5 + Vite**. Backend tetap Worker JavaScript de
 
 Favicon tab mengikuti mode perangkat. `public/assets/kspps-symbol.svg` berisi bentuk vektor logo, `scripts/generate-favicons.mjs` menghasilkan varian terang/gelap secara otomatis saat build.
 
+## Nomor anggota, 2 November 2026
+
+`backend/src/membership.js`, fungsi `assignMemberNumbers`, adalah sumber penomoran resmi. Nomor yang belum ada memakai `SKI-<tahun masuk>-<bulan masuk Romawi>-<nomor urut>`. SQL mengambil tahun dan bulan dari `created_at` dengan offset WITA +8; serial berasal dari `member_numbers` dan minimal empat digit. Nomor lama tetap dipertahankan. `profileDTO` dan snapshot meneruskan nomor sebagai teks ke portal dan surat; jangan membentuk ulang nomor dari tampilannya. Tes `tests/member-numbers.mjs` mencakup bulan, batas waktu WITA, nomor lama, keunikan, kirim ulang dan overflow.
+
 ## Identitas akun tanpa platform lama
 
 `backend/src/authentication.js` memeriksa sesi melalui binding server `AUTH`. Router memakai ID hasil verifikasi untuk pemeriksaan role/kepemilikan yang sudah ada. Header identitas platform lama tidak dibaca; hanya cookie atau token sesi yang diteruskan ke verifier terpercaya. Tanpa provider/sesi sah, akses privat ditolak. Tes `authentication.mjs` dan fixture `tests/helpers/test-session.mjs` memisahkan sesi terpercaya dari input browser. UI tidak lagi mempunyai tautan atau instruksi masuk/keluar platform lama. Login email/kata sandi belum dihubungkan.

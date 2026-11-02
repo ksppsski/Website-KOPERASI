@@ -39,9 +39,9 @@ No seeded member or financial records are inserted by this release. Notification
 
 ## Automatic member numbers
 
-Each persisted registration receives `SKI-<registration year>-<serial>`, e.g. `SKI-2026-0001`. The year follows the original server-recorded registration timestamp in Asia/Makassar (UTC+8). The globally increasing serial is allocated by D1 and continues across years; it is padded to at least four digits and never truncated. The database enforces one allocation per profile and a unique member number. Editing, approval, repeat submissions and page refreshes keep the same number. Internal UUIDs remain separate references for requests and attachments.
+From 2 November 2026, registrations without an issued number receive `SKI-<registration year>-<Roman registration month>-<serial>`, e.g. `SKI-2026-XI-0001`. Both year and month follow the original server-recorded registration timestamp in Asia/Makassar (UTC+8). Months use I through XII. The globally increasing serial is allocated by D1 and continues across months and years; it is padded to at least four digits and never truncated. The database enforces one allocation per profile and a unique member number. Editing, approval, repeat submissions and page refreshes keep the same number. Internal UUIDs remain separate references for requests and attachments.
 
-Existing unnumbered registrations are assigned transactionally in original registration order when first read. The same number is displayed in both portals and new application snapshots. Historical snapshots and PDFs remain immutable; old request lists resolve their display number from the linked profile.
+Previously issued member numbers retain their exact spelling, including the former `SKI-<year>-<serial>` format. The allocation UPDATE only affects `member_number IS NULL`; no schema migration or mass renumbering is performed. Existing unnumbered registrations are assigned transactionally in original registration order when first read. The same number is displayed in both portals and new application snapshots. Historical snapshots and PDFs remain immutable; old request lists resolve their display number from the linked profile.
 
 ## Automatic contract rules
 

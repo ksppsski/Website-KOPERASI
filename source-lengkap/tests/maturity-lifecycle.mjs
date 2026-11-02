@@ -237,12 +237,20 @@ for (const row of q.items) {
 }
 const letter = ok(await call()).profile.letter;
 assert(letter);
-assert.match(letter.filename, /^SPA SKI-2026-0001 a.n ANGGOTA UJI/);
+assert.match(letter.filename, /^SPA SKI-2026-IX-0001 a.n ANGGOTA UJI/);
+assert.equal(
+  JSON.parse(
+    database.prepare('SELECT snapshot FROM membership_letters WHERE owner=?').get('member-a')
+      .snapshot,
+  ).memberNumber,
+  'SKI-2026-IX-0001',
+  'the membership letter snapshot retains the full member number with its Roman month',
+);
 assert.equal(letter.effectiveDate, '2026-09-01');
 let pdf = await call('/profile/letter?download=1');
 ok(pdf);
 assert.equal((await PDFDocument.load(pdf.data)).getPageCount(), 1);
-assert(pdf.headers.get('content-disposition').includes('SPA SKI-2026-0001'));
+assert(pdf.headers.get('content-disposition').includes('SPA SKI-2026-IX-0001'));
 writeFileSync('/tmp/kspps-membership-letter-test.pdf', pdf.data);
 assert.equal(
   (await call('/member/' + ids['member-a'] + '/profile/letter', { user: 'member-b' })).status,
@@ -592,11 +600,14 @@ const longData = {
   identityAddress: 'Jalan Pengujian Kecamatan Panakkukang Kota Makassar '.repeat(5).slice(0, 240),
   birthplace: 'Kota Makassar '.repeat(8).slice(0, 100),
 };
-const longPDF = await buildMembershipLetter({
-  number: '0003/KSPPS-SKI/SPA/09/2026',
-  filename: 'SPA long.pdf',
-  reconciled_at: '2026-09-01T01:00:00Z',
-  snapshot: JSON.stringify({ data: longData, memberNumber: 'SKI-2026-0003' }),
-});
-assert.equal((await PDFDocument.load(longPDF)).getPageCount(), 1);
-writeFileSync('/tmp/kspps-membership-letter-long.pdf', longPDF);
+for (const memberNumber of ['SKI-2026-0003', 'SKI-2026-XII-10000']) {
+  const longPDF = await buildMembershipLetter({
+    number: '0003/KSPPS-SKI/SPA/09/2026',
+    filename: 'SPA long.pdf',
+    reconciled_at: '2026-09-01T01:00:00Z',
+    snapshot: JSON.stringify({ data: longData, memberNumber }),
+  });
+  assert.equal((await PDFDocument.load(longPDF)).getPageCount(), 1, memberNumber);
+  if (memberNumber.includes('-XII-'))
+    writeFileSync('/tmp/kspps-membership-letter-long.pdf', longPDF);
+}
