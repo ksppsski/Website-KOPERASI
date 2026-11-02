@@ -33,7 +33,7 @@ Project dibagi menjadi **frontend user**, **frontend petugas**, **frontend avali
 - [x] Pisahkan entry landing page dan portal anggota ke `frontend-user/src/entries/`.
 - [x] Pisahkan router anggota ke `frontend-user/src/Portal.svelte` tanpa mengimpor halaman khusus petugas.
 - [x] Pertahankan palet logo KSPPS, susunan halaman, favicon dan tampilan responsif.
-- [x] Pertahankan animasi kartu: awal horizontal menutupi portal, klik bergeser ke kiri sambil miring dan lingkaran berputar.
+- [x] Terapkan mockup beranda modern dan tenang 2 November 2026: hero gedung/Ruang Anggota, tiga kartu simpanan, Tentang KSPPS, tiga FAQ dan footer Hubungi Admin; menggantikan animasi kartu lama.
 - [x] Gunakan istilah penyertaan modal pada layanan anggota.
 - [x] Pisahkan pintu masuk petugas dari navigasi landing page dan portal anggota.
 

@@ -1,34 +1,9 @@
-<script>
-  import LandingIcon from './LandingIcon.svelte';
-</script>
-
-<section class="ski-bottom ski-wrap" id="ski-tentang">
-  <div class="ski-about">
-    <div class="ski-eyebrow">Tentang kami</div>
-    <h2>Syirkah Kebaikan<br />Indonesia</h2>
+<section class="ski-about-section" id="tentang" aria-labelledby="ski-about-title">
+  <div class="ski-about-inner ski-wrap">
+    <h2 id="ski-about-title">Tentang KSPPS</h2>
     <p>
-      Koperasi syariah yang melayani kebutuhan simpanan, penyertaan modal, dan pembiayaan anggota.
+      KSPPS Syirkah Kebaikan Indonesia mengelola simpanan dan pembiayaan bagi anggota berdasarkan
+      prinsip syariah.
     </p>
-    <button
-      type="button"
-      class="ski-button ski-outline"
-      style="margin-top:19px"
-      data-ski-dialog="contact">Hubungi Kami <LandingIcon name="message-circle" /></button
-    >
-  </div>
-  <div class="ski-faq">
-    <h3>Pertanyaan umum</h3>
-    <details>
-      <summary>Bagaimana cara menjadi anggota?</summary>
-      <p>Lengkapi data diri dan setoran keanggotaan, lalu ikuti proses verifikasi tim.</p>
-    </details>
-    <details>
-      <summary>Apa tujuan penyertaan modal?</summary>
-      <p>Penyertaan modal digunakan untuk pengadaan kebutuhan barang Mitra.</p>
-    </details>
-    <details>
-      <summary>Di mana dokumen akad tersedia?</summary>
-      <p>Dokumen tersedia di menu Dokumen Akad pada portal anggota.</p>
-    </details>
   </div>
 </section>

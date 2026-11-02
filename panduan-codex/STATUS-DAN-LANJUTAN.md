@@ -4,6 +4,10 @@ Snapshot serah terima: **14 Oktober 2026**, aplikasi **v39**. Periksa kode/commi
 
 ## Pembaruan 2 November 2026
 
+Beranda mengikuti mockup modern dan tenang: header responsif, hero dua kolom dengan foto gedung dan kartu Ruang Anggota, tiga kartu simpanan, Tentang KSPPS, tiga FAQ native buka/tutup, serta footer Hubungi Admin. Hero kartu berputar dan bagian keanggotaan panjang diganti oleh struktur ringkas ini. Komponen dan stylesheet beranda terpisah dari portal; tema dan favicon tetap memakai mekanisme bersama. Tujuan tombol memakai portal/kontak yang sudah ada. Publikasi tetap melalui GitHub Pages tanpa mengubah DNS.
+
+Validasi beranda: `npm run check`, seluruh `npm run test:app`, `npm run build:pages` dan `npm run check:pages` lulus. Browser nyata memeriksa lebar 1280 px, 390 px dan 320 px, tema terang/gelap, logo putih, menu ponsel, FAQ, fokus dialog kontak dan tujuan Portal Anggota. Tidak ditemukan luapan horizontal; font serta aset gedung termuat. Empat puluh tampilan portal tetap lolos parity tanpa mengubah fixture. `docs/CNAME` dipertahankan.
+
 Standar nomor anggota yang belum diterbitkan berubah menjadi **SKI-tahun masuk-bulan masuk Romawi-nomor urut**, misalnya `SKI-2026-XI-0001`. Tahun dan bulan memakai tanggal pendaftaran asli dalam WITA; nomor urut tetap global, minimal empat digit, terus berlanjut lintas bulan/tahun. Perubahan ini hanya mengisi nomor yang belum ada. Nomor anggota yang sudah terbit, arsip keanggotaan ditutup, snapshot dan PDF historis tetap dipertahankan. Tidak ada migrasi skema atau penomoran ulang massal.
 
 Pengujian mencakup seluruh bulan I–XII, batas pergantian bulan/tahun WITA, kirim ulang bersamaan, nomor lama, urutan di atas 9999, propagasi nomor baru ke surat keanggotaan, nama berkas PDF dan pendaftaran ulang. Perubahan source tidak mengaktifkan backend pada domain Pages.

@@ -28,7 +28,7 @@ Portal Avalist tersedia melalui `/avalist.html`. Pendaftaran email tetap dilakuk
 | Yang ingin diubah                    | Lokasi                                                                                       |
 | ------------------------------------ | -------------------------------------------------------------------------------------------- |
 | Landing page                         | `frontend-user/src/Landing.svelte`                                                           |
-| Animasi kartu                        | `frontend-user/src/components/public/Hero.svelte` dan `frontend-user/src/styles/landing.css` |
+| Hero beranda                         | `frontend-user/src/components/public/Hero.svelte` dan `frontend-user/src/styles/landing.css` |
 | Pendaftaran / portal anggota         | `frontend-user/src/components/member/`                                                       |
 | Interaksi anggota                    | `frontend-user/src/features/member/controller.js`                                            |
 | Halaman admin                        | `frontend-petugas/src/components/staff/`                                                     |
