@@ -299,7 +299,7 @@ let r = await call('/profile', { body: registration() });
 assert.equal(r.status, 201, JSON.stringify(r.data));
 let p = r.data.profile;
 const assignedMemberNumber = p.memberNumber;
-assert.match(assignedMemberNumber, /^SKI-\d{4}-0001$/);
+assert.match(assignedMemberNumber, /^SKI-\d{4}-(I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII)-0001$/);
 assert.equal(p.id, regId);
 assert.equal(p.status, 'pending');
 assert.equal(storage.size, 3);

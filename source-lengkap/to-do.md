@@ -1,6 +1,6 @@
 # To-do pengembangan website KSPPS
 
-Diperbarui: 27 Oktober 2026. Baseline serah terima: aplikasi v39, 14 Oktober 2026. Konteks lanjutan: [panduan Codex](../panduan-codex/README.md).
+Diperbarui: 2 November 2026. Baseline serah terima: aplikasi v39, 14 Oktober 2026. Konteks lanjutan: [panduan Codex](../panduan-codex/README.md).
 
 Project dibagi menjadi **frontend user**, **frontend petugas**, **frontend avalist**, dan **backend**. Daftar ini mengikuti fitur terakhir yang sudah disepakati. `[x]` berarti sudah tersedia pada implementasi/pratinjau; `[ ]` berarti masih perlu dikerjakan atau diverifikasi. Status tersedia tidak berarti seluruh kebutuhan operasional produksi sudah selesai.
 
@@ -43,7 +43,7 @@ Project dibagi menjadi **frontend user**, **frontend petugas**, **frontend avali
 - [x] Kumpulkan identitas, alamat, kontak, rekening dan data yang diperlukan akad.
 - [x] Wajibkan foto KTP serta tanda tangan pada pendaftaran.
 - [x] Wajibkan bukti transfer simpanan dalam format JPG, PNG atau PDF.
-- [x] Tampilkan nomor anggota `SKI-<tahun daftar>-<nomor urut>`.
+- [x] Nomor baru memakai `SKI-<tahun masuk>-<bulan masuk Romawi>-<nomor urut>`, contoh `SKI-2026-XI-0001`; nomor lama yang sudah terbit tetap ditampilkan.
 - [x] Tampilkan tanda tangan dan foto KTP; KTP di kanan tanda tangan pada layar lebar, ditumpuk pada layar kecil.
 - [x] Sediakan tindakan perbaikan ketika admin atau finance meminta koreksi.
 - [x] Tampilkan surat keanggotaan setelah pembayaran awal direkonsiliasi finance.
@@ -129,7 +129,7 @@ Project dibagi menjadi **frontend user**, **frontend petugas**, **frontend avali
 
 ### Aturan simpanan dan keanggotaan
 
-- [x] Alokasikan nomor anggota unik otomatis; tahun berdasarkan tanggal daftar WITA, urutan global tidak dipakai ulang.
+- [x] Alokasikan nomor anggota unik otomatis; tahun dan bulan Romawi berdasarkan tanggal daftar WITA, urutan global minimal empat digit tidak direset atau dipakai ulang. Pertahankan nomor historis yang sudah terbit.
 - [x] Simpan simpanan pokok Rp100.000 sebagai pembayaran sekali per keanggotaan.
 - [x] Alokasikan simpanan wajib Rp10.000 per bulan dari saldo di muka, dengan tanggal acuan pendaftaran dan penyesuaian bulan pendek.
 - [x] Tentukan status aktif, tunggakan dan pengingat saldo paling banyak Rp30.000.

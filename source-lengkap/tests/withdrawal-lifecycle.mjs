@@ -195,6 +195,7 @@ let profile = ok(await call('/profile', { body: registration() }), 201).profile;
 profile = await approveRegistration(profile);
 const oldNumber = profile.memberNumber,
   oldId = profile.id;
+assert.match(oldNumber, /^SKI-\d{4}-(I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII)-0001$/);
 assert.equal((await call('/profile/restart', { body: { confirm: true } })).status, 409);
 const withdraw = () => ({
   id: crypto.randomUUID(),
@@ -468,6 +469,7 @@ assert.equal(
   'old profile identifier cannot be reused',
 );
 let newProfile = ok(await call('/profile', { body: registration() }), 201).profile;
+assert.match(newProfile.memberNumber, /^SKI-\d{4}-(I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII)-0002$/);
 assert.notEqual(newProfile.memberNumber, oldNumber);
 assert.notEqual(newProfile.id, oldId);
 assert.equal(newProfile.status, 'pending');

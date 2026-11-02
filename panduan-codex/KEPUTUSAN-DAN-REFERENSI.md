@@ -1,5 +1,9 @@
 # Keputusan, preferensi dan referensi proyek
 
+## Penomoran anggota, 2 November 2026
+
+Pengguna meminta format **SKI-tahun masuk-bulan masuk dalam Romawi-nomor**. Implementasi memakai `SKI-<tahun masuk>-<bulan masuk Romawi>-<nomor urut minimal empat digit>`, contoh `SKI-2026-XI-0001`. Tahun/bulan tetap bersumber dari tanggal pendaftaran server dalam WITA. Urutan global yang sudah ada tidak direset saat bulan atau tahun berganti. Nomor yang sudah diterbitkan dipertahankan agar identitas dan arsip dokumen tetap cocok; standar baru berlaku ketika nomor belum dialokasikan.
+
 ## Customer Relation, 27 Oktober 2026
 
 Pengguna meminta satu peran tambahan bernama persis **Customer Relation** sebagai PIC fitur Bantuan. Key peran dan divisi adalah `customer_relation`. Peran ini menangani keluhan yang ditugaskan kepadanya, tanpa menu atau akses operasional umum. Manajer mengatur akses akun; Admin/Manajer mengatur PIC, tenggat dan penutupan. Customer Relation dapat memulai penanganan, memberi tanggapan, memilih status tindak lanjut dan mencatat hasil penyelesaian. Peran PIC sebelumnya tetap tersedia.
