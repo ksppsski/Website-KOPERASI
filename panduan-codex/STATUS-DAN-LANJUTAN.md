@@ -4,6 +4,8 @@ Snapshot serah terima: **14 Oktober 2026**, aplikasi **v39**. Periksa kode/commi
 
 ## Pembaruan 2 November 2026
 
+Visual gedung beranda diganti render 3D dengan logo HD asli sebagai lapisan terpisah. Header, footer dan ikon Ruang Anggota kembali menggunakan PNG asli proyek, termasuk versi putih untuk gelap. Logo lockup rekonstruksi mockup dihapus. Gedung dan signage bergerak bersama saat parallax; fitur portal dan favicon tidak berubah.
+
 Beranda memakai reveal ringan berulang saat bagian/kartu masuk layar dan parallax foto gedung terbatas. Scroll tetap native, tanpa mengambil alih roda mouse atau sentuhan. Preferensi pengurangan gerak dipantau saat halaman terbuka; mode tersebut, fallback browser, fokus keyboard dan cetak tetap memperlihatkan isi. Efek dibatasi pada beranda dan tidak mengubah portal.
 
 Beranda mengikuti mockup modern dan tenang: header responsif, hero dua kolom dengan foto gedung dan kartu Ruang Anggota, tiga kartu simpanan, Tentang KSPPS, tiga FAQ native buka/tutup, serta footer Hubungi Admin. Hero kartu berputar dan bagian keanggotaan panjang diganti oleh struktur ringkas ini. Komponen dan stylesheet beranda terpisah dari portal; tema dan favicon tetap memakai mekanisme bersama. Tujuan tombol memakai portal/kontak yang sudah ada. Publikasi tetap melalui GitHub Pages tanpa mengubah DNS.

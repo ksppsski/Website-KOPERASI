@@ -14,7 +14,10 @@ function environment({ reduced = false, observer = true } = {}) {
     <main id="ski-web" style="--unrelated-value: keep">
       <section class="ski-hero">
         <div class="ski-hero-content"><p>Cooperative</p><h1>Title</h1><a href="#services">Join</a></div>
-        <div class="ski-hero-visual"><img class="ski-building-photo" alt="Building"></div>
+        <div class="ski-hero-visual"><div class="ski-building-scene">
+          <img class="ski-building-photo" alt="3D building">
+          <svg><image href="assets/kspps-logo-color-hd.png"></image></svg>
+        </div></div>
         <a class="ski-member-preview" href="#members">Members</a>
       </section>
       <section id="services">
@@ -159,6 +162,19 @@ const firstScreen = env.root.querySelector('h1');
 const cards = [...env.root.querySelectorAll('.ski-product')];
 const card = cards[0];
 assert.equal(env.root.dataset.scrollMotion, 'active');
+const scene = env.root.querySelector('.ski-building-scene');
+assert(scene.contains(env.root.querySelector('.ski-building-photo')));
+assert(scene.contains(env.root.querySelector('svg image')));
+assert.match(
+  env.view.getComputedStyle(scene).translate,
+  /--ski-photo-drift/,
+  'The scene moves its building and original signage together',
+);
+assert.doesNotMatch(
+  env.view.getComputedStyle(env.root.querySelector('.ski-building-photo')).translate,
+  /--ski-photo-drift/,
+  'The building has no separate drift from its signage',
+);
 assert.equal(
   firstScreen.dataset.scrollVisible,
   'true',

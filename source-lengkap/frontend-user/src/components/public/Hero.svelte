@@ -1,5 +1,6 @@
 <script>
   import LandingIcon from './LandingIcon.svelte';
+  import LandingBrand from './LandingBrand.svelte';
 </script>
 
 <section id="beranda" class="ski-hero" aria-labelledby="ski-hero-title">
@@ -24,14 +25,29 @@
     </div>
   </div>
   <div class="ski-hero-visual">
-    <img
-      class="ski-building-photo"
-      src="assets/kspps-building.webp"
-      alt="Ilustrasi gedung KSPPS dengan fasad putih dan pepohonan."
-      width="1200"
-      height="1000"
-      fetchpriority="high"
-    />
+    <div class="ski-building-scene">
+      <img
+        class="ski-building-photo"
+        src="assets/kspps-building-3d.webp"
+        alt="Render 3D gedung KSPPS dengan fasad putih, kaca biru dan logo asli koperasi."
+        width="1200"
+        height="1000"
+        fetchpriority="high"
+      />
+      <svg
+        class="ski-building-sign"
+        viewBox="0 0 1200 1000"
+        preserveAspectRatio="xMidYMid slice"
+        aria-hidden="true"
+      >
+        <image
+          href="assets/kspps-logo-color-hd.png"
+          width="330"
+          height="116.875"
+          transform="matrix(0.9 -0.42 0 1 620 250)"
+        />
+      </svg>
+    </div>
   </div>
   <a
     class="ski-member-preview"
@@ -39,9 +55,7 @@
     aria-label="Buka Ruang Anggota untuk melihat simpanan dan akad"
   >
     <div class="ski-member-preview-heading">
-      <span class="ski-member-preview-icon"
-        ><img src="assets/kspps-symbol.svg" width="18" height="32" alt="" /></span
-      >
+      <span class="ski-member-preview-icon"><LandingBrand symbol /></span>
       <span
         ><strong>Ruang Anggota</strong><small>Simpanan dan akad, lebih mudah dipantau.</small></span
       >
