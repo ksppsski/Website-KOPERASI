@@ -29,6 +29,12 @@ Framework frontend tetap **Svelte 5 + Vite**. Backend tetap Worker JavaScript de
 
 Favicon tab mengikuti mode perangkat. `public/assets/kspps-symbol.svg` berisi bentuk vektor logo, `scripts/generate-favicons.mjs` menghasilkan varian terang/gelap secara otomatis saat build.
 
+## Beranda mockup, 2 November 2026
+
+`frontend-user/src/Landing.svelte` menyusun Header, Hero, Products, About, FAQ dan Footer dari `components/public/`. `LandingBrand.svelte` memakai simbol KSPPS serta teks wordmark native. `Hero.svelte` memuat ilustrasi gedung dari `public/assets/kspps-building.webp`; kartu Ruang Anggota adalah tautan/markup HTML. `frontend-user/src/styles/landing.css` hanya diimpor entry publik dan mengatur seluruh komposisi responsif serta warna terang/gelap. Jangan mengubah stylesheet portal untuk memperbaiki beranda.
+
+Navigasi memakai anchor #beranda, #tentang, #layanan dan #informasi. Daftar Anggota menuju anggota.html#daftar; Portal Anggota serta Ruang Anggota menuju anggota.html#masuk. Tiga kartu layanan memakai portal simpanan, portal modal, dan dialog kontak Admin. FAQ memakai details/summary. Footer memiliki tautan Hubungi Admin dengan fallback mailto dan intersepsi dialog kontak saat JavaScript aktif; tombol Escape, fokus balik dan navigasi keyboard tetap berfungsi. ThemeToggle dipasang sekali di Header. Tes landing-interactions.mjs memeriksa struktur, tautan, FAQ, menu dan kontak; fixture 40 tampilan portal tetap dipertahankan.
+
 ## Nomor anggota, 2 November 2026
 
 `backend/src/membership.js`, fungsi `assignMemberNumbers`, adalah sumber penomoran resmi. Nomor yang belum ada memakai `SKI-<tahun masuk>-<bulan masuk Romawi>-<nomor urut>`. SQL mengambil tahun dan bulan dari `created_at` dengan offset WITA +8; serial berasal dari `member_numbers` dan minimal empat digit. Nomor lama tetap dipertahankan. `profileDTO` dan snapshot meneruskan nomor sebagai teks ke portal dan surat; jangan membentuk ulang nomor dari tampilannya. Tes `tests/member-numbers.mjs` mencakup bulan, batas waktu WITA, nomor lama, keunikan, kirim ulang dan overflow.

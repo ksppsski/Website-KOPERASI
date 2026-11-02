@@ -1,84 +1,58 @@
 <script>
   import LandingIcon from './LandingIcon.svelte';
-  let expanded = $state(false);
-  let card;
 </script>
 
-<svelte:window
-  onkeydown={(event) => {
-    if (event.key === 'Escape' && expanded) {
-      event.preventDefault();
-      expanded = false;
-      card?.focus();
-    }
-  }}
-/>
-<section id="ski-beranda" class="ski-hero ski-wrap">
-  <div>
-    <div class="ski-eyebrow">Koperasi syariah</div>
-    <h1>Langkah bersama,<br />untuk masa depan<br />yang <em>lebih baik.</em></h1>
-    <p class="ski-hero-copy">Layanan simpanan, penyertaan modal, dan pembiayaan untuk anggota.</p>
+<section id="beranda" class="ski-hero" aria-labelledby="ski-hero-title">
+  <div class="ski-hero-content">
+    <p class="ski-eyebrow">Koperasi syariah untuk anggota</p>
+    <h1 id="ski-hero-title">
+      <span>Langkah Baik,</span> <span class="ski-hero-accent">Tumbuh Bersama.</span>
+    </h1>
+    <p class="ski-hero-copy">
+      Kelola simpanan dan rencana Anda bersama<br class="ski-desktop-break" /> KSPPS Syirkah Kebaikan
+      Indonesia.
+    </p>
     <div class="ski-actions">
-      <button type="button" class="ski-button" data-ski-dialog="join"
-        >Menjadi Anggota <LandingIcon name="arrow-right" /></button
-      ><a class="ski-text-link" href="#ski-layanan"
-        >Kenali layanan kami <LandingIcon name="arrow-up-right" /></a
+      <a class="ski-button ski-cyan" href="anggota.html#daftar"
+        >Daftar Anggota <LandingIcon name="arrow-right" /></a
       >
+      <a class="ski-button ski-hero-outline" href="#layanan">Kenali Layanan</a>
+    </div>
+    <div class="ski-hero-values">
+      <span><LandingIcon name="sprout" />Berlandaskan syariah</span>
+      <span><LandingIcon name="users-round" />Berorientasi anggota</span>
     </div>
   </div>
-  <div
-    class="ski-art"
-    class:is-open={expanded}
-    data-ski-motion=""
-    aria-label="Kartu anggota dan akses layanan digital KSPPS"
+  <div class="ski-hero-visual">
+    <img
+      class="ski-building-photo"
+      src="assets/kspps-building.webp"
+      alt="Ilustrasi gedung KSPPS dengan fasad putih dan pepohonan."
+      width="1200"
+      height="1000"
+      fetchpriority="high"
+    />
+  </div>
+  <a
+    class="ski-member-preview"
+    href="anggota.html#masuk"
+    aria-label="Buka Ruang Anggota untuk melihat simpanan dan akad"
   >
-    <div class="ski-motion-scene">
-      <div class="ski-orbit" aria-hidden="true"><div class="ski-dot"></div></div>
-      <button
-        type="button"
-        class="ski-membership"
-        bind:this={card}
-        onclick={() => (expanded = !expanded)}
-        aria-expanded={expanded}
-        aria-controls="ski-portal-motion-panel"
-        aria-label={expanded ? 'Tutup fitur Portal Anggota' : 'Buka fitur Portal Anggota'}
-        ><img
-          class="ski-membership-brand"
-          src="assets/brand-9523c1e45f.png"
-          width="720"
-          height="256"
-          alt="KSPPS Syirkah Kebaikan Indonesia"
-        /><span>KARTU ANGGOTA &nbsp; ↗</span></button
+    <div class="ski-member-preview-heading">
+      <span class="ski-member-preview-icon"
+        ><img src="assets/kspps-symbol.svg" width="18" height="32" alt="" /></span
       >
-      <div
-        class="ski-access"
-        id="ski-portal-motion-panel"
-        role="region"
-        aria-label="Portal Anggota"
-        aria-hidden={!expanded}
-        inert={!expanded}
-      >
-        <div class="ski-access-head"><strong>Portal Anggota</strong></div>
-        <div class="ski-access-row">
-          <span class="ski-tiny-icon"><LandingIcon name="wallet" /></span><span
-            >Simpanan anggota</span
-          >
-        </div>
-        <div class="ski-access-row">
-          <span class="ski-tiny-icon"><LandingIcon name="chart-no-axes-combined" /></span><span
-            >Penyertaan modal</span
-          >
-        </div>
-        <div class="ski-access-row">
-          <span class="ski-tiny-icon"><LandingIcon name="files" /></span><span>Dokumen akad</span>
-        </div>
-        <button type="button" class="ski-button ski-access-login" data-ski-dialog="member"
-          >Masuk Portal Anggota <LandingIcon name="arrow-up-right" /></button
-        >
-      </div>
-      <span class="ski-motion-status" aria-live="polite"
-        >{expanded ? 'Fitur Portal Anggota ditampilkan.' : 'Kartu anggota ditutup.'}</span
+      <span
+        ><strong>Ruang Anggota</strong><small>Simpanan dan akad, lebih mudah dipantau.</small></span
       >
     </div>
-  </div>
+    <div class="ski-member-preview-statuses" aria-label="Contoh status di portal anggota">
+      <span class="ski-preview-status ski-preview-status--member"
+        ><LandingIcon name="circle-check" />Anggota terdaftar</span
+      >
+      <span class="ski-preview-status ski-preview-status--document"
+        ><LandingIcon name="circle-check" />Akad lengkap</span
+      >
+    </div>
+  </a>
 </section>

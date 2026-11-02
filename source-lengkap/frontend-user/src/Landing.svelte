@@ -1,17 +1,16 @@
 <script>
-  import ThemeToggle from '../../shared/components/ThemeToggle.svelte';
   import { tick } from 'svelte';
   import Header from './components/public/Header.svelte';
-  import Values from './components/public/Values.svelte';
   import Hero from './components/public/Hero.svelte';
   import Products from './components/public/Products.svelte';
-  import Join from './components/public/Join.svelte';
   import About from './components/public/About.svelte';
+  import FAQ from './components/public/FAQ.svelte';
   import Footer from './components/public/Footer.svelte';
   import LandingIcon from './components/public/LandingIcon.svelte';
 
   let contactOpen = $state(false);
   let closeButton;
+  let contactDialog;
   let lastFocus;
 
   function closeContact() {
@@ -26,37 +25,43 @@
       if (action === 'member' || action === 'join') {
         location.assign('anggota.html#' + (action === 'join' ? 'daftar' : 'masuk'));
       } else if (action === 'contact') {
+        event.preventDefault();
         lastFocus = button;
         contactOpen = true;
         await tick();
         closeButton?.focus({ preventScroll: true });
       }
     }
-    const link = event.target.closest('a[href^="#ski-"]');
-    if (link) {
-      event.preventDefault();
-      document.querySelector(link.getAttribute('href'))?.scrollIntoView({ block: 'start' });
-    }
   }
 </script>
-
-<ThemeToggle />
 
 <svelte:document onclick={handleClick} />
 <svelte:window
   onkeydown={(event) => {
     if (!contactOpen) return;
-    if (event.key === 'Escape') closeContact();
-    if (event.key === 'Tab') {
+    if (event.key === 'Escape') {
       event.preventDefault();
-      closeButton?.focus();
+      closeContact();
+    }
+    if (event.key === 'Tab') {
+      const controls = [...contactDialog.querySelectorAll('button, a[href]')];
+      const first = controls[0];
+      const last = controls.at(-1);
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
+      }
     }
   }}
 />
 
 <div id="ski-web">
+  <a class="ski-skip" href="#konten">Lewati ke konten</a>
   <Header />
-  <main><Hero /><Values /><Products /><Join /><About /></main>
+  <main id="konten"><Hero /><Products /><About /><FAQ /></main>
   <Footer />
   <div
     class="ski-overlay"
@@ -72,6 +77,7 @@
       aria-modal="true"
       aria-labelledby="ski-dialog-title"
       tabindex="-1"
+      bind:this={contactDialog}
     >
       <div class="ski-dialog-top">
         <small id="ski-dialog-label">KSPPS SYIRKAH KEBAIKAN INDONESIA</small>
@@ -83,7 +89,7 @@
           onclick={closeContact}><LandingIcon name="x" /></button
         >
       </div>
-      <h2 id="ski-dialog-title">Hubungi Kami</h2>
+      <h2 id="ski-dialog-title">Hubungi Admin</h2>
       <div id="ski-dialog-body">
         <ul class="ski-dialog-list">
           <li>
@@ -91,10 +97,10 @@
               >Jl. Kijang No. 34 A, Maricaya,<br />Kota Makassar</span
             >
           </li>
-          <li><LandingIcon name="phone" /><span>0856 0836 5555</span></li>
+          <li><LandingIcon name="phone" /><a href="tel:085608365555">0856 0836 5555</a></li>
           <li>
-            <LandingIcon name="mail" /><span style="overflow-wrap:anywhere"
-              >syirkahkebaikanindonesia@gmail.com</span
+            <LandingIcon name="mail" /><a href="mailto:syirkahkebaikanindonesia@gmail.com"
+              >syirkahkebaikanindonesia@gmail.com</a
             >
           </li>
         </ul>

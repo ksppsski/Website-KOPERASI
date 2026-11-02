@@ -16,6 +16,8 @@
     MapPin,
     Phone,
     Mail,
+    CircleCheck,
+    Plus,
   } from '@lucide/svelte';
   let { name } = $props();
   const icons = {
@@ -35,6 +37,8 @@
     'map-pin': MapPin,
     phone: Phone,
     mail: Mail,
+    'circle-check': CircleCheck,
+    plus: Plus,
   };
   let Icon = $derived(icons[name]);
 </script>

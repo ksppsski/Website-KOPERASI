@@ -1,5 +1,13 @@
 # Keputusan, preferensi dan referensi proyek
 
+## Beranda modern dan tenang, 2 November 2026
+
+Pengguna meminta beranda mengikuti mockup **Beranda KSPPS modern dan tenang.png** dan diterbitkan pada domain melalui GitHub Pages. Keputusan ini menggantikan komposisi hero serta animasi kartu landing sebelumnya. Pertahankan judul **Langkah Baik, Tumbuh Bersama.**, ilustrasi gedung, kartu Ruang Anggota dan tiga kartu simpanan. Setelah layanan hanya ada Tentang KSPPS singkat, tiga FAQ yang dapat dibuka, serta footer Hubungi Admin dengan ruang kosong yang lapang. Semua teks, navigasi, tombol dan kartu memakai komponen Svelte; gambar hanya menjadi aset visual.
+
+Label kartu sesuai mockup adalah Simpanan Pokok dan Wajib, Simpanan Mudharabah, serta Simpanan Wadiah Yadh Dhamanah. Tautannya memakai tujuan yang sudah ada: portal simpanan, portal penyertaan modal, dan kontak Admin. Label publik ini tidak menambah layanan transaksi atau mengubah aturan keuangan portal. Foto hero direkonstruksi dari mockup menjadi aset visual terpisah `public/assets/kspps-building.webp`; teks dan kartu tidak dirasterkan.
+
+Tema, favicon dan semua portal dipertahankan. Publikasi menggunakan branch main serta folder docs yang sudah dipakai Pages, tanpa perubahan DNS/nameserver.
+
 ## Penomoran anggota, 2 November 2026
 
 Pengguna meminta format **SKI-tahun masuk-bulan masuk dalam Romawi-nomor**. Implementasi memakai `SKI-<tahun masuk>-<bulan masuk Romawi>-<nomor urut minimal empat digit>`, contoh `SKI-2026-XI-0001`. Tahun/bulan tetap bersumber dari tanggal pendaftaran server dalam WITA. Urutan global yang sudah ada tidak direset saat bulan atau tahun berganti. Nomor yang sudah diterbitkan dipertahankan agar identitas dan arsip dokumen tetap cocok; standar baru berlaku ketika nomor belum dialokasikan.
@@ -42,7 +50,7 @@ Pembaruan **23 Oktober 2026**: permintaan berdasarkan rekaman layar dibatasi pad
 | Kode independen | Pisahkan tanggung jawab dan kepemilikan state. Komponen/utilitas bersama tetap dipakai bila sesuai; tidak menyalin semua kode ke setiap portal. |
 | Konsep landing bergaya Spotify | Pernah diminta lalu dibatalkan; pertahankan desain landing terakhir pada source. |
 | Istilah layanan | Gunakan anggota koperasi dan penyertaan modal pada fitur website saat ini; istilah investor pada nama template sumber tidak berarti UI harus memakai investor. |
-| Animasi landing | Kartu pada awalnya menutupi portal; klik membuatnya bergeser ke kiri sambil miring; lingkaran latar berputar. Pertahankan posisi/interaksi source terakhir. |
+| Beranda | Mockup 2 November 2026 menggantikan hero animasi kartu lama: judul Langkah Baik, Tumbuh Bersama., gedung, Ruang Anggota, tiga layanan, Tentang KSPPS, FAQ dan footer. |
 | Warna status | Hijau/toska dan biru untuk status normal/aktif/proses; merah untuk peringatan termasuk top up. Gunakan pemetaan yang sudah terpusat. |
 | Tema halaman | Tombol kanan atas bertuliskan aksesibel `Aktifkan mode gelap` atau `Aktifkan mode terang`. Ikuti perangkat sebelum pengguna memilih; simpan pilihan browser dan terapkan pada seluruh portal serta landing tanpa mereset formulir. |
 | Penawaran penuh | Tetap tampil 72 jam sejak terpenuhi di portal anggota; semua riwayat tetap di Manajer. |
