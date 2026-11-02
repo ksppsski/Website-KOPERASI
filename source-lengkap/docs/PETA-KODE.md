@@ -102,3 +102,7 @@ Sumber Svelte yang sama menghasilkan aplikasi dengan backend (`dist/`) dan prati
 ## Batas validasi
 
 Tes UI berjalan melalui DOM simulasi, termasuk 40 perbandingan struktur halaman, formulir yang sedang diisi, isolasi peran, dan mode statis tanpa jaringan. Pengujian ini tidak menggantikan pemeriksaan visual browser nyata. Login email/kata sandi mandiri belum diaktifkan oleh refactor ini; hosting aplikasi tetap memakai identitas yang didukung backend.
+
+### Motion saat menggulir beranda
+
+`frontend-user/src/motion/landing-scroll-motion.js` adalah action Svelte pada `Landing.svelte`. Action mengelola IntersectionObserver, stagger dan parallax foto melalui satu requestAnimationFrame per rangkaian scroll. Aturan visual berada di `frontend-user/src/styles/landing.css`, termasuk fokus keyboard, reduced motion dan cetak. Pengujian lifecycle/fallback berada di `tests/landing-scroll-motion.mjs`.

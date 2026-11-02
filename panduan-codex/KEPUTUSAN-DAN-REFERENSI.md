@@ -1,5 +1,9 @@
 # Keputusan, preferensi dan referensi proyek
 
+## Gerakan saat menggulir beranda, 2 November 2026
+
+Pengguna meminta kesan gerakan halus pada setiap scroll beranda. Bagian halaman dan kartu muncul bertahap saat memasuki layar, lalu dapat muncul kembali setelah keluar sepenuhnya. Foto gedung mendapat parallax ringan. Pertahankan scroll bawaan perangkat, susunan mockup, tujuan tombol dan fungsi portal. Pengurangan gerak menonaktifkan efek, fokus keyboard langsung memperlihatkan kontrol, dan semua isi tetap terlihat saat JavaScript/IntersectionObserver tidak tersedia atau halaman dicetak. Observer, listener dan frame hanya dimiliki instance beranda serta dilepas saat unmount.
+
 ## Beranda modern dan tenang, 2 November 2026
 
 Pengguna meminta beranda mengikuti mockup **Beranda KSPPS modern dan tenang.png** dan diterbitkan pada domain melalui GitHub Pages. Keputusan ini menggantikan komposisi hero serta animasi kartu landing sebelumnya. Pertahankan judul **Langkah Baik, Tumbuh Bersama.**, ilustrasi gedung, kartu Ruang Anggota dan tiga kartu simpanan. Setelah layanan hanya ada Tentang KSPPS singkat, tiga FAQ yang dapat dibuka, serta footer Hubungi Admin dengan ruang kosong yang lapang. Semua teks, navigasi, tombol dan kartu memakai komponen Svelte; gambar hanya menjadi aset visual.

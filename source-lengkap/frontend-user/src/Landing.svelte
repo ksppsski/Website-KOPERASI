@@ -7,6 +7,7 @@
   import FAQ from './components/public/FAQ.svelte';
   import Footer from './components/public/Footer.svelte';
   import LandingIcon from './components/public/LandingIcon.svelte';
+  import { landingScrollMotion } from './motion/landing-scroll-motion.js';
 
   let contactOpen = $state(false);
   let closeButton;
@@ -58,7 +59,7 @@
   }}
 />
 
-<div id="ski-web">
+<div id="ski-web" use:landingScrollMotion>
   <a class="ski-skip" href="#konten">Lewati ke konten</a>
   <Header />
   <main id="konten"><Hero /><Products /><About /><FAQ /></main>

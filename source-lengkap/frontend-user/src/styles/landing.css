@@ -1257,6 +1257,42 @@ body {
   }
 }
 
+#ski-web[data-scroll-motion='active'] [data-scroll-reveal] {
+  opacity: 0;
+  translate: 0 18px;
+  transition:
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1) var(--ski-reveal-delay, 0ms),
+    translate 700ms cubic-bezier(0.22, 1, 0.36, 1) var(--ski-reveal-delay, 0ms),
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+#ski-web[data-scroll-motion='active'] [data-scroll-visible='true'],
+#ski-web[data-scroll-motion='active'] [data-scroll-reveal]:focus-within {
+  opacity: 1;
+  translate: 0 0;
+}
+
+#ski-web[data-scroll-motion='active'] [data-scroll-reveal]:focus-within {
+  transition: none;
+}
+
+#ski-web[data-scroll-motion='active'] .ski-building-photo {
+  translate: 0 var(--ski-photo-drift, 0px);
+  scale: 1.1;
+}
+
+@media print {
+  #ski-web[data-scroll-motion='active'] [data-scroll-reveal] {
+    opacity: 1;
+    translate: none;
+  }
+  #ski-web[data-scroll-motion='active'] .ski-building-photo {
+    translate: none;
+    scale: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -1266,5 +1302,13 @@ body {
   #ski-web *::after {
     scroll-behavior: auto;
     transition: none !important;
+  }
+  #ski-web[data-scroll-motion='active'] [data-scroll-reveal] {
+    opacity: 1;
+    translate: none;
+  }
+  #ski-web[data-scroll-motion='active'] .ski-building-photo {
+    translate: none;
+    scale: none;
   }
 }

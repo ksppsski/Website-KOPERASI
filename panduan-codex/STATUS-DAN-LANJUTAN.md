@@ -4,6 +4,8 @@ Snapshot serah terima: **14 Oktober 2026**, aplikasi **v39**. Periksa kode/commi
 
 ## Pembaruan 2 November 2026
 
+Beranda memakai reveal ringan berulang saat bagian/kartu masuk layar dan parallax foto gedung terbatas. Scroll tetap native, tanpa mengambil alih roda mouse atau sentuhan. Preferensi pengurangan gerak dipantau saat halaman terbuka; mode tersebut, fallback browser, fokus keyboard dan cetak tetap memperlihatkan isi. Efek dibatasi pada beranda dan tidak mengubah portal.
+
 Beranda mengikuti mockup modern dan tenang: header responsif, hero dua kolom dengan foto gedung dan kartu Ruang Anggota, tiga kartu simpanan, Tentang KSPPS, tiga FAQ native buka/tutup, serta footer Hubungi Admin. Hero kartu berputar dan bagian keanggotaan panjang diganti oleh struktur ringkas ini. Komponen dan stylesheet beranda terpisah dari portal; tema dan favicon tetap memakai mekanisme bersama. Tujuan tombol memakai portal/kontak yang sudah ada. Publikasi tetap melalui GitHub Pages tanpa mengubah DNS.
 
 Validasi beranda: `npm run check`, seluruh `npm run test:app`, `npm run build:pages` dan `npm run check:pages` lulus. Browser nyata memeriksa lebar 1280 px, 390 px dan 320 px, tema terang/gelap, logo putih, menu ponsel, FAQ, fokus dialog kontak dan tujuan Portal Anggota. Tidak ditemukan luapan horizontal; font serta aset gedung termuat. Empat puluh tampilan portal tetap lolos parity tanpa mengubah fixture. `docs/CNAME` dipertahankan.
